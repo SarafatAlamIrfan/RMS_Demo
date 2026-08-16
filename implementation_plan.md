@@ -1,155 +1,428 @@
-# Implementation Plan - FlavourCraft Dhaka: Restaurant Management OS
+# 📋 FlavourCraft Dhaka: Master Implementation Plan & System Architecture Specification
 
-Build a comprehensive, modern, state-of-the-art Restaurant Management System customized for **Authentic & Familiar Bangladeshi Restaurant Cuisine** under the leadership of **Managing Director & Admin Sadia Islam Dia**, with all financial operations, pricing, bills, and costing calculated in **Bangladeshi Taka (৳ / BDT)**.
-
-The system is built using **100% Pure HTML5, Plain CSS3, and Modular Vanilla JavaScript** with a zero-dependency **Client-Side MongoDB Document Engine (`mongo-db.js`)**, Web Audio API synthesizer, and an integrated **Authentication & Role-Based Access Control Gate System**.
-
----
-
-## 🎨 Aesthetic & Modern UI/UX Design System (Plain CSS)
-
-The application features a **luxury dark obsidian & warm amber/saffron design system** built entirely with pure, bespoke CSS:
-
-- **Curated Color Tokens**:
-  - Deep Obsidian Canvas: `#080c14` & Surface `#0f172a`
-  - Translucent Glass Paneling: `rgba(15, 23, 42, 0.80)` with `backdrop-filter: blur(16px)`
-  - Primary Warm Amber Accents: `#f59e0b` / `#fbbf24` (Saffron & Ghee glow)
-  - Fresh Culinary Emerald: `#10b981` (Available, Ready, Healthy)
-  - Spicy Ruby Crimson: `#ef4444` (Naga Spice, Urgent, Overdue, Low-Stock)
-  - Cyber Indigo & Violet: `#6366f1` / `#8b5cf6` (Admin, Analytics)
-- **Modern Typography Pairing**:
-  - Headings & Branding: `Outfit` & `Playfair Display` from Google Fonts
-  - High-Legibility UI & Content: `Plus Jakarta Sans`
-  - POS / Numerical & Thermal Receipts: `JetBrains Mono`
-- **Dynamic Micro-Interactions & Fluid Animations**:
-  - Interactive 3D/Glow card hover elevations (`translateY(-4px)` + ambient box-shadows).
-  - Live pulsing status halos for kitchen timers (<10m, 10–20m, >20m overdue) & occupied table seats.
-  - Smooth cubic-bezier transitions for sliding panels, checkout drawers, and modal backdrops.
-  - Custom scrollbars, glowing category filter pills, interactive spice-level flame meters.
-  - Realistic thermal POS receipt renderer with authentic monospace layout, Mushak-6.3 tax formatting, and native print styling.
-  - Built-in Web Audio chime engine providing acoustic feedback for chef orders and barcode scanner beeps without external MP3 files.
-- **Ultra-Responsive Layout**:
-  - Adaptive CSS Grid & Flexbox engineered for Mobile foodies, Tablet POS/KDS terminals, and Desktop Operations screens.
+> **System Name**: FlavourCraft Dhaka - Modern Bangladeshi Restaurant Management System  
+> **Executive Leadership**: Managing Director & Admin **Sadia Islam Dia**  
+> **Platform Paradigm**: 100% Pure Client-Side Single-Page Web Application (HTML5, Plain CSS3, Modular Vanilla JavaScript, Client MongoDB Engine)  
+> **Currency Unit**: Bangladeshi Taka (**৳ / BDT**)  
+> **Cuisine Specialization**: Authentic & Familiar Bangladeshi Traditional & Modern Dhaka Cuisine  
+> **Repository**: [https://github.com/SarafatAlamIrfan/RMS_Demo.git](https://github.com/SarafatAlamIrfan/RMS_Demo.git)
 
 ---
 
-## 🏛️ Architecture (Pure HTML5 + Plain CSS + Vanilla JS)
+## 📑 Table of Contents
+1. [Executive Summary & System Mission](#1-executive-summary--system-mission)
+2. [Architectural Philosophy & Zero-Dependency Paradigm](#2-architectural-philosophy--zero-dependency-paradigm)
+3. [Design System & UI/UX Specifications (Plain CSS)](#3-design-system--uiux-specifications-plain-css)
+4. [Client-Side MongoDB Document Engine Specification](#4-client-side-mongodb-document-engine-specification)
+5. [Comprehensive Database Schema Definitions](#5-comprehensive-database-schema-definitions)
+6. [Detailed Feature & Module Specifications](#6-detailed-feature--module-specifications)
+   - [Module 1: Digital Interactive Menu & Customizer](#module-1-digital-interactive-menu--customizer)
+   - [Module 2: Table Reservation Engine & Digital e-Pass](#module-2-table-reservation-engine--digital-e-pass)
+   - [Module 3: Multi-Mode Ordering & Bangladeshi Checkout](#module-3-multi-mode-ordering--bangladeshi-checkout)
+   - [Module 4: Customer Order Login Gate](#module-4-customer-order-login-gate)
+   - [Module 5: Live Order Progress Tracker & Rider Radar](#module-5-live-order-progress-tracker--rider-radar)
+   - [Module 6: Kitchen Display System (KDS) & Cook Recipe Specs](#module-6-kitchen-display-system-kds--cook-recipe-specs)
+   - [Module 7: 2D Interactive Table & Floor Plan](#module-7-2d-interactive-table--floor-plan)
+   - [Module 8: Rapid Touch POS Register & Mushak-6.3 Receipts](#module-8-rapid-touch-pos-register--mushak-63-receipts)
+   - [Module 9: Inventory Management & Automatic Stock Deductions](#module-9-inventory-management--automatic-stock-deductions)
+   - [Module 10: Recipe Costing & Profit Margin Engine](#module-10-recipe-costing--profit-margin-engine)
+   - [Module 11: Food Waste & Kitchen Spoilage Tracker](#module-11-food-waste--kitchen-spoilage-tracker)
+   - [Module 12: Executive Analytics & Reports](#module-12-executive-analytics--reports)
+   - [Module 13: Authentication, Session & Role-Based Access Control (RBAC)](#module-13-authentication-session--role-based-access-control-rbac)
+7. [Directory Structure & File Manifest](#7-directory-structure--file-manifest)
+8. [End-to-End Quality Verification Protocol](#8-end-to-end-quality-verification-protocol)
+
+---
+
+## 1. Executive Summary & System Mission
+
+**FlavourCraft Dhaka** is an enterprise-grade restaurant management operating system tailored specifically to Bangladeshi dining establishments. Under the executive direction of **Sadia Islam Dia (Managing Director & Admin)**, the platform replaces fragmented restaurant tools with a single unified, ultra-fast interface covering:
+- **Customer Acquisition**: Online menu browsing, customization, table reservations with e-Pass generation, and online ordering with MFS payments (bKash/Nagad).
+- **Kitchen & Floor Operations**: Real-time Kitchen Display System (KDS) tickets, urgency countdowns, line cook recipe specs, 2D floor visualizer, and rapid POS register with Mushak-6.3 tax invoices.
+- **Back-Office & Supply Chain**: Dynamic recipe costing, automatic raw ingredient stock deduction upon order confirmation, low-stock safety alarms, food waste logging, and executive revenue turnover analytics in Bangladeshi Taka.
+
+---
+
+## 2. Architectural Philosophy & Zero-Dependency Paradigm
+
+The system is constructed strictly adhering to the **Zero External Backend / 100% Native Client-Side Architecture**:
+1. **Core Web Standard**: Standard HTML5 semantic document hierarchy and Modular ES6 Vanilla JavaScript classes.
+2. **Zero Python / Node.js Runtime Dependencies**: The app runs directly in any modern browser by opening `index.html` without requiring Node modules, NPM servers, or Python backends.
+3. **Pure Bespoke CSS3**: Hand-crafted CSS design tokens, custom glassmorphism, responsive grid/flexbox layouts, keyframe animations, and zero Tailwind or UI framework bloat.
+4. **Client-Side Document Database**: A custom MongoDB implementation (`js/db/mongo-db.js`) providing genuine MongoDB collections, CRUD operations, query operators, update modifiers, aggregation pipelines, and LocalStorage persistence.
+5. **Acoustic Audio Engine**: Uses the native browser **Web Audio API** (`AudioContext` oscillators) to generate dynamic audio alerts (chimes, bell rings, scanner beeps, alarm sirens) with zero external audio file dependencies.
+
+---
+
+## 3. Design System & UI/UX Specifications (Plain CSS)
+
+### 🎨 Color Palette Tokens (`css/variables.css`)
+- **Canvas Base**: `#080c14` (Obsidian Midnight)
+- **Elevated Surface**: `#0f172a` / `#1e293b` (Deep Slate Glass)
+- **Glassmorphism Panels**: `rgba(15, 23, 42, 0.80)` with `backdrop-filter: blur(16px)` and `border: 1px solid rgba(255, 255, 255, 0.08)`
+- **Primary Brand Accent**: `#f59e0b` / `#fbbf24` (Saffron Gold / Warm Mustard Ghee)
+- **Culinary Emerald (Success)**: `#10b981` (Available tables, completed orders, optimal margins)
+- **Naga Crimson (Danger / Urgency)**: `#ef4444` (Overdue tickets >20m, low stock alerts, food waste)
+- **Sky Blue (Info / MFS)**: `#38bdf8` (Takeaway, bKash/Nagad gateways)
+- **Royal Amethyst (VIP / Admin)**: `#8b5cf6` (VIP salons, executive analytics)
+
+### 🔤 Typography Hierarchy
+- **Brand & Headings**: `Playfair Display` (Serif elegance for menu titles) & `Outfit` (Modern geometric sans-serif for UI headers).
+- **Body & Controls**: `Plus Jakarta Sans` (Clean, highly legible body text).
+- **Numerals, Barcodes & Thermal POS Receipts**: `JetBrains Mono` (High-contrast monospaced font for billing and stock units).
+
+### ✨ Micro-Interactions & Animation Physics
+- Smooth card hover lift: `transform: translateY(-4px)` with dynamic gold drop-shadows.
+- Real-time pulsating status rings for occupied/dirty tables and critical kitchen tickets.
+- Sliding drawer transitions with `cubic-bezier(0.16, 1, 0.3, 1)` easing.
+- Authentic thermal paper tear formatting with CSS dashed borders and `@media print` layout.
+
+---
+
+## 4. Client-Side MongoDB Document Engine Specification
+
+Implemented in `js/db/mongo-db.js`, the document engine simulates genuine MongoDB database operations inside the browser:
+
+### ⚙️ Engine Capabilities
+- **Database Initialization & Persistence**: Automatically persists collections in browser `localStorage` using unique keys (e.g. `flavourcraft_dhaka_v6_auth`).
+- **BSON ObjectId Generation**: Generates 24-character hex ObjectIds (`_id`).
+- **CRUD Operations**:
+  - `collection.find(query, options)`: Filter documents with sorting (`sort`), pagination (`skip`), and limits (`limit`).
+  - `collection.findOne(query)`: Retrieve first matching document.
+  - `collection.insertOne(document)`: Insert single document with automatic `_id` and timestamps (`createdAt`, `updatedAt`).
+  - `collection.insertMany(documents)`: Bulk insert.
+  - `collection.updateOne(filter, update)`: Update document using `$set`, `$inc`, `$push`, `$pull`.
+  - `collection.updateMany(filter, update)`: Update multiple matching documents.
+  - `collection.deleteOne(filter)` / `collection.deleteMany(filter)`: Remove records.
+  - `collection.countDocuments(filter)`: Count records.
+- **Query Operators**: `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$regex`, `$exists`, `$or`, `$and`.
+- **Aggregation Pipeline (`collection.aggregate(pipeline)`)**:
+  - `$match`: Filter records.
+  - `$group`: Aggregate totals using `$sum`, `$avg`, `$min`, `$max`, `$count`.
+  - `$sort`: Sort result sets.
+  - `$limit`: Limit output count.
+- **Event Change Stream**: Emits `change` events on document mutations to trigger real-time reactive UI re-renders.
+- **JSON Backup & Export**: One-click extraction of the entire database state as an exported JSON file.
+
+---
+
+## 5. Comprehensive Database Schema Definitions
+
+### 📦 1. `menu` Collection
+```json
+{
+  "_id": "dish_01",
+  "sku": "KAC-101",
+  "name": "Puran Dhaka Mutton Kacchi Biryani",
+  "category": "Kacchi & Biryani",
+  "price": 650,
+  "description": "Authentic Old Dhaka style tender mutton kacchi with fragrant Chinigura rice, spiced soft aloo, aloo bukhara, and Baghabari pure ghee. Served with cold Borhani.",
+  "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80",
+  "tags": ["100% Halal", "Chef Special"],
+  "spiceLevel": 1,
+  "isAvailable": true,
+  "recipeId": "rec_kacchi",
+  "prepTimeMinutes": 5
+}
+```
+
+### 📋 2. `recipes` Collection
+```json
+{
+  "_id": "rec_kacchi",
+  "dishId": "dish_01",
+  "dishName": "Puran Dhaka Mutton Kacchi Biryani",
+  "sellingPrice": 650,
+  "ingredients": [
+    { "ingredientId": "ing_mutton", "name": "Fresh Bengal Mutton Cuts", "quantity": 250, "unit": "g", "unitCost": 1.10 },
+    { "ingredientId": "ing_chinigura_rice", "name": "Chinigura Rice", "quantity": 180, "unit": "g", "unitCost": 0.16 },
+    { "ingredientId": "ing_pure_ghee", "name": "Baghabari Pure Ghee", "quantity": 30, "unit": "g", "unitCost": 1.40 },
+    { "ingredientId": "ing_potato", "name": "Biryani Aloo", "quantity": 1, "unit": "pcs", "unitCost": 15.00 },
+    { "ingredientId": "ing_aloo_bukhara", "name": "Aloo Bukhara & Spices", "quantity": 15, "unit": "g", "unitCost": 4.00 }
+  ]
+}
+```
+
+### 🥩 3. `inventory` Collection
+```json
+{
+  "_id": "ing_mutton",
+  "name": "Fresh Bengal Mutton Cuts",
+  "category": "Meats",
+  "currentStock": 18500,
+  "threshold": 5000,
+  "unit": "g",
+  "costPerUnit": 1.10
+}
+```
+
+### 🪑 4. `tables` Collection
+```json
+{
+  "_id": "tbl_03",
+  "number": "T-03",
+  "capacity": 4,
+  "shape": "booth",
+  "zone": "Main Dining Hall",
+  "status": "occupied",
+  "currentOrderId": "ord_101",
+  "activeServer": "Anika"
+}
+```
+
+### 📝 5. `orders` Collection
+```json
+{
+  "_id": "ord_101",
+  "orderNumber": "#FC-DHK-501",
+  "type": "Dine-In",
+  "tableNumber": "T-03",
+  "customerName": "Asif Rahman",
+  "customerPhone": "+880 1711-234567",
+  "status": "Preparing",
+  "createdAt": "2026-08-16T15:40:00.000Z",
+  "items": [
+    { "dishId": "dish_01", "name": "Puran Dhaka Mutton Kacchi Biryani", "quantity": 2, "unitPrice": 650, "modifiers": ["Extra Aloo (+৳60)"], "itemTotal": 1420 }
+  ],
+  "subtotal": 1420,
+  "taxVat": 71,
+  "serviceCharge": 71,
+  "deliveryFee": 0,
+  "discount": 0,
+  "totalAmount": 1562,
+  "paymentMethod": "bKash",
+  "paymentStatus": "Paid"
+}
+```
+
+### 📅 6. `reservations` Collection
+```json
+{
+  "_id": "res_01",
+  "bookingCode": "FC-DHK-801",
+  "guestName": "Farhan Kabir",
+  "guestPhone": "+880 1712-998877",
+  "guestEmail": "farhan.kabir@gmail.com",
+  "partySize": 4,
+  "date": "2026-08-16",
+  "timeSlot": "20:00",
+  "tablePreference": "Family Lounge",
+  "assignedTable": "T-05",
+  "depositPaid": 500,
+  "status": "Confirmed",
+  "specialRequest": "Family dinner. Extra spicy kacchi biryani setup."
+}
+```
+
+### 🗑️ 7. `waste` Collection
+```json
+{
+  "_id": "wst_01",
+  "ingredientId": "ing_mutton",
+  "ingredientName": "Fresh Bengal Mutton Cuts",
+  "quantity": 300,
+  "unit": "g",
+  "reason": "Fat trimming",
+  "costLoss": 330,
+  "loggedBy": "Chef Rony",
+  "createdAt": "2026-08-16T12:00:00.000Z"
+}
+```
+
+### 👥 8. `users` Collection
+```json
+{
+  "_id": "usr_admin",
+  "username": "admin",
+  "password": "admin123",
+  "name": "Sadia Islam Dia",
+  "role": "Admin",
+  "avatar": "👩‍💼",
+  "phone": "+880 1710-000001",
+  "email": "sadia.dia@flavourcraft.bd"
+}
+```
+
+---
+
+## 6. Detailed Feature & Module Specifications
+
+### Module 1: Digital Interactive Menu & Customizer
+- **Categories**: *Kacchi & Biryani*, *Beef, Mutton & Chicken*, *Fish & Seafood*, *Kabab & Street Food*, *Drinks & Desserts*.
+- **15 Authentic Dishes**:
+  1. *Puran Dhaka Mutton Kacchi Biryani* (৳650)
+  2. *Old Dhaka Beef Tehari* (৳480)
+  3. *Biye Bari Chicken Roast with Polao* (৳520)
+  4. *Chittagong Beef Kala Bhuna* (৳680)
+  5. *Sylheti Beef with Shatkora* (৳620)
+  6. *Padma River Shorshe Ilish* (৳850)
+  7. *Golda Chingri Malai Curry* (৳950)
+  8. *Special Crispy Fuchka & Chotpoti Platter* (৳220)
+  9. *Chicken Reshmi Kabab with Butter Naan* (৳420)
+  10. *Special Naga Crispy Chicken Wings* (৳380)
+  11. *Classic Shahi Borhani* (৳150)
+  12. *Gondhoraj Lebu Shorbot* (৳120)
+  13. *Special Royal Falooda with Ice Cream* (৳280)
+  14. *Bogura Shahi Mishti Doi* (৳180)
+  15. *Sweet Rasmalai Bowl (4 pcs)* (৳220)
+- **Dietary Filter System**: *Naga Spicy (🔥)*, *100% Halal*, *Vegetarian*, *Vegan*, *Gluten-Free*.
+- **Customizer Drawer**: Modifiers (+৳60 Biryani Aloo, +৳80 Borhani, +৳140 Jali Kabab, +৳50 Naga Dip), heat level selector (*Shahi Mild*, *Dhaka Regular 🌶️*, *Naga Fiery 🔥*), and live total recalculations.
+
+### Module 2: Table Reservation Engine & Digital e-Pass
+- **Dining Zones**: *Main Dining Hall*, *Family Lounge*, *Terrace Patio*, *VIP Banquet Salon*.
+- **Time Slots & Peak Rush**: 1:00 PM, 2:30 PM, 6:00 PM, 7:30 PM (Peak), 8:00 PM (Peak), 8:30 PM (Peak), 9:00 PM (Peak), 10:00 PM.
+- **Deposit Handling**: Automatic ৳500 refundable deposit prompt during peak dinner slots (7:30 PM – 9:30 PM).
+- **Digital Guest Pass**: Generates unique Booking Code (`FC-DHK-XXXX`), seating details, dynamic QR code graphic, and simulated SMS confirmation.
+
+### Module 3: Multi-Mode Ordering & Bangladeshi Checkout
+- **Ordering Channels**:
+  - **Dine-In**: Selects table number (T-01 to VIP-2). Applies 5% VAT + 5% Service Charge.
+  - **Takeaway**: Self-pickup option. Applies 5% VAT.
+  - **Dhaka Home Delivery**: Address field input with standard ৳60 delivery fee inside Dhaka.
+- **Bangladeshi Payment Gateways**: **bKash Merchant Pay**, **Nagad / Rocket**, **Debit/Credit Cards (BRAC/City Visa)**, and **Cash on Delivery**.
+- **Promo Engine**: Validates promo codes (`DHAKA10` for 10% off, `KACCHI20` for 20% off, `GULSHAN25` for 25% VIP off).
+
+### Module 4: Customer Order Login Gate
+- Customers can add items to the cart as guests.
+- Clicking **"Proceed to Checkout"** checks `window.store.isLoggedIn()`.
+- If unauthenticated, opens the **Login/Sign-up Modal** with an informative banner.
+- Upon successful authentication, seamlessly resumes and opens the checkout modal with customer's Name, Phone, and Delivery Address pre-populated.
+
+### Module 5: Live Order Progress Tracker & Rider Radar
+- **Visual Progress Pipeline**: *Order Received* ➔ *Cooking in Handi / Dum* ➔ *Ready to Serve / Out for Delivery* ➔ *Completed*.
+- **Driver Dispatch Simulation**: Shows rider avatar, name (Mehedi Hasan #04), and delivery countdown timer (~15-20 Mins).
+- **Stage Advance Trigger**: Interactive button allowing line cooks or dispatchers to advance orders through pipeline stages in real time.
+
+### Module 6: Kitchen Display System (KDS) & Cook Recipe Specs
+- **3-Column Ticket Board**: *New Incoming*, *In Preparation*, and *Ready for Service*.
+- **Urgency Timers & Color Coding**:
+  - 🟢 Fresh (< 10 minutes)
+  - 🟡 Warning (10 – 20 minutes)
+  - 🔴 Critical / Overdue (> 20 minutes with pulsing crimson border)
+- **Web Audio Arrival Chimes**: Tactile audio notification when an order is submitted.
+- **Line Cook Recipe Spec Guide**: Clicking `Recipe` on any ticket opens an ingredient breakdown showing exact grams/units needed for preparation.
+
+### Module 7: 2D Interactive Table & Floor Plan
+- **12 Table Nodes Across 4 Zones**:
+  - *Main Dining Hall*: T-01, T-02, T-03 (Booth), T-04 (Booth)
+  - *Family Lounge*: T-05, T-06, T-07 (6-Seat Round)
+  - *Terrace Patio*: T-08 (Round), T-09, T-10
+  - *VIP Banquet Salon*: VIP-1 (8-Seat), VIP-2 (12-Seat)
+- **Status Ring Halos**: 🟢 Available, 🔵 Occupied, 🟠 Reserved, 🟡 Dirty (Needs Cleaning).
+- **Table Action Drawer**: Quick modal to change table state, inspect running POS balance in ৳ BDT, mark clean, or launch POS directly.
+
+### Module 8: Rapid Touch POS Register & Mushak-6.3 Receipts
+- **Touch Item Catalog**: Fast category tabs and live dish search.
+- **Barcode / SKU Scanner Simulator**: Click to simulate barcode scan with audible acoustic beep.
+- **Split-Bill Calculator**: Computes exact per-guest split in Taka based on party size.
+- **Mushak-6.3 Thermal Receipt Generator**: Monospaced thermal paper layout with BANANI DHAKA restaurant address, BIN number, item breakdown, VAT 5%, Service Charge 5%, and native `@media print` support.
+
+### Module 9: Inventory Management & Automatic Stock Deductions
+- **Automatic Stock Deduction Engine**: Executed inside `store.submitOrder()`. Every order item inspects recipe formula and reduces raw stocks in MongoDB using `$inc` operations.
+- **Real-Time Threshold Monitoring**: Low-stock banner triggered when ingredients dip below safety thresholds.
+- **One-Click Quick Reorder All**: Restocks all depleted items to safe levels instantly.
+
+### Module 10: Recipe Costing & Profit Margin Engine
+- Calculates raw portion cost from recipe formulas and compares against menu selling prices.
+- Computes Gross Profit Margin (৳) and Food Cost % (e.g. 24.8% Optimal vs. >35% Warning).
+
+### Module 11: Food Waste & Kitchen Spoilage Tracker
+- Kitchen staff can log wasted food with quantity, ingredient name, reason code (*Overcooked in Handi*, *Shelf Life Expired*, *Prep Spill*, *Quality Rejection*), and financial loss in Taka.
+- Automatically adjusts raw stock inventory downward upon waste submission.
+
+### Module 12: Executive Analytics & Reports
+- **7-Day Revenue Velocity Chart**: SVG bar chart displaying weekly turnover in Taka (e.g. ৳12.37 Lakh).
+- **Dhaka Peak Ordering Hours Heatmap**: Visualizes order density across Lunch (1–2:30 PM), Adda (6 PM), and Dinner Rush (8–10 PM).
+- **Top 5 Bestsellers Ranking**: Quantities sold and total revenue contribution.
+- **Database JSON Export**: Full client MongoDB backup downloadable with a single click.
+
+### Module 13: Authentication, Session & Role-Based Access Control (RBAC)
+- **Staff Operations Route Guard**: Public guest access is restricted to Menu, Reservations, and Tracking. Navigating to KDS, Floor, POS, Inventory, or Analytics shows a **"🔒 Staff Login Required"** lock screen.
+- **One-Click Demo Credentials**:
+  | Role | Name | Username / Identifier | Password | Permissions |
+  | :--- | :--- | :--- | :--- | :--- |
+  | 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access across all 8 modules |
+  | 👩‍💼 **Manager** | **Tanima Ahmed** | `manager` | `manager123` | Floor, POS, Inventory, Analytics, Menu |
+  | 💳 **Cashier** | **Shakib Al Hasan** | `cashier` | `cashier123` | POS Register, Floor Plan, Menu, Tracking |
+  | 🍳 **Kitchen** | **Chef Rony** | `kitchen` | `kitchen123` | Kitchen KDS, Recipe Specs, Inventory |
+  | 🛵 **Rider** | **Mehedi Hasan** | `rider` | `rider123` | Live Tracking, Dispatch Radar |
+  | 🍽️ **Customer** | **Asif Rahman** | `customer` / `+880 1711-234567` | `customer123` | Menu, Reservations, Order Checkout |
+- **Session Persistence**: Stores session token in `localStorage` under `flavourcraft_auth_session`. Topbar user profile chip provides profile information and instant Sign Out.
+
+---
+
+## 7. Directory Structure & File Manifest
 
 ```
-FlavourCraft/
-├── index.html                      # Main Single-Page Application shell
-├── README.md                       # Comprehensive Project Documentation
-├── implementation_plan.md          # Technical Architecture & Implementation Plan
+d:/Personal Projects/FlavourCraft/
+├── index.html                      # Single-Page Application Master HTML Shell
+├── README.md                       # Comprehensive Project User Guide & Documentation
+├── implementation_plan.md          # Technical Master Implementation Plan (This Document)
+├── .gitignore                      # Git ignore rules for logs and OS files
 ├── css/
-│   ├── variables.css               # Design tokens, color palette, gradients, glassmorphism, shadows
-│   ├── style.css                   # Core layout, top header, glass navbar, badges, toast notifications
-│   ├── menu.css                    # Luxury digital menu cards, spice meters, item customizer drawer
-│   ├── ordering.css                # Checkout, MFS/Card payment modal, live animated progress tracker
-│   ├── reservations.css            # Interactive table booking, seat selector & digital e-Pass ticket
-│   ├── kds.css                     # Kitchen Display System tickets, glowing countdown timers, audio chime alerts
-│   ├── floor.css                   # Visual 2D Table Floor Plan with live table halos & seat indicators
-│   ├── pos.css                     # Fast touch-screen POS register, barcode scanner simulator & thermal receipt
-│   ├── inventory.css               # Stock inventory, recipe margin breakdown, low-stock glow alerts
-│   ├── analytics.css               # Sales SVG charts, peak hour heatmaps, waste tracking in Taka
-│   ├── rbac.css                    # Role switcher, user badges, permission indicators
-│   └── auth.css                    # Authentication modal, demo pills, dropdown profile menu, staff lock screen
+│   ├── variables.css               # Design tokens, color palette, glassmorphism, shadows
+│   ├── style.css                   # Global styles, layout, sidebar, topbar, buttons, toasts
+│   ├── menu.css                    # Menu cards, spice meters, customizer drawer
+│   ├── ordering.css                # Cart drawer, checkout, live tracking progress
+│   ├── reservations.css            # Table booking, seat selector & digital e-Pass ticket
+│   ├── kds.css                     # Kitchen tickets, urgency countdown timers, audio chimes
+│   ├── floor.css                   # 2D table floor plan & live occupancy halos
+│   ├── pos.css                     # Touch POS register & thermal receipt printer
+│   ├── inventory.css               # Stock table, recipe margins, low-stock glow alerts
+│   ├── analytics.css               # Sales SVG charts, peak hour heatmaps, metric cards
+│   ├── rbac.css                    # Role badges & permission indicators
+│   └── auth.css                    # Authentication modal, demo pills, dropdown menu & lock screen
 └── js/
     ├── db/
-    │   ├── mongo-db.js             # Client-side MongoDB document engine (find, insertOne, updateOne, aggregate, $inc, $set)
-    │   └── seed-data.js            # Initial MongoDB collections (Menu, Recipes, Stock, Tables, Orders, Admin: Sadia Islam Dia)
-    ├── store.js                    # Reactive state, Web Audio synthesizer, Auto-deduction, Authentication engine
-    ├── app.js                      # Main controller, router, modal handlers, toast manager
+    │   ├── mongo-db.js             # Client-side MongoDB document engine (CRUD, Aggregations)
+    │   └── seed-data.js            # Initial MongoDB seed dataset (Menu, Stock, Tables, Users)
+    ├── store.js                    # Reactive state, Web Audio synthesizer, Auto-deduction, Auth engine
+    ├── app.js                      # Main application controller, router, modal & toast manager
     └── components/
-        ├── auth.js                 # Authentication controller, login modal, registration, staff lock overlay
-        ├── menu.js                 # Menu rendering, search, dietary filtering (Vegan, Halal, Spicy), customization
-        ├── reservations.js         # Table booking engine, party size, table preference, deposit calculation & SMS/Email confirmation
-        ├── ordering.js             # Multi-mode checkout (Dine-in, Takeaway, Delivery), payment simulation, live order tracking progress
-        ├── kds.js                  # Kitchen Display System tickets, countdown timers, sound alerts, recipe popup, one-click bumps
-        ├── floor.js                # Interactive 2D restaurant floor plan, table statuses (Available, Occupied, Reserved, Dirty)
-        ├── pos.js                  # POS terminal, quick lookup, barcode scanner, split billing, VAT/service calculation, thermal receipt printer
-        ├── inventory.js            # Inventory stock tracker, recipe costing & margin analysis, auto stock deduction, waste logging
-        ├── analytics.js            # Visual interactive analytics (revenue trends, peak hours, bestsellers, profit margins in BDT)
-        └── rbac.js                 # Role-Based Access Control (Admin, Manager, Cashier, Kitchen Chef, Delivery Rider)
+        ├── auth.js                 # Authentication controller, login modal, registration & staff gate
+        ├── menu.js                 # Menu component, item customizer & dietary filter
+        ├── reservations.js         # Table reservations & digital ticket generator
+        ├── ordering.js             # Checkout with login gate, payment gateways & live tracker
+        ├── kds.js                  # Kitchen Display System & cook recipe specs
+        ├── floor.js                # Visual 2D floor & table management
+        ├── pos.js                  # POS register, split billing & thermal receipts
+        ├── inventory.js            # Stock inventory, recipe costing & waste logs
+        ├── analytics.js            # Analytics charts & JSON DB export
+        └── rbac.js                 # Role-based permissions & navigation filtering
 ```
 
 ---
 
-## 🚀 Detailed Feature Breakdown
+## 8. End-to-End Quality Verification Protocol
 
-### 1. Customer-Facing Portal
-- **Digital Interactive Menu (Familiar & Beloved Bangladeshi Dishes)**:
-  - Filter by category (*Kacchi & Biryani*, *Beef, Mutton & Chicken*, *Fish & Seafood*, *Kabab & Street Food*, *Drinks & Desserts*).
-  - Popular Dishes: *Puran Dhaka Mutton Kacchi Biryani (৳650)*, *Old Dhaka Beef Tehari (৳480)*, *Biye Bari Chicken Roast with Polao (৳520)*, *Chittagong Beef Kala Bhuna (৳680)*, *Padma River Shorshe Ilish (৳850)*, *Golda Chingri Malai Curry (৳950)*, *Special Crispy Fuchka & Chotpoti (৳220)*, *Chicken Reshmi Kabab (৳420)*, *Naga Wings (৳380)*, *Shahi Borhani (৳150)*, *Falooda (৳280)*, *Bogura Mishti Doi (৳180)*, *Rasmalai (৳220)*.
-  - Dietary pill tags: *Naga Spicy (🔥)*, *100% Halal*, *Vegetarian*, *Vegan*, *Gluten-Free*.
-  - Instant live search with highlighted matches.
-  - Item customizer drawer: *Extra Biryani Aloo (+৳60)*, *Cold Borhani (+৳80)*, *Mutton Jali Kabab (+৳140)*, *Naga Fire Dip (+৳50)*, spice heat selector (*Shahi Mild*, *Dhaka Regular 🌶️*, *Naga Fiery 🔥*).
-- **Table Reservation System**:
-  - Date & Time slot picker, party size (1 to 12+ guests), seating zones (*Main Dining Hall*, *Family Lounge*, *Terrace Patio*, *VIP Banquet Salon*).
-  - ৳500 refundable deposit handling during peak dinner rush (7:30 PM – 9:30 PM).
-  - Automated simulated SMS & Email confirmation with unique Booking ID & QR code.
-- **Ordering & Checkout with Customer Authentication Gate**:
-  - Order types: **Dine-In** (with table selection), **Takeaway**, and **Dhaka Home Delivery** (with ৳60 delivery fee).
-  - **Login Gate**: Intercepts unauthenticated checkout with login/registration modal, then automatically opens checkout with customer's saved name, phone number, and address pre-populated.
-  - Integrated payment modal supporting **bKash Merchant Pay**, **Nagad / Rocket**, **Debit/Credit Cards (BRAC/City Bank Visa)**, and **Cash on Delivery**.
-  - Promo code discounts (`DHAKA10`, `KACCHI20`, `GULSHAN25`).
-- **Live Order Tracking**:
-  - Interactive multi-stage visual timeline (*Order Received* ➔ *Cooking on Dum / Handi* ➔ *Ready to Serve / Out for Delivery* ➔ *Completed*).
-  - Estimated preparation countdown timer and simulated delivery rider avatar (Mehedi Hasan #04).
+### Test Case 1: Customer Order Login Gate
+1. Open application in browser without logging in (Guest state).
+2. Browse menu, customize *Puran Dhaka Mutton Kacchi Biryani* with Extra Aloo (+৳60), and add to cart.
+3. Open Cart Drawer and click **"Proceed to Checkout"**.
+4. **Expected Result**: System intercepts the checkout, displays a warning toast, and opens the Authentication Modal with the *"Login Required for Checkout"* banner.
+5. Log in using Customer credentials (`customer` / `customer123`).
+6. **Expected Result**: Checkout modal automatically opens with customer name (*Asif Rahman*), phone (*+880 1711-234567*), and Banani delivery address pre-filled.
 
----
+### Test Case 2: Staff Route Access Guard
+1. As an unauthenticated guest or logged-in Customer, click **"Kitchen Display (KDS)"** or **"POS & Billing"** on the sidebar.
+2. **Expected Result**: View is locked, rendering the **"🔒 Staff Login Required"** lock overlay.
+3. Click *"Sign In with Staff Credentials"* and click the **Sadia (Admin)** one-click demo pill.
+4. **Expected Result**: System authenticates as Admin Sadia Islam Dia, unlocks all 8 operational views, and displays full navigation.
 
-### 2. Floor & Kitchen Operations
-- **Kitchen Display System (KDS)**:
-  - Digital order ticket queue categorized by status (*New*, *In Preparation*, *Ready to Serve*).
-  - Color-coded urgency timers:
-    - 🟢 Normal (< 10 mins)
-    - 🟡 Warning (10 - 20 mins)
-    - 🔴 Critical / Overdue (> 20 mins) with flashing pulsing borders.
-  - Web Audio synthetic chime alerts when new orders arrive.
-  - **Recipe Formulation Modal**: Line cooks can click *Recipe* on any ticket to view exact ingredient proportions in grams/milliliters (*Dinajpur Chinigura rice*, *Baghabari pure ghee*, *Padma Ilish*, *Bengal Beef & Mutton*, *Mustard oil*).
-  - One-click bump buttons to advance order stages in real time.
-- **Visual Table & Floor Management**:
-  - Interactive 2D restaurant layout map across 4 dining zones.
-  - Status indicators: 🟢 Available, 🔵 Occupied, 🟠 Reserved, 🟡 Dirty (Needs Cleaning).
-  - Quick action drawer: Seat guests, inspect running balance in Taka, mark table clean, assign server, or launch POS.
-- **POS & Billing (Point of Sale)**:
-  - Rapid search by name or barcode/SKU simulation (`KAC-101`, `TEH-102`, `BEEF-201`, `FISH-301`).
-  - Quick-touch category grid and customizable modifiers.
-  - Split-bill calculator (per guest share in Taka).
-  - Automatic **5% Mushak-6.3 VAT** and **5% Service Charge** calculations.
-  - **Mushak-6.3 Thermal Receipt Generator**: Monospaced thermal paper receipt format with authentic tear styling and one-click `window.print()` support.
+### Test Case 3: Automatic Stock Deduction & Low-Stock Alerts
+1. Note current stock of *Fresh Bengal Mutton Cuts* (e.g. 18,500g).
+2. Place a Dine-In order for 2x *Puran Dhaka Mutton Kacchi Biryani*.
+3. **Expected Result**: Stock automatically reduces by 500g mutton, 360g Chinigura rice, and 60g ghee.
+4. Navigate to **Inventory & Recipes** to verify updated stock numbers in the real-time data table.
 
----
+### Test Case 4: Rapid POS Register & Mushak-6.3 Receipt
+1. Navigate to **POS & Billing**.
+2. Click **"Scan SKU Barcode"** or tap menu items to add to the register ticket.
+3. Apply a 10% Member discount and select **Split Bill** (e.g. 3 guests). Verify individual share in Taka.
+4. Click **"Settle & Print Receipt"**.
+5. **Expected Result**: Generates authentic Mushak-6.3 Tax Invoice formatted for Banani, Dhaka with 5% VAT, 5% Service Charge, and printable layout.
 
-### 3. Admin & Inventory Control
-- **Recipe Costing & Profit Margins**:
-  - Direct link between menu items and raw ingredients (e.g. 1 Kacchi Biryani = 250g Mutton, 180g Chinigura rice, 30g Ghee, 1 Aloo, 15g Aloo Bukhara).
-  - **Automatic Stock Deduction Engine**: Whenever an order is confirmed, inventory stocks are reduced proportionally in MongoDB via `$inc` mutations.
-  - Food Cost % and Profit Margin calculation for every dish in Taka.
-- **Low-Stock Alerts**:
-  - Configurable minimum threshold warnings for ingredients.
-  - Urgent alert badges and quick-reorder action.
-- **Analytics & Reports**:
-  - Interactive charts for 7-day revenue in Taka (৳12.37 Lakh turnover), monthly sales trends, peak ordering hours heatmap, top 5 bestsellers, and table turnover rate.
-  - Food waste logger with reason codes (spoilage, burned, expired) and financial loss calculation in Taka.
-- **Authentication & Role-Based Access Control (RBAC)**:
-  - **Staff Operations Gate**: Restricts operational views behind authentication.
-  - **One-Click Demo Credentials**:
-    - 👑 **Admin**: **Sadia Islam Dia** (`admin` / `admin123`)
-    - 👩‍💼 **Manager**: **Tanima Ahmed** (`manager` / `manager123`)
-    - 💳 **Cashier**: **Shakib Al Hasan** (`cashier` / `cashier123`)
-    - 🍳 **Kitchen**: **Chef Rony** (`kitchen` / `kitchen123`)
-    - 🛵 **Rider**: **Mehedi Hasan** (`rider` / `rider123`)
-    - 🍽️ **Customer**: **Asif Rahman** (`customer` / `customer123`)
-  - Persistent login sessions via `localStorage` with dropdown profile menu & Sign Out action.
-
----
-
-## 🔒 Verification & Quality Checklist
-
-1. **Database & Data Engine**: `mongo-db.js` initializes with rich collections and persists queries, updates, and aggregations correctly in `localStorage`.
-2. **Customer Flow Testing**: Menu filtering, item customization, adding to cart, placing orders with login gate enforcement, and tracking live progression.
-3. **KDS & Floor Plan Testing**: Trigger an order and verify real-time arrival in KDS with urgency timer, sound alert, recipe spec popup, and automatic table occupancy update.
-4. **Inventory Auto-Deduction**: Confirm that checking out an order reduces the corresponding ingredient quantities and triggers low-stock warnings when below threshold.
-5. **POS & Billing Testing**: Item search, applying promo discounts, calculating Mushak-6.3 VAT/service charge, and generating printable thermal receipts.
-6. **Authentication & Access Gate**: Verify login gate prompts for customer checkout, staff lock screen protects operational routes, and demo quick-login buttons work seamlessly.
+### Test Case 5: Kitchen KDS Bump Stages & Audio Chimes
+1. Submit an order from POS or customer checkout.
+2. **Expected Result**: Audio chime rings, and new ticket appears in KDS *New* column.
+3. Click *Start Cooking* ➔ moves to *In Preparation*. Click *Recipe* ➔ displays portion metrics. Click *Mark Ready* ➔ moves to *Ready to Serve*.
