@@ -1,0 +1,283 @@
+/* ==========================================================================
+   FlavourCraft - Kitchen Display System (KDS) Stylesheet
+   ========================================================================== */
+
+.kds-top-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.kds-stats-strip {
+  display: flex;
+  gap: 16px;
+}
+
+.kds-stat-pill {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kds-stat-pill .count {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.kds-stat-pill.new .count { color: var(--color-info); }
+.kds-stat-pill.prep .count { color: var(--primary-light); }
+.kds-stat-pill.ready .count { color: var(--color-success); }
+.kds-stat-pill.overdue .count { color: var(--color-danger); }
+
+.kds-audio-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.kds-audio-toggle.active {
+  color: var(--color-success);
+  border-color: var(--color-success-border);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+/* KDS Kanban Board */
+.kds-board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  min-height: calc(100vh - 220px);
+}
+
+@media (max-width: 1080px) {
+  .kds-board-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kds-column {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.kds-column-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface-elevated);
+}
+
+.kds-column-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kds-ticket-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* KDS Order Chit / Ticket */
+.kds-ticket {
+  background: var(--bg-surface-card);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.kds-ticket.urgency-fresh {
+  border-color: var(--color-success);
+}
+
+.kds-ticket.urgency-warning {
+  border-color: var(--color-warning);
+}
+
+.kds-ticket.urgency-overdue {
+  border-color: var(--color-danger);
+  animation: pulse-danger-border 2s infinite;
+}
+
+@keyframes pulse-danger-border {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.kds-ticket-header {
+  padding: 12px 16px;
+  background: var(--bg-surface-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.kds-ticket-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kds-order-num {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.kds-type-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.kds-timer-badge {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.urgency-fresh .kds-timer-badge { color: var(--color-success); }
+.urgency-warning .kds-timer-badge { color: var(--color-warning); }
+.urgency-overdue .kds-timer-badge { color: var(--color-danger); font-weight: 800; }
+
+.kds-ticket-items {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.kds-ticket-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.kds-item-qty {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--primary-light);
+  min-width: 24px;
+}
+
+.kds-item-details {
+  flex: 1;
+}
+
+.kds-item-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.kds-item-modifiers {
+  font-size: 12px;
+  color: var(--text-amber);
+  margin-top: 2px;
+}
+
+.kds-recipe-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 3px 6px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.kds-recipe-btn:hover {
+  color: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.kds-ticket-footer {
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.8);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 8px;
+}
+
+.bump-btn {
+  flex: 1;
+  padding: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: var(--transition-fast);
+  border: none;
+}
+
+.bump-btn.start-prep {
+  background: var(--primary-gradient);
+  color: #000;
+}
+
+.bump-btn.mark-ready {
+  background: var(--color-success);
+  color: #000;
+}
+
+.bump-btn.complete {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  color: #fff;
+}
+
+.bump-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}

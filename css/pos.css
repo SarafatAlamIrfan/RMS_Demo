@@ -1,0 +1,375 @@
+/* ==========================================================================
+   FlavourCraft - POS & Thermal Billing Stylesheet
+   ========================================================================== */
+
+.pos-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+  height: calc(100vh - 140px);
+}
+
+@media (max-width: 1100px) {
+  .pos-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+/* POS Left: Catalog & Search */
+.pos-catalog-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  overflow: hidden;
+}
+
+.pos-search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pos-search-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+}
+
+.pos-search-input-wrap input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+
+.barcode-scanner-btn {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--primary-light);
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.barcode-scanner-btn:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--primary);
+}
+
+/* POS Categories Row */
+.pos-cat-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.pos-cat-btn {
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+
+.pos-cat-btn.active {
+  background: var(--primary-gradient);
+  color: #000;
+  font-weight: 700;
+}
+
+/* POS Items Grid */
+.pos-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
+}
+
+.pos-item-btn {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  position: relative;
+  min-height: 120px;
+  justify-content: center;
+}
+
+.pos-item-btn:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  background: var(--bg-surface-hover);
+}
+
+.pos-item-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.pos-item-price {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--primary-light);
+}
+
+.pos-item-sku {
+  font-size: 10px;
+  color: var(--text-muted);
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-family: var(--font-mono);
+}
+
+/* POS Right: Register Ticket & Billing */
+.pos-ticket-panel {
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pos-ticket-header {
+  padding: 16px 20px;
+  background: var(--bg-surface-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pos-table-selector {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  color: var(--primary-light);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 8px;
+  outline: none;
+}
+
+.pos-ticket-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pos-ticket-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.pos-row-info {
+  flex: 1;
+}
+
+.pos-row-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.pos-row-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pos-qty-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pos-qty-btn:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+.pos-ticket-calculations {
+  padding: 16px 20px;
+  background: rgba(15, 23, 42, 0.85);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pos-calc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.pos-calc-row.grand-total {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  border-top: 1px dashed var(--border-medium);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.pos-calc-row.grand-total .amount {
+  color: var(--primary-light);
+}
+
+.pos-actions-grid {
+  padding: 16px 20px;
+  background: #0f172a;
+  border-top: 1px solid var(--border-subtle);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* Authentic Thermal Receipt Modal & Print Format */
+.thermal-receipt-wrap {
+  width: 320px;
+  margin: 0 auto;
+  background: #fff;
+  color: #000;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  padding: 24px 18px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+  position: relative;
+}
+
+.thermal-receipt-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: radial-gradient(circle, transparent, transparent 50%, #fff 50%, #fff 100%);
+  background-size: 16px 16px;
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.receipt-brand {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.receipt-divider {
+  border-bottom: 1px dashed #000;
+  margin: 10px 0;
+}
+
+.receipt-double-divider {
+  border-bottom: 2px solid #000;
+  margin: 10px 0;
+}
+
+.receipt-items-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+}
+
+.receipt-items-table th {
+  text-align: left;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #000;
+}
+
+.receipt-items-table td {
+  padding: 4px 0;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin: 3px 0;
+}
+
+.receipt-row.bold {
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.receipt-footer {
+  text-align: center;
+  font-size: 11px;
+  margin-top: 16px;
+}
+
+/* Print Rules */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .thermal-receipt-wrap, .thermal-receipt-wrap * {
+    visibility: visible;
+  }
+  .thermal-receipt-wrap {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none;
+  }
+}

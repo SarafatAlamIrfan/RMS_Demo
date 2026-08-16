@@ -1,0 +1,425 @@
+/* ==========================================================================
+   FlavourCraft - Menu & Item Customizer Styles
+   ========================================================================== */
+
+.menu-header-banner {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.8) 100%),
+              radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 50%);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 36px 40px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.menu-header-banner::before {
+  content: 'FLAVOUR';
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  font-family: var(--font-heading);
+  font-size: 110px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.02);
+  letter-spacing: 4px;
+  pointer-events: none;
+}
+
+.menu-header-banner h1 {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.menu-header-banner p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  max-width: 600px;
+}
+
+/* Category Navigation Pills */
+.category-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  scrollbar-width: thin;
+}
+
+.category-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+
+.category-pill:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-main);
+  border-color: var(--border-medium);
+}
+
+.category-pill.active {
+  background: var(--primary-gradient);
+  color: #000;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+
+/* Dietary & Search Filters Bar */
+.menu-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.dietary-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dietary-tag-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: var(--bg-glass-input);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dietary-tag-btn:hover {
+  color: var(--text-main);
+  border-color: var(--border-medium);
+}
+
+.dietary-tag-btn.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--color-success);
+  border-color: var(--color-success-border);
+}
+
+.dietary-tag-btn.active.spicy {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+
+.dietary-tag-btn.active.halal {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--primary-light);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+/* Menu Grid */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.menu-card {
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: var(--transition-normal);
+  backdrop-filter: blur(8px);
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-primary);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+.menu-card-img-wrap {
+  height: 180px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #1e293b;
+}
+
+.menu-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.menu-card:hover .menu-card-img {
+  transform: scale(1.06);
+}
+
+.menu-card-badge-container {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.menu-card-fav-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.menu-card-fav-btn:hover {
+  color: var(--color-danger);
+  transform: scale(1.1);
+}
+
+.menu-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.menu-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.menu-card-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.menu-card-price {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-light);
+  white-space: nowrap;
+}
+
+.menu-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.menu-card-ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.ingredient-chip {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.menu-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+  gap: 10px;
+}
+
+.spice-meter {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--color-danger);
+}
+
+.add-btn {
+  background: var(--primary-gradient);
+  color: #000;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-fast);
+}
+
+.add-btn:hover {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Customizer Drawer / Modal */
+.customizer-dialog {
+  max-width: 650px;
+}
+
+.customizer-item-preview {
+  display: flex;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 20px;
+}
+
+.customizer-img {
+  width: 110px;
+  height: 110px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
+.customizer-meta h3 {
+  font-size: 20px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.customizer-meta p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.customizer-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--primary);
+  margin: 16px 0 10px 0;
+}
+
+.modifier-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.modifier-option {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.modifier-option:hover {
+  border-color: var(--border-medium);
+}
+
+.modifier-option.selected {
+  border-color: var(--primary);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.modifier-option input {
+  margin-right: 8px;
+  accent-color: var(--primary);
+}
+
+.modifier-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+
+.quantity-stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  width: fit-content;
+}
+
+.stepper-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.stepper-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary);
+}
+
+.stepper-val {
+  font-weight: 700;
+  font-size: 16px;
+  min-width: 24px;
+  text-align: center;
+}
