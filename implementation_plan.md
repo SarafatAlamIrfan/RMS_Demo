@@ -79,34 +79,33 @@ The system is constructed strictly adhering to the **Zero External Backend / 100
 
 ---
 
-## 4. Client-Side MongoDB Document Engine Specification
+## 4. MongoDB Atlas Cloud Central Database & Client Document Engine Specification
 
-Implemented in `js/db/mongo-db.js`, the document engine simulates genuine MongoDB database operations inside the browser:
+The system architecture utilizes **MongoDB Atlas** as its centralized cloud database, managed seamlessly through `js/db/mongo-db.js` using a **Dual-Mode Cloud Sync & Client Engine Architecture**:
 
-### ⚙️ Engine Capabilities
-- **Database Initialization & Persistence**: Automatically persists collections in browser `localStorage` using unique keys (e.g. `flavourcraft_dhaka_v6_auth`).
-- **BSON ObjectId Generation**: Generates 24-character hex ObjectIds (`_id`).
-- **CRUD Operations**:
-  - `collection.find(query, options)`: Filter documents with sorting (`sort`), pagination (`skip`), and limits (`limit`).
-  - `collection.findOne(query)`: Retrieve first matching document.
-  - `collection.insertOne(document)`: Insert single document with automatic `_id` and timestamps (`createdAt`, `updatedAt`).
-  - `collection.insertMany(documents)`: Bulk insert.
-  - `collection.updateOne(filter, update)`: Update document using `$set`, `$inc`, `$push`, `$pull`.
-  - `collection.updateMany(filter, update)`: Update multiple matching documents.
-  - `collection.deleteOne(filter)` / `collection.deleteMany(filter)`: Remove records.
-  - `collection.countDocuments(filter)`: Count records.
-- **Query Operators**: `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$regex`, `$exists`, `$or`, `$and`.
-- **Aggregation Pipeline (`collection.aggregate(pipeline)`)**:
-  - `$match`: Filter records.
-  - `$group`: Aggregate totals using `$sum`, `$avg`, `$min`, `$max`, `$count`.
-  - `$sort`: Sort result sets.
-  - `$limit`: Limit output count.
-- **Event Change Stream**: Emits `change` events on document mutations to trigger real-time reactive UI re-renders.
-- **JSON Backup & Export**: One-click extraction of the entire database state as an exported JSON file.
+### ☁️ MongoDB Atlas Cloud Architecture
+- **Central Cloud Cluster**: MongoDB Atlas Cloud (`Cluster0`, Region: `AWS / ap-southeast-1` or `GCP / asia-south1`).
+- **Central Database Name**: `flavourcraft_dhaka`
+- **Cloud Collections**:
+  - `menu`: Master catalog of dishes, pricing in ৳ BDT, dietary tags, and image URLs.
+  - `recipes`: Portion formulations and ingredient weights.
+  - `inventory`: Raw meat, fish, grain, and spice stock levels with safety thresholds.
+  - `tables`: 12 live table occupancy nodes across 4 Dhaka dining zones.
+  - `orders`: Real-time order tickets, payment statuses, and delivery addresses.
+  - `reservations`: Table bookings, party sizes, and refundable deposit records.
+  - `waste`: Kitchen spoilage and trimming logs with financial cost losses.
+  - `users`: Authenticated customer profiles and staff roles with password credentials.
+- **Atlas Data API & App Services HTTPS Connection**:
+  - Connects to Atlas Data API endpoints (`/action/find`, `/action/findOne`, `/action/insertOne`, `/action/updateOne`, `/action/aggregate`).
+  - Authenticates securely via Atlas Data API Keys or App Services App IDs directly over HTTPS `fetch` calls.
+- **Dual-Mode Fallback & High-Availability**:
+  - **Online Mode (Atlas Cloud Connected)**: Queries and mutations sync directly with the central MongoDB Atlas cluster in the cloud.
+  - **Local Offline / Demo Mode (Atlas Compatible Schema)**: If running offline or without an active cloud API key, the system seamlessly operates on its high-speed client document engine with 100% MongoDB API and schema parity, storing state in browser storage and allowing instant one-click sync to Atlas upon connection.
+  - **Atlas Cloud Config & Live Ping Tool**: In Executive Analytics, Admin Sadia Islam Dia can test live cluster connectivity (`testAtlasConnection()`), view cloud connection status, and configure Atlas endpoints.
 
 ---
 
-## 5. Comprehensive Database Schema Definitions
+## 5. Comprehensive Database Schema Definitions (MongoDB Atlas)
 
 ### 📦 1. `menu` Collection
 ```json

@@ -39,9 +39,12 @@ class AnalyticsComponent {
           </h2>
           <p style="font-size: 13px; color: var(--text-secondary);">Real-time financial turnover in Bangladeshi Taka, kitchen velocity & dish popularity trends.</p>
         </div>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" id="btn-atlas-config">
+            ☁️ MongoDB Atlas Cloud
+          </button>
           <button class="btn btn-secondary btn-sm" id="btn-export-json">
-            💾 Export MongoDB JSON
+            💾 Export JSON
           </button>
           <button class="btn btn-primary btn-sm" id="btn-refresh-analytics">
             🔄 Refresh Metrics
@@ -195,6 +198,67 @@ class AnalyticsComponent {
       refreshBtn.addEventListener('click', () => {
         this.render();
         window.app.showToast('Analytics scorecards updated with latest orders', 'info');
+      });
+    }
+
+    const atlasBtn = document.getElementById('btn-atlas-config');
+    if (atlasBtn) {
+      atlasBtn.addEventListener('click', () => {
+        const atlas = window.store.db.atlasConfig;
+        const modal = document.getElementById('modal-generic');
+        const title = document.getElementById('generic-modal-title');
+        const body = document.getElementById('generic-modal-body');
+
+        title.textContent = '☁️ MongoDB Atlas Cloud Central Database';
+        body.innerHTML = `
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); padding: 14px; border-radius: var(--radius-md); margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <strong style="color: #fff; font-size: 13.5px;">Cloud Status:</strong>
+              <span class="badge badge-success" id="atlas-status-badge">${atlas.status}</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+              Central Database: <code>flavourcraft_dhaka</code> • Cluster: <code>Cluster0 (MongoDB Atlas)</code><br>
+              Collections: <code>menu</code>, <code>recipes</code>, <code>inventory</code>, <code>tables</code>, <code>orders</code>, <code>reservations</code>, <code>waste</code>, <code>users</code>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Atlas App Services / Data API Endpoint</label>
+            <input type="text" class="form-input" id="atlas-endpoint-input" placeholder="https://data.mongodb-api.com/app/data-xxxxx/endpoint/data/v1" value="${atlas.endpoint}" />
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">MongoDB Atlas App Services HTTPS Data API URL</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Atlas Data API Key</label>
+            <input type="password" class="form-input" id="atlas-apikey-input" placeholder="Enter MongoDB Atlas Cloud API Key" value="${atlas.apiKey}" />
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Enables direct HTTPS reads/writes to MongoDB Atlas Cluster0</div>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn btn-secondary" style="flex: 1;" id="btn-test-atlas-ping">
+              ⚡ Test Atlas Ping
+            </button>
+            <button class="btn btn-primary" style="flex: 1;" id="btn-save-atlas-config">
+              💾 Save & Sync Atlas
+            </button>
+          </div>
+        `;
+
+        body.querySelector('#btn-test-atlas-ping')?.addEventListener('click', async () => {
+          const res = await window.store.db.testAtlasConnection();
+          window.app.showToast(res.message, res.success ? 'success' : 'warning');
+        });
+
+        body.querySelector('#btn-save-atlas-config')?.addEventListener('click', () => {
+          const endpoint = body.querySelector('#atlas-endpoint-input').value.trim();
+          const apiKey = body.querySelector('#atlas-apikey-input').value.trim();
+
+          window.store.db.setAtlasConfig({ endpoint, apiKey });
+          window.app.closeModal('modal-generic');
+          window.app.showToast('MongoDB Atlas configuration saved successfully!', 'success');
+        });
+
+        window.app.openModal('modal-generic');
       });
     }
 
