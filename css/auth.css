@@ -126,43 +126,116 @@
   max-width: 520px;
 }
 
-.auth-modal-tabs {
+/* One-Click Quick Login Demo Bar */
+.demo-quick-login-box {
+  background: #fff5f7;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+
+.demo-quick-login-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--heading-color);
+  margin-bottom: 8px;
+}
+
+.demo-pills-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 24px;
-  background: var(--bg-surface-elevated);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+@media (max-width: 520px) {
+  .demo-pills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.demo-pill-btn {
+  background: #ffffff;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--heading-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.demo-pill-btn:hover {
+  background: #fff1f2;
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Segmented Auth Navigation Tabs */
+.auth-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: #f1f5f9;
   padding: 4px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
+  margin-bottom: 20px;
 }
 
-.auth-modal-tab {
-  padding: 10px;
+.auth-tab-btn {
+  padding: 9px 8px;
   text-align: center;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--text-secondary);
   cursor: pointer;
+  border: none;
+  background: transparent;
   transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.auth-modal-tab:hover {
+.auth-tab-btn:hover {
   color: var(--heading-color);
 }
 
-.auth-modal-tab.active {
+.auth-tab-btn.active {
   background: #ffffff;
   color: var(--primary);
+  font-weight: 800;
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-subtle);
 }
 
+/* Staff Quick Select Grid in Staff Tab */
 .staff-quick-select-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-bottom: 20px;
+}
+
+@media (max-width: 520px) {
+  .staff-quick-select-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .staff-quick-card {
@@ -189,17 +262,17 @@
 }
 
 .staff-quick-avatar {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .staff-quick-name {
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--heading-color);
 }
 
 .staff-quick-role {
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--primary);
   font-weight: 700;
 }
