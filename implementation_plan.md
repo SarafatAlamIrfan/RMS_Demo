@@ -117,11 +117,11 @@ Located in `api/`:
 - **Dietary Filter System**: *Naga Spicy (🔥)*, *100% Halal*, *Vegetarian*, *Vegan*, *Gluten-Free*.
 - **Customizer Drawer**: Modifiers (+৳60 Biryani Aloo, +৳80 Borhani, +৳140 Jali Kabab, +৳50 Naga Dip), heat level selector (*Shahi Mild*, *Dhaka Regular 🌶️*, *Naga Fiery 🔥*), and live total recalculations.
 
-### Module 2: Table Reservation Engine & Digital e-Pass
-- **Dining Zones**: *Main Dining Hall*, *Family Lounge*, *Terrace Patio*, *VIP Banquet Salon*.
+### Module 2: Table Reservation Engine & Digital Pass
+- **Restaurant Architecture**: Single authentic dining venue & floor.
 - **Time Slots & Peak Rush**: 1:00 PM, 2:30 PM, 6:00 PM, 7:30 PM (Peak), 8:00 PM (Peak), 8:30 PM (Peak), 9:00 PM (Peak), 10:00 PM.
 - **Deposit Handling**: Automatic ৳500 refundable deposit prompt during peak dinner slots (7:30 PM – 9:30 PM).
-- **Digital Guest Pass**: Generates unique Booking Code (`FC-DHK-XXXX`), seating details, instant verification badge, and simulated SMS confirmation.
+- **Digital Guest Pass**: Generates unique Booking Code (`FC-DHK-XXXX`), guest party size, and instant confirmation pass.
 
 ### Module 3: Multi-Mode Ordering & Bangladeshi Checkout
 - **Ordering Channels**:
