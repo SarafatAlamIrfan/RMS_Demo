@@ -63,54 +63,55 @@
 }
 
 /* ==========================================================================
-   2. LIGHT THEME VARIABLES (Crisp Porcelain & Saffron Palette)
+   2. LIGHT THEME VARIABLES (Pinkish Red & Saffron Palette)
    ========================================================================== */
 [data-theme="light"] {
   /* Surface & Canvas Colors */
-  --bg-canvas: #f8fafc;
+  --bg-canvas: #fff5f7;
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #f1f5f9;
+  --bg-surface-elevated: #fff1f2;
   --bg-card: #ffffff;
-  --bg-card-hover: #f8fafc;
-  --bg-glass: rgba(255, 255, 255, 0.90);
+  --bg-card-hover: #fff8f8;
+  --bg-glass: rgba(255, 255, 255, 0.95);
   --bg-input: #ffffff;
   --bg-sidebar: #ffffff;
-  --bg-topbar: rgba(248, 250, 252, 0.90);
+  --bg-topbar: rgba(255, 245, 247, 0.92);
 
   /* Typography Colors */
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
-  --text-inverse: #f8fafc;
+  --text-inverse: #ffffff;
   --heading-color: #0f172a;
 
   /* Borders & Dividers */
-  --border-subtle: #e2e8f0;
-  --border-medium: #cbd5e1;
-  --border-focus: #d97706;
+  --border-subtle: #fecdd3;
+  --border-medium: #fda4af;
+  --border-focus: #e11d48;
 
-  /* Brand Accents (High Contrast Rich Amber) */
-  --primary: #d97706;
-  --primary-light: #b45309;
-  --primary-dark: #92400e;
-  --primary-glow: rgba(217, 119, 6, 0.20);
+  /* Brand Accents (Vibrant Pinkish Red & Warm Saffron) */
+  --primary: #e11d48;
+  --primary-light: #f43f5e;
+  --primary-dark: #be123c;
+  --primary-glow: rgba(225, 29, 72, 0.22);
+  --accent-saffron: #f59e0b;
 
   /* Semantic State Colors */
   --color-success: #059669;
   --color-success-bg: #ecfdf5;
-  --color-warning: #d97706;
+  --color-warning: #f59e0b;
   --color-warning-bg: #fffbeb;
-  --color-danger: #dc2626;
-  --color-danger-bg: #fef2f2;
+  --color-danger: #e11d48;
+  --color-danger-bg: #fff1f2;
   --color-info: #0284c7;
   --color-info-bg: #f0f9ff;
 
   /* Elevation Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.10);
-  --shadow-xl: 0 20px 35px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 0 16px rgba(217, 119, 6, 0.25);
+  --shadow-sm: 0 1px 3px rgba(225, 29, 72, 0.06);
+  --shadow-md: 0 4px 14px rgba(225, 29, 72, 0.08);
+  --shadow-lg: 0 10px 25px rgba(225, 29, 72, 0.10);
+  --shadow-xl: 0 20px 35px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 16px rgba(225, 29, 72, 0.25);
 
   /* Glassmorphism Filter */
   --glass-blur: blur(12px);
