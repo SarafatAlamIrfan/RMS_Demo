@@ -258,3 +258,53 @@
   flex-direction: column;
   gap: 10px;
 }
+
+/* Light Mode Overrides for Auth UI */
+[data-theme="light"] .auth-dropdown-menu {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .dropdown-user-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .dropdown-item {
+  color: #475569;
+}
+
+[data-theme="light"] .dropdown-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="light"] .staff-lock-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .staff-lock-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .auth-tab-btn {
+  color: #64748b;
+}
+
+[data-theme="light"] .auth-tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+[data-theme="light"] .role-pill-btn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme="light"] .role-pill-btn:hover {
+  background: #e2e8f0;
+}
+

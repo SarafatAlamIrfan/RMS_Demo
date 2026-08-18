@@ -271,13 +271,50 @@
   color: #000;
 }
 
-.bump-btn.complete {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-medium);
-  color: #fff;
-}
-
 .bump-btn:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
 }
+
+/* Light Mode Overrides for KDS */
+[data-theme="light"] .kds-column {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .kds-stat-pill {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .kds-ticket-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .kds-ticket-header {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .kds-order-num {
+  color: #0f172a;
+}
+
+[data-theme="light"] .kds-item-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .kds-ticket-footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .bump-btn.complete {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+

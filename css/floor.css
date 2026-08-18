@@ -208,3 +208,29 @@
   font-weight: 800;
   color: #000;
 }
+
+/* Light Mode Overrides for Floor Plan */
+[data-theme="light"] .floor-legend {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .floor-canvas-wrapper {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .floor-zone-header {
+  color: #0f172a;
+}
+
+[data-theme="light"] .table-node {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .table-node-num {
+  color: #0f172a;
+}
+

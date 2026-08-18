@@ -102,10 +102,13 @@
           <div class="topbar-search">
             <span>🔍</span>
             <input type="text" id="global-search-input" placeholder="Search dishes, ingredients, tables..." />
-          </div>
-        </div>
-
         <div class="topbar-right">
+          <!-- Light / Dark Theme Switcher -->
+          <button class="theme-toggle-btn" id="btn-theme-toggle" title="Toggle Light / Dark Mode">
+            <span class="theme-icon" id="theme-toggle-icon">☀️</span>
+            <span id="theme-toggle-text">Light Mode</span>
+          </button>
+
           <!-- Dynamic Auth Status & Login Button -->
           <div id="topbar-auth-container"></div>
 
@@ -241,6 +244,7 @@
   <!-- JavaScript Scripts -->
   <script src="js/db/mongo-db.js"></script>
   <script src="js/db/seed-data.js"></script>
+  <script src="js/api-client.js"></script>
   <script src="js/store.js"></script>
   <script src="js/components/menu.js"></script>
   <script src="js/components/reservations.js"></script>

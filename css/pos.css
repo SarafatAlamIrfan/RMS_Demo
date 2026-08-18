@@ -373,3 +373,49 @@
     box-shadow: none;
   }
 }
+
+/* Light Mode Overrides for POS */
+[data-theme="light"] .pos-container {
+  background: #f8fafc;
+}
+
+[data-theme="light"] .pos-catalog-panel,
+[data-theme="light"] .pos-register-panel {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .pos-item-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .pos-item-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .pos-ticket-header {
+  background: #f8fafc;
+  border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .pos-ticket-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .pos-row-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .pos-qty-btn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme="light"] .pos-ticket-calculations {
+  background: #f8fafc;
+  border-top-color: #e2e8f0;
+}
+

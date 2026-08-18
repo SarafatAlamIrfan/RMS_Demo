@@ -239,3 +239,46 @@
   font-size: 14px;
   color: var(--primary-light);
 }
+
+/* Light Mode Overrides for Analytics */
+[data-theme="light"] .metric-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .metric-label {
+  color: #475569;
+}
+
+[data-theme="light"] .metric-val {
+  color: #0f172a;
+}
+
+[data-theme="light"] .analytics-chart-panel {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .chart-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .chart-axis-label {
+  fill: #64748b;
+}
+
+[data-theme="light"] .top-dish-item {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .top-dish-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .peak-hour-cell {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+

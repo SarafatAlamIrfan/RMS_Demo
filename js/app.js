@@ -6,9 +6,13 @@ class Application {
   constructor() {
     this.currentView = 'menu';
     this.components = {};
+    this.currentTheme = localStorage.getItem('flavourcraft_theme') || 'dark';
   }
 
   async init() {
+    // Apply Theme (Dark or Light)
+    this.setTheme(this.currentTheme, false);
+
     // Initialize Components
     this.components = {
       menu: new window.MenuComponent(),
@@ -137,7 +141,40 @@ class Application {
     }, 3500);
   }
 
+  setTheme(themeName, showToast = true) {
+    this.currentTheme = themeName;
+    document.documentElement.setAttribute('data-theme', themeName);
+    localStorage.setItem('flavourcraft_theme', themeName);
+
+    const iconEl = document.getElementById('theme-toggle-icon');
+    const textEl = document.getElementById('theme-toggle-text');
+
+    if (iconEl && textEl) {
+      if (themeName === 'light') {
+        iconEl.textContent = '🌙';
+        textEl.textContent = 'Dark Mode';
+      } else {
+        iconEl.textContent = '☀️';
+        textEl.textContent = 'Light Mode';
+      }
+    }
+
+    if (showToast) {
+      this.showToast(`Switched to ${themeName === 'light' ? '☀️ Light Porcelain' : '🌙 Dark Obsidian'} theme`, 'info');
+    }
+  }
+
+  toggleTheme() {
+    const nextTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+    this.setTheme(nextTheme, true);
+  }
+
   _attachGlobalEvents() {
+    // Theme Switcher Toggle Button
+    document.getElementById('btn-theme-toggle')?.addEventListener('click', () => {
+      this.toggleTheme();
+    });
+
     // Navigation clicks
     document.querySelectorAll('.nav-item[data-view]').forEach(item => {
       item.addEventListener('click', (e) => {

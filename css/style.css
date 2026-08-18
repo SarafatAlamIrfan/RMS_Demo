@@ -720,6 +720,144 @@ html, body {
 .badge-info { background: var(--color-info-bg); color: var(--color-info); border: 1px solid var(--color-info-border); }
 .badge-amber { background: rgba(245, 158, 11, 0.15); color: var(--primary-light); border: 1px solid rgba(245, 158, 11, 0.3); }
 
+/* Theme Toggle Switcher Button in Topbar */
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  user-select: none;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--primary);
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle-btn .theme-icon {
+  font-size: 16px;
+}
+
+/* Light Theme Overrides for Text, Inputs & Modals */
+[data-theme="light"] body {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .page-heading h2 {
+  color: var(--heading-color) !important;
+}
+
+[data-theme="light"] .brand-text h1 {
+  background: linear-gradient(135deg, #0f172a 40%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .sidebar-footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .nav-item {
+  color: #475569;
+}
+
+[data-theme="light"] .nav-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="light"] .nav-item.active {
+  color: #b45309;
+  background: #fffbeb;
+}
+
+[data-theme="light"] .topbar {
+  background: rgba(255, 255, 255, 0.90);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .topbar-search {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .topbar-search input {
+  color: #0f172a;
+}
+
+[data-theme="light"] .modal-dialog {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  color: #0f172a;
+}
+
+[data-theme="light"] .modal-header {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .modal-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .modal-close {
+  color: #64748b;
+}
+
+[data-theme="light"] .modal-close:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+[data-theme="light"] .modal-footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .form-input, 
+[data-theme="light"] .form-select, 
+[data-theme="light"] .form-textarea {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme="light"] .form-input:focus, 
+[data-theme="light"] .form-select:focus, 
+[data-theme="light"] .form-textarea:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+[data-theme="light"] .menu-card,
+[data-theme="light"] .pos-item-card,
+[data-theme="light"] .inventory-table-card,
+[data-theme="light"] .metric-card,
+[data-theme="light"] .reservation-card,
+[data-theme="light"] .kds-ticket-card,
+[data-theme="light"] .table-node-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1024px) {
   .sidebar {

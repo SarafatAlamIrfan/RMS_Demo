@@ -404,13 +404,80 @@
   flex: 1;
 }
 
-.driver-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-}
-
 .driver-status {
   font-size: 13px;
   color: var(--color-success);
 }
+
+/* Light Mode Overrides for Ordering & Cart */
+[data-theme="light"] .cart-drawer {
+  background: #ffffff;
+  border-left-color: #e2e8f0;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .cart-header {
+  background: #f8fafc;
+  border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .cart-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .cart-item-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .cart-item-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .cart-footer {
+  background: #f8fafc;
+  border-top-color: #e2e8f0;
+}
+
+[data-theme="light"] .order-type-btn {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+[data-theme="light"] .order-type-btn.active {
+  background: #fffbeb;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+[data-theme="light"] .payment-method-card {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme="light"] .payment-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .payment-method-card.selected {
+  background: #fffbeb;
+  border-color: var(--primary);
+}
+
+[data-theme="light"] .tracker-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .delivery-radar-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .driver-name {
+  color: #0f172a;
+}
+

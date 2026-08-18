@@ -257,3 +257,53 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Light Mode Overrides for Reservations */
+[data-theme="light"] .booking-step-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .step-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .zone-option-card {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme="light"] .zone-option-card.selected {
+  background: #fffbeb;
+  border-color: var(--primary);
+}
+
+[data-theme="light"] .time-slot-btn {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme="light"] .time-slot-btn.selected {
+  background: #fffbeb;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+[data-theme="light"] .reservation-pass-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .pass-val {
+  color: #0f172a;
+}
+
+[data-theme="light"] .pass-qr-container {
+  background: #f8fafc;
+  border-top-color: #e2e8f0;
+}
+

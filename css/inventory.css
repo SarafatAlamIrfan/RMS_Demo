@@ -199,3 +199,28 @@
   background: rgba(245, 158, 11, 0.15);
   color: var(--color-warning);
 }
+
+/* Light Mode Overrides for Inventory */
+[data-theme="light"] .inventory-table {
+  color: #0f172a;
+}
+
+[data-theme="light"] .inventory-table th {
+  background: #f8fafc;
+  color: #475569;
+  border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .inventory-table td {
+  border-bottom-color: #f1f5f9;
+}
+
+[data-theme="light"] .inventory-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+[data-theme="light"] .inventory-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
