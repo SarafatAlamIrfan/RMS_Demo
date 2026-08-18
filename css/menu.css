@@ -584,3 +584,54 @@
   border-radius: var(--radius-md);
   padding: 4px 8px;
 }
+
+/* 7. Admin & Manager Dish Management Action Toolbar */
+.admin-dish-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.btn-xs {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  border: 1px solid var(--border-medium);
+  background: #ffffff;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition-fast);
+}
+
+.btn-xs:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-xs.btn-danger {
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+
+.btn-xs.btn-danger:hover {
+  background: #fff1f2;
+}
+
+.btn-xs.btn-success {
+  color: var(--color-success);
+  border-color: var(--color-success-border);
+}
+
+.btn-xs.btn-warning {
+  color: var(--accent-saffron-dark);
+  border-color: var(--accent-saffron-light);
+}

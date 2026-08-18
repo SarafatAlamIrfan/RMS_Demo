@@ -2,6 +2,7 @@
  * FlavourCraft - Digital Interactive Menu Component
  * Hero Banner: "Experience the True Taste of Dhaka!"
  * Chef's Special Recommendations + Full Catalog in ৳ BDT
+ * Full CRUD Capabilities for Executive Admin (Sadia Islam Dia) & Manager (Sarafat Alam Irfan)
  */
 
 class MenuComponent {
@@ -10,6 +11,17 @@ class MenuComponent {
     this.activeDietary = [];
     this.searchQuery = '';
     this.customizingDish = null;
+  }
+
+  setSearchQuery(q) {
+    this.searchQuery = q;
+    const grid = document.getElementById('dishes-grid');
+    if (grid) {
+      window.store.db.collection('menu').find().then(dishes => {
+        grid.innerHTML = this._renderDishCards(dishes);
+        this._rebindCardButtons();
+      });
+    }
   }
 
   async render() {
@@ -29,6 +41,8 @@ class MenuComponent {
       'Kabab & Street Food',
       'Drinks & Desserts'
     ];
+
+    const canManage = ['Admin', 'Manager'].includes(window.store.currentRole);
 
     container.innerHTML = `
       <!-- Hero Banner Matching Reference Design -->
@@ -59,22 +73,30 @@ class MenuComponent {
         <div class="section-header-row">
           <div class="section-title-box">
             <h2 class="section-main-title">Chef's Special Recommendations</h2>
-            <p class="section-sub-title">Signature royal recipes perfected by Head Chef Rony and Managing Director Sadia Islam Dia</p>
+            <p class="section-sub-title">Signature recipes perfected by Head Chef Rony, Manager Sarafat Alam Irfan & Admin Sadia Islam Dia</p>
           </div>
         </div>
 
         <div class="specials-grid">
-          ${chefSpecials.map(dish => this._renderSpecialCard(dish)).join('')}
+          ${chefSpecials.map(dish => this._renderSpecialCard(dish, canManage)).join('')}
         </div>
       </div>
 
       <!-- Full Menu Catalog Section -->
       <div class="menu-catalog-section" id="menu-catalog-section">
-        <div class="section-header-row" style="margin-top: 40px;">
+        <div class="section-header-row" style="margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
           <div class="section-title-box">
             <h2 class="section-main-title">Explore Our Full Menu</h2>
-            <p class="section-sub-title">Authentic dishes prepared fresh with Baghabari pure ghee, tender Bengal meats & wild spices</p>
+            <p class="section-sub-title">Authentic dishes prepared fresh with Baghabari pure ghee, tender meats & wild spices</p>
           </div>
+
+          ${canManage ? `
+            <div>
+              <button class="btn btn-primary" id="btn-add-new-dish" style="box-shadow: var(--shadow-md);">
+                <span>➕ Add New Dish (Admin / Manager)</span>
+              </button>
+            </div>
+          ` : ''}
         </div>
 
         <!-- Categories Navigation -->
@@ -109,7 +131,7 @@ class MenuComponent {
 
         <!-- Dishes Grid -->
         <div class="menu-grid" id="dishes-grid">
-          ${this._renderDishCards(dishes)}
+          ${this._renderDishCards(dishes, canManage)}
         </div>
       </div>
     `;
@@ -117,7 +139,7 @@ class MenuComponent {
     this._attachEvents();
   }
 
-  _renderSpecialCard(dish) {
+  _renderSpecialCard(dish, canManage) {
     return `
       <div class="special-card">
         <div class="special-badge">⭐ Chef Pick</div>
@@ -134,6 +156,16 @@ class MenuComponent {
               <span>+ Add</span>
             </button>
           </div>
+
+          ${canManage ? `
+            <div class="admin-dish-bar">
+              <button class="btn-xs btn-edit-dish" data-dish-id="${dish._id}">✏️ Edit</button>
+              <button class="btn-xs btn-danger btn-delete-dish" data-dish-id="${dish._id}">🗑️ Delete</button>
+              <button class="btn-xs ${dish.isAvailable ? 'btn-success' : 'btn-warning'} btn-toggle-avail" data-dish-id="${dish._id}">
+                ${dish.isAvailable ? '🟢 Available' : '🔴 Sold Out'}
+              </button>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -174,14 +206,17 @@ class MenuComponent {
     });
   }
 
-  _renderDishCards(dishes) {
+  _renderDishCards(dishes, canManage = null) {
+    if (canManage === null) {
+      canManage = ['Admin', 'Manager'].includes(window.store.currentRole);
+    }
     const filtered = this._filterDishes(dishes);
     if (filtered.length === 0) {
       return `
         <div class="empty-menu-state" style="grid-column: 1/-1; text-align:center; padding: 40px;">
           <span style="font-size: 40px;">🍲</span>
-          <h3 style="margin-top: 10px; color: var(--text-primary);">No dishes found</h3>
-          <p style="color: var(--text-muted); font-size: 13px;">Try adjusting your search query or dietary filters</p>
+          <h3 style="margin-top: 10px; color: var(--heading-color);">No dishes found</h3>
+          <p style="color: var(--text-secondary); font-size: 13px;">Try adjusting your search query or dietary filters</p>
         </div>
       `;
     }
@@ -222,6 +257,16 @@ class MenuComponent {
               </button>
             </div>
           </div>
+
+          ${canManage ? `
+            <div class="admin-dish-bar">
+              <button class="btn-xs btn-edit-dish" data-dish-id="${dish._id}">✏️ Edit</button>
+              <button class="btn-xs btn-danger btn-delete-dish" data-dish-id="${dish._id}">🗑️ Delete</button>
+              <button class="btn-xs ${dish.isAvailable ? 'btn-success' : 'btn-warning'} btn-toggle-avail" data-dish-id="${dish._id}">
+                ${dish.isAvailable ? '🟢 Available' : '🔴 Sold Out'}
+              </button>
+            </div>
+          ` : ''}
         </div>
       </div>
     `).join('');
@@ -242,6 +287,11 @@ class MenuComponent {
 
     document.getElementById('btn-hero-track')?.addEventListener('click', () => {
       window.app.navigate('tracking');
+    });
+
+    // Add New Dish button (Admin / Manager)
+    document.getElementById('btn-add-new-dish')?.addEventListener('click', () => {
+      this.openDishFormModal();
     });
 
     // Category filter click
@@ -265,21 +315,6 @@ class MenuComponent {
         this.render();
       });
     });
-
-    // Global Search listener from topbar
-    const searchInput = document.getElementById('global-search-input');
-    if (searchInput) {
-      searchInput.oninput = (e) => {
-        this.searchQuery = e.target.value;
-        const grid = document.getElementById('dishes-grid');
-        if (grid) {
-          window.store.db.collection('menu').find().then(dishes => {
-            grid.innerHTML = this._renderDishCards(dishes);
-            this._rebindCardButtons();
-          });
-        }
-      };
-    }
 
     this._rebindCardButtons();
   }
@@ -307,8 +342,201 @@ class MenuComponent {
         }
       };
     });
+
+    // Admin & Manager: Edit Dish
+    document.querySelectorAll('.btn-edit-dish').forEach(btn => {
+      btn.onclick = async (e) => {
+        const dishId = e.currentTarget.dataset.dishId;
+        const dish = await window.store.db.collection('menu').findOne({ _id: dishId });
+        if (dish) {
+          this.openDishFormModal(dish);
+        }
+      };
+    });
+
+    // Admin & Manager: Delete Dish
+    document.querySelectorAll('.btn-delete-dish').forEach(btn => {
+      btn.onclick = async (e) => {
+        const dishId = e.currentTarget.dataset.dishId;
+        const dish = await window.store.db.collection('menu').findOne({ _id: dishId });
+        if (dish) {
+          if (confirm(`Are you sure you want to delete "${dish.name}" from the menu?`)) {
+            await window.store.db.collection('menu').deleteOne({ _id: dishId });
+            window.app.showToast(`Dish "${dish.name}" removed by ${window.store.currentUser?.name || 'Staff'}`, 'info');
+            this.render();
+          }
+        }
+      };
+    });
+
+    // Admin & Manager: Toggle Availability
+    document.querySelectorAll('.btn-toggle-avail').forEach(btn => {
+      btn.onclick = async (e) => {
+        const dishId = e.currentTarget.dataset.dishId;
+        const dish = await window.store.db.collection('menu').findOne({ _id: dishId });
+        if (dish) {
+          const newStatus = !dish.isAvailable;
+          await window.store.db.collection('menu').updateOne(
+            { _id: dishId },
+            { $set: { isAvailable: newStatus } }
+          );
+          window.app.showToast(`"${dish.name}" marked as ${newStatus ? 'Available' : 'Sold Out'}`, 'success');
+          this.render();
+        }
+      };
+    });
   }
 
+  // --- Dish Modal: Create & Edit Dish (Admin & Manager) ---
+  async openDishFormModal(existingDish = null) {
+    const isEdit = !!existingDish;
+    const modal = document.getElementById('modal-generic');
+    const title = document.getElementById('generic-modal-title');
+    const body = document.getElementById('generic-modal-body');
+
+    if (!modal || !title || !body) return;
+
+    title.textContent = isEdit ? `✏️ Edit Dish: ${existingDish.name}` : `➕ Add New Culinary Dish`;
+
+    const categories = [
+      'Kacchi & Biryani',
+      'Beef, Mutton & Chicken',
+      'Fish & Seafood',
+      'Kabab & Street Food',
+      'Drinks & Desserts'
+    ];
+
+    const currentTags = existingDish ? (existingDish.tags || []) : ['100% Halal'];
+
+    body.innerHTML = `
+      <form id="dish-crud-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Dish Name *</label>
+            <input type="text" class="form-input" id="df-name" value="${isEdit ? existingDish.name : ''}" placeholder="e.g. Shahi Mutton Rezala" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select class="form-select" id="df-category">
+              ${categories.map(c => `<option value="${c}" ${isEdit && existingDish.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Selling Price (৳ BDT) *</label>
+            <input type="number" class="form-input" id="df-price" value="${isEdit ? existingDish.price : ''}" placeholder="e.g. 580" min="10" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">SKU / Item Code</label>
+            <input type="text" class="form-input" id="df-sku" value="${isEdit ? (existingDish.sku || '') : ('FC-DHK-' + Math.floor(100 + Math.random() * 900))}" placeholder="FC-DHK-XXX" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea class="form-textarea" id="df-desc" rows="2" placeholder="Rich aroma, tender cuts cooked in clay pot..." required>${isEdit ? existingDish.description : ''}</textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Image URL / Asset Path</label>
+            <input type="text" class="form-input" id="df-image" value="${isEdit ? existingDish.image : 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=600&q=80'}" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Spice Heat Level</label>
+            <select class="form-select" id="df-spice">
+              <option value="0" ${isEdit && existingDish.spiceLevel === 0 ? 'selected' : ''}>🟢 0 - Shahi Mild (Non-Spicy)</option>
+              <option value="1" ${isEdit && existingDish.spiceLevel === 1 ? 'selected' : ''}>🌶️ 1 - Dhaka Regular</option>
+              <option value="2" ${isEdit && existingDish.spiceLevel === 2 ? 'selected' : ''}>🔥🔥 2 - Spicy</option>
+              <option value="3" ${isEdit && existingDish.spiceLevel === 3 ? 'selected' : ''}>🔥🔥🔥 3 - Sylheti Naga Fire</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Dietary Tags</label>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px;">
+            ${['100% Halal', 'Spicy', 'Vegetarian', 'Vegan', 'Gluten-Free'].map(tag => `
+              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                <input type="checkbox" class="df-tag-cb" value="${tag}" ${currentTags.includes(tag) ? 'checked' : ''} />
+                <span>${tag}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox" id="df-available" style="width: 18px; height: 18px;" ${!isEdit || existingDish.isAvailable ? 'checked' : ''} />
+          <label for="df-available" style="font-size: 13.5px; font-weight: 700; cursor: pointer;">In-Stock & Available for Customers</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 14px;">
+          <span>${isEdit ? '💾 Update Menu Dish' : '✨ Add Dish to Live Menu'}</span>
+        </button>
+      </form>
+    `;
+
+    modal.classList.add('active');
+
+    const form = document.getElementById('dish-crud-form');
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('df-name').value.trim();
+      const category = document.getElementById('df-category').value;
+      const price = parseFloat(document.getElementById('df-price').value) || 0;
+      const sku = document.getElementById('df-sku').value.trim();
+      const description = document.getElementById('df-desc').value.trim();
+      const image = document.getElementById('df-image').value.trim();
+      const spiceLevel = parseInt(document.getElementById('df-spice').value) || 0;
+      const isAvailable = document.getElementById('df-available').checked;
+      const tags = Array.from(document.querySelectorAll('.df-tag-cb:checked')).map(cb => cb.value);
+
+      const actor = window.store.currentUser?.name || 'Authorized Staff';
+
+      if (isEdit) {
+        await window.store.db.collection('menu').updateOne(
+          { _id: existingDish._id },
+          {
+            $set: {
+              name,
+              category,
+              price,
+              sku,
+              description,
+              image,
+              spiceLevel,
+              isAvailable,
+              tags
+            }
+          }
+        );
+        window.app.showToast(`Dish "${name}" updated successfully by ${actor}!`, 'success');
+      } else {
+        const newDish = {
+          _id: 'dish_' + Date.now(),
+          sku: sku || ('FC-DHK-' + Math.floor(100 + Math.random() * 900)),
+          name,
+          category,
+          price,
+          description,
+          image: image || 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=600&q=80',
+          spiceLevel,
+          isAvailable,
+          tags,
+          createdAt: new Date().toISOString()
+        };
+        await window.store.db.collection('menu').insertOne(newDish);
+        window.app.showToast(`New dish "${name}" added to menu by ${actor}!`, 'success');
+      }
+
+      modal.classList.remove('active');
+      this.render();
+    };
+  }
+
+  // --- Customer Dish Customizer Modal ---
   openCustomizer(dish) {
     this.customizingDish = dish;
     const modal = document.getElementById('modal-item-customizer');
@@ -338,9 +566,9 @@ class MenuComponent {
       <div class="customizer-header-card">
         <img src="${dish.image}" alt="${dish.name}" class="customizer-dish-thumb" />
         <div>
-          <h3 style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">${dish.name}</h3>
+          <h3 style="font-size: 18px; font-weight: 800; color: var(--heading-color); margin-bottom: 4px;">${dish.name}</h3>
           <div style="font-size: 16px; font-weight: 800; color: var(--primary);">৳${dish.price.toLocaleString()}</div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">${dish.description}</p>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${dish.description}</p>
         </div>
       </div>
 

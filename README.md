@@ -113,8 +113,8 @@ FlavourCraft features a vibrant **Light Mode** palette designed with **Pinkish R
   - **One-Click Demo Credentials**:
     | Role | Name | Identifier / Username | Password | Access Scope |
     | :--- | :--- | :--- | :--- | :--- |
-    | 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access across all modules |
-    | 👩‍💼 **Manager** | **Tanima Ahmed** | `manager` | `manager123` | Operations, Inventory, Analytics, Menu |
+    | 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access across all modules + Menu CRUD |
+    | 👨‍💼 **Manager** | **Sarafat Alam Irfan** | `manager` | `manager123` | Operations, Inventory, Analytics + Menu CRUD |
     | 🍳 **Kitchen** | **Chef Rony** | `kitchen` | `kitchen123` | Kitchen KDS, Recipe Specs, Inventory |
     | 🍽️ **Customer** | **Asif Rahman** | `+880 1711-234567` / `customer` | `customer123` | Menu, Reservations, Order Checkout |
   - Persistent login sessions via `localStorage` with dropdown profile menu & Sign Out action.

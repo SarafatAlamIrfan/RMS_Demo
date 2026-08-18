@@ -160,7 +160,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Users (4 Roles)
 INSERT INTO `users` (`user_uid`, `username`, `password`, `name`, `role`, `avatar`, `phone`, `email`, `delivery_address`) VALUES
 ('usr_admin', 'admin', 'admin123', 'Sadia Islam Dia', 'Admin', '👩‍💼', '+880 1710-000001', 'sadia.dia@flavourcraft.bd', 'Banani, Dhaka'),
-('usr_manager', 'manager', 'manager123', 'Tanima Ahmed (Floor Lead)', 'Manager', '👩‍💻', '+880 1710-000002', 'tanima@flavourcraft.bd', 'Gulshan 2, Dhaka'),
+('usr_manager', 'manager', 'manager123', 'Sarafat Alam Irfan', 'Manager', '👨‍💼', '+880 1710-000002', 'irfan@flavourcraft.bd', 'Gulshan 2, Dhaka'),
 ('usr_kitchen', 'kitchen', 'kitchen123', 'Chef Rony (Biryani Ustad)', 'Kitchen', '🍳', '+880 1710-000004', 'rony@flavourcraft.bd', 'Old Dhaka, Dhaka'),
 ('usr_customer', 'customer', 'customer123', 'Asif Rahman', 'Customer', '🍽️', '+880 1711-234567', 'asif.rahman@gmail.com', 'House 42, Road 11, Block D, Banani, Dhaka');
 

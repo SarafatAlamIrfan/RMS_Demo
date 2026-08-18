@@ -169,7 +169,7 @@ class AuthComponent {
             <span>👑</span> <span>Sadia (Admin)</span>
           </button>
           <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Manager')">
-            <span>👩‍💼</span> <span>Tanima (Manager)</span>
+            <span>👨‍💼</span> <span>Sarafat (Manager)</span>
           </button>
           <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Kitchen')">
             <span>🍳</span> <span>Chef Rony (Kitchen)</span>

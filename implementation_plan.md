@@ -171,10 +171,9 @@ Located in `api/`:
 - **One-Click Demo Credentials**:
   | Role | Name | Username / Identifier | Password | Permissions |
   | :--- | :--- | :--- | :--- | :--- |
-  | 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access across all modules |
-  | 👩‍💼 **Manager** | **Tanima Ahmed** | `manager` | `manager123` | Operations, Inventory, Analytics, Menu |
+  | 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access across all modules + Menu CRUD |
+  | 👨‍💼 **Manager** | **Sarafat Alam Irfan** | `manager` | `manager123` | Operations, Inventory, Analytics + Menu CRUD |
   | 🍳 **Kitchen** | **Chef Rony** | `kitchen` | `kitchen123` | Kitchen KDS, Recipe Specs, Inventory |
-  | 🛵 **Rider** | **Mehedi Hasan** | `rider` | `rider123` | Live Tracking, Dispatch Radar |
   | 🍽️ **Customer** | **Asif Rahman** | `customer` / `+880 1711-234567` | `customer123` | Menu, Reservations, Order Checkout |
 - **Session Persistence**: Stores session in `localStorage` under `flavourcraft_auth_session`. Topbar user profile chip provides profile information and instant Sign Out.
 

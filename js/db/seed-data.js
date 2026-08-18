@@ -434,11 +434,11 @@ window.SEED_DATA = {
       _id: 'usr_manager', 
       username: 'manager', 
       password: 'manager123',
-      name: 'Tanima Ahmed (Operations Lead)', 
+      name: 'Sarafat Alam Irfan (Operations Manager)', 
       role: 'Manager', 
-      avatar: '👩‍💻', 
+      avatar: '👨‍💼', 
       phone: '+880 1710-000002',
-      email: 'tanima@flavourcraft.bd' 
+      email: 'irfan@flavourcraft.bd' 
     },
     { 
       _id: 'usr_kitchen', 
