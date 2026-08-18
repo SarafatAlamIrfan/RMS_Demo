@@ -7,7 +7,7 @@
 
 class MenuComponent {
   constructor() {
-    this.activeCategory = 'All';
+    this.activeCategory = 'All Categories';
     this.activeDietary = [];
     this.searchQuery = '';
     this.customizingDish = null;
@@ -30,16 +30,16 @@ class MenuComponent {
 
     const dishes = await window.store.db.collection('menu').find();
     const chefSpecials = dishes.filter(d => 
-      ['dish_01', 'dish_04', 'dish_06', 'dish_07', 'dish_08'].includes(d._id)
+      ['dish_01', 'dish_04', 'dish_06', 'dish_chn_01', 'dish_08'].includes(d._id)
     );
 
     const categories = [
-      'All',
-      'Kacchi & Biryani',
-      'Beef, Mutton & Chicken',
-      'Fish & Seafood',
-      'Kabab & Street Food',
-      'Drinks & Desserts'
+      'All Categories',
+      'Bengali Food',
+      'Chinese',
+      'Appetizer',
+      'Drinks & Coffee',
+      'Dessert'
     ];
 
     const canManage = ['Admin', 'Manager'].includes(window.store.currentRole);
@@ -173,19 +173,19 @@ class MenuComponent {
 
   _getCategoryIcon(cat) {
     const icons = {
-      'All': '✨',
-      'Kacchi & Biryani': '🍚',
-      'Beef, Mutton & Chicken': '🥩',
-      'Fish & Seafood': '🐟',
-      'Kabab & Street Food': '🍢',
-      'Drinks & Desserts': '🍮'
+      'All Categories': '🍽️',
+      'Bengali Food': '🍛',
+      'Chinese': '🥢',
+      'Appetizer': '🍤',
+      'Drinks & Coffee': '☕',
+      'Dessert': '🍨'
     };
     return icons[cat] || '🍽️';
   }
 
   _filterDishes(dishes) {
     return dishes.filter(dish => {
-      if (this.activeCategory !== 'All' && dish.category !== this.activeCategory) {
+      if (this.activeCategory !== 'All Categories' && this.activeCategory !== 'All' && dish.category !== this.activeCategory) {
         return false;
       }
       if (this.activeDietary.length > 0) {
@@ -399,11 +399,11 @@ class MenuComponent {
     title.textContent = isEdit ? `✏️ Edit Dish: ${existingDish.name}` : `➕ Add New Culinary Dish`;
 
     const categories = [
-      'Kacchi & Biryani',
-      'Beef, Mutton & Chicken',
-      'Fish & Seafood',
-      'Kabab & Street Food',
-      'Drinks & Desserts'
+      'Bengali Food',
+      'Chinese',
+      'Appetizer',
+      'Drinks & Coffee',
+      'Dessert'
     ];
 
     const currentTags = existingDish ? (existingDish.tags || []) : ['100% Halal'];

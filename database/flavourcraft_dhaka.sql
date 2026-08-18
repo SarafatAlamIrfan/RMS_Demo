@@ -166,11 +166,11 @@ INSERT INTO `users` (`user_uid`, `username`, `password`, `name`, `role`, `avatar
 
 -- Categories
 INSERT INTO `categories` (`slug`, `name`, `icon`, `display_order`) VALUES
-('Kacchi & Biryani', 'Kacchi & Biryani', '🍚', 1),
-('Beef, Mutton & Chicken', 'Beef, Mutton & Chicken', '🥩', 2),
-('Fish & Seafood', 'Fish & Seafood', '🐟', 3),
-('Kabab & Street Food', 'Kabab & Street Food', '🍢', 4),
-('Drinks & Desserts', 'Drinks & Desserts', '🍮', 5);
+('Bengali Food', 'Bengali Food', '🍛', 1),
+('Chinese', 'Chinese', '🥢', 2),
+('Appetizer', 'Appetizer', '🍤', 3),
+('Drinks & Coffee', 'Drinks & Coffee', '☕', 4),
+('Dessert', 'Dessert', '🍨', 5);
 
 -- 15 Authentic Dishes in ৳ BDT
 INSERT INTO `menu_items` (`item_uid`, `sku`, `name`, `category_slug`, `price`, `description`, `image_url`, `tags`, `spice_level`, `is_available`, `prep_time_minutes`) VALUES
