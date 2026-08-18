@@ -121,7 +121,7 @@ Located in `api/`:
 - **Dining Zones**: *Main Dining Hall*, *Family Lounge*, *Terrace Patio*, *VIP Banquet Salon*.
 - **Time Slots & Peak Rush**: 1:00 PM, 2:30 PM, 6:00 PM, 7:30 PM (Peak), 8:00 PM (Peak), 8:30 PM (Peak), 9:00 PM (Peak), 10:00 PM.
 - **Deposit Handling**: Automatic ৳500 refundable deposit prompt during peak dinner slots (7:30 PM – 9:30 PM).
-- **Digital Guest Pass**: Generates unique Booking Code (`FC-DHK-XXXX`), seating details, dynamic QR code graphic, and simulated SMS confirmation.
+- **Digital Guest Pass**: Generates unique Booking Code (`FC-DHK-XXXX`), seating details, instant verification badge, and simulated SMS confirmation.
 
 ### Module 3: Multi-Mode Ordering & Bangladeshi Checkout
 - **Ordering Channels**:

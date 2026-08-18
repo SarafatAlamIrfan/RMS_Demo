@@ -1,7 +1,7 @@
 <?php
 /**
- * FlavourCraft Dhaka - Reservations API
- * Handles Table Bookings, Deposits, and e-Pass QR Verification
+ * FlavourCraft - Reservations API
+ * Handles Table Bookings, Peak Deposits, and Digital Pass Verification
  */
 
 require_once __DIR__ . '/config.php';

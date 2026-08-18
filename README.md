@@ -27,7 +27,7 @@
 
 ## 🌟 Project Overview
 
-**FlavourCraft** is an all-in-one, beginner-friendly restaurant operations platform designed specifically for Bangladeshi dining establishments. It unifies customer online ordering, table bookings with QR e-passes, digital Kitchen Display System (KDS), automated recipe ingredient stock deductions, and executive revenue analytics in Bangladeshi Taka.
+**FlavourCraft** is an all-in-one, beginner-friendly restaurant operations platform designed specifically for Bangladeshi dining establishments. It unifies customer online ordering, table bookings with instant digital passes, digital Kitchen Display System (KDS), automated recipe ingredient stock deductions, and executive revenue analytics in Bangladeshi Taka.
 
 ---
 
@@ -75,7 +75,7 @@ FlavourCraft features a vibrant **Light Mode** palette designed with **Pinkish R
 - **Table Reservation System**:
   - Date & time slot picker with ৳500 refundable deposit during peak dinner hours (7:30 PM – 9:30 PM).
   - Party size selector (1 to 12+ guests) across *Main Dining Hall*, *Family Lounge*, *Terrace Patio*, and *VIP Banquet Salon*.
-  - Automated simulated SMS & Email confirmation with unique Booking ID & QR code.
+  - Automated simulated SMS & Email confirmation with unique Booking ID.
 - **Ordering & Checkout with Customer Login Gate**:
   - Multi-mode ordering: **Dine-In**, **Takeaway**, and **Dhaka Home Delivery** (৳60 flat fee).
   - Intercepts checkout for unauthenticated guests, requiring login/signup and auto-prefilling customer contact & delivery address upon login.

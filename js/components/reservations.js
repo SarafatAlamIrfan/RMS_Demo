@@ -1,6 +1,7 @@
 /**
  * FlavourCraft - Table Reservation System Component
- * Bangladeshi Dhaka Modern Restaurant Edition (Prices in ৳ BDT)
+ * Theme: Light Mode (Pinkish Red & Saffron Palette)
+ * Currency: Bangladeshi Taka (৳ / BDT)
  */
 
 class ReservationsComponent {
@@ -26,6 +27,8 @@ class ReservationsComponent {
       { time: '22:00', label: '10:00 PM (Late)', isPeak: false }
     ];
 
+    const pastBookings = await window.store.db.collection('reservations').find({}, { sort: { createdAt: -1 }, limit: 4 });
+
     container.innerHTML = `
       <div class="reservation-container">
         <div class="reservation-hero">
@@ -36,7 +39,7 @@ class ReservationsComponent {
         <div class="reservation-grid">
           <!-- Reservation Form -->
           <div class="glass-card">
-            <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 20px;">1. Select Date & Party Size</h3>
+            <h3 class="step-section-title">1. Select Date & Party Size</h3>
             
             <div class="form-row" style="margin-bottom: 20px;">
               <div class="form-group" style="margin-bottom: 0;">
@@ -56,7 +59,7 @@ class ReservationsComponent {
               </div>
             </div>
 
-            <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px;">2. Seating Zone Preference</h3>
+            <h3 class="step-section-title">2. Seating Zone Preference</h3>
             <div class="seating-preference-grid" id="seating-preference-grid">
               <div class="seating-card ${this.selectedSeating === 'Gulshan Dining Hall' ? 'selected' : ''}" data-seating="Gulshan Dining Hall">
                 <span class="seating-icon">🍽️</span>
@@ -80,7 +83,7 @@ class ReservationsComponent {
               </div>
             </div>
 
-            <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px;">3. Preferred Time Slot</h3>
+            <h3 class="step-section-title">3. Preferred Time Slot</h3>
             <div class="time-slots-grid" id="time-slots-grid">
               ${timeSlots.map(slot => `
                 <div class="time-slot-btn ${this.selectedTimeSlot === slot.time ? 'selected' : ''}" data-time="${slot.time}" data-peak="${slot.isPeak}">
@@ -97,7 +100,7 @@ class ReservationsComponent {
               </div>
             </div>
 
-            <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px;">4. Guest Contact</h3>
+            <h3 class="step-section-title">4. Guest Contact</h3>
             <form id="reservation-form">
               <div class="form-row">
                 <div class="form-group">
@@ -110,28 +113,28 @@ class ReservationsComponent {
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label">Email Address (For e-Pass & QR) *</label>
-                <input type="email" class="form-input" id="res-email" placeholder="asif@dhaka.com" value="${window.store.currentUser ? (window.store.currentUser.email || '') : ''}" required />
+                <label class="form-label">Email Address (For Booking Confirmation) *</label>
+                <input type="email" class="form-input" id="res-email" placeholder="asif@gmail.com" value="${window.store.currentUser ? (window.store.currentUser.email || '') : ''}" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Special Requests (Occasion, Dietary, Birthday)</label>
                 <textarea class="form-textarea" id="res-notes" rows="2" placeholder="Birthday celebration, high chair, extra Borhani setup..."></textarea>
               </div>
               <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
-                <span>✨ Confirm & Generate e-Pass</span>
+                <span>✨ Confirm Table Reservation</span>
               </button>
             </form>
           </div>
 
-          <!-- Real-Time Reservation Pass Preview -->
+          <!-- Real-Time Reservation Pass Preview (No QR) -->
           <div>
             <div class="reservation-pass-card" id="reservation-pass-preview">
               <div class="pass-header">
                 <div>
-                  <span style="font-size: 11px; text-transform: uppercase; color: var(--primary); font-weight: 800;">FlavourCraft Dhaka Guest Pass</span>
+                  <span style="font-size: 11px; text-transform: uppercase; color: var(--accent-saffron-light); font-weight: 800;">FlavourCraft Guest Pass</span>
                   <div class="pass-code" id="pass-code">FC-DHK-PENDING</div>
                 </div>
-                <div class="badge badge-amber" id="pass-status">HOLDING</div>
+                <div class="badge badge-warning" id="pass-status">HOLDING</div>
               </div>
               <div class="pass-body">
                 <div class="pass-row">
@@ -152,38 +155,31 @@ class ReservationsComponent {
                 </div>
                 <div class="pass-row">
                   <span class="pass-label">Deposit Required</span>
-                  <span class="pass-val" id="pass-deposit" style="color: var(--primary-light);">৳${this._isCurrentSlotPeak() ? '500' : '0'}</span>
+                  <span class="pass-val" id="pass-deposit" style="color: var(--accent-saffron-light);">৳${this._isCurrentSlotPeak() ? '500' : '0'}</span>
                 </div>
               </div>
-              <div class="pass-qr-container">
-                <div class="pass-qr-mock">
-                  <svg viewBox="0 0 100 100" width="80" height="80">
-                    <rect width="100" height="100" fill="white" />
-                    <rect x="10" y="10" width="25" height="25" fill="black" />
-                    <rect x="15" y="15" width="15" height="15" fill="white" />
-                    <rect x="18" y="18" width="9" height="9" fill="black" />
-                    <rect x="65" y="10" width="25" height="25" fill="black" />
-                    <rect x="70" y="15" width="15" height="15" fill="white" />
-                    <rect x="73" y="18" width="9" height="9" fill="black" />
-                    <rect x="10" y="65" width="25" height="25" fill="black" />
-                    <rect x="15" y="70" width="15" height="15" fill="white" />
-                    <rect x="18" y="73" width="9" height="9" fill="black" />
-                    <circle cx="50" cy="50" r="10" fill="black" />
-                    <rect x="40" y="20" width="6" height="20" fill="black" />
-                    <rect x="55" y="60" width="20" height="8" fill="black" />
-                    <rect x="70" y="45" width="12" height="12" fill="black" />
-                  </svg>
-                </div>
-                <span style="font-size: 11px; color: var(--text-muted);">Instant SMS & Email Confirmation with QR Entry</span>
+              <div class="pass-verification-box">
+                <span>📱 Instant SMS & Email Confirmation Dispatched</span>
               </div>
             </div>
 
-            <!-- Existing Bookings Table -->
-            <div class="glass-card" style="margin-top: 24px;">
-              <h4 style="color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 12px;">Recent Confirmed Bookings (Dhaka)</h4>
-              <div id="recent-reservations-list" style="display: flex; flex-direction: column; gap: 8px;">
-                <!-- Populated dynamically -->
+            <!-- Recent Confirmed Bookings -->
+            <div class="recent-bookings-box">
+              <div class="recent-bookings-title">
+                <span>📅</span> <span>Recent Confirmed Bookings (Dhaka)</span>
               </div>
+              ${(pastBookings.length ? pastBookings : [
+                { guestName: 'Farhan Kabir', partySize: 4, reservationDate: '2026-08-19', timeSlot: '20:00', tablePreference: 'Gulshan Dining Hall', code: 'FC-DHK-801' },
+                { guestName: 'Nusrat Jahan', partySize: 2, reservationDate: '2026-08-19', timeSlot: '19:30', tablePreference: 'Banani Skyline Lounge', code: 'FC-DHK-802' }
+              ]).map(b => `
+                <div class="recent-booking-item">
+                  <div>
+                    <div class="recent-guest-name">${b.guestName} (${b.partySize} Guests)</div>
+                    <div class="recent-guest-meta">${b.reservationDate} @ ${b.timeSlot} • ${b.tablePreference}</div>
+                  </div>
+                  <span class="badge badge-success">${b.bookingCode || b.code || 'CONFIRMED'}</span>
+                </div>
+              `).join('')}
             </div>
           </div>
         </div>
@@ -191,7 +187,6 @@ class ReservationsComponent {
     `;
 
     this._attachEvents();
-    this._loadRecentReservations();
   }
 
   _isCurrentSlotPeak() {
@@ -199,107 +194,113 @@ class ReservationsComponent {
   }
 
   _attachEvents() {
+    // Date change
+    const dateInput = document.getElementById('res-date');
+    if (dateInput) {
+      dateInput.addEventListener('change', (e) => {
+        this.selectedDate = e.target.value;
+        this._updatePassPreview();
+      });
+    }
+
+    // Party size chips
     document.querySelectorAll('#party-size-chips .party-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
+      chip.addEventListener('click', (e) => {
         document.querySelectorAll('#party-size-chips .party-chip').forEach(c => c.classList.remove('selected'));
         chip.classList.add('selected');
         this.selectedPartySize = parseInt(chip.dataset.size);
-        document.getElementById('pass-guests').textContent = `${this.selectedPartySize} Guests`;
+        this._updatePassPreview();
       });
     });
 
+    // Seating cards
     document.querySelectorAll('#seating-preference-grid .seating-card').forEach(card => {
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
         document.querySelectorAll('#seating-preference-grid .seating-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         this.selectedSeating = card.dataset.seating;
-        document.getElementById('pass-seating').textContent = this.selectedSeating;
+        this._updatePassPreview();
       });
     });
 
+    // Time slot buttons
     document.querySelectorAll('#time-slots-grid .time-slot-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
         document.querySelectorAll('#time-slots-grid .time-slot-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         this.selectedTimeSlot = btn.dataset.time;
-        const isPeak = btn.dataset.peak === 'true';
-        document.getElementById('peak-deposit-alert').style.display = isPeak ? 'flex' : 'none';
-        document.getElementById('pass-deposit').textContent = `৳${isPeak ? '500' : '0'}`;
-        document.getElementById('pass-datetime').textContent = `${this.selectedDate} @ ${this.selectedTimeSlot}`;
+        
+        const isPeak = this._isCurrentSlotPeak();
+        const alertBox = document.getElementById('peak-deposit-alert');
+        if (alertBox) {
+          alertBox.style.display = isPeak ? 'flex' : 'none';
+        }
+        this._updatePassPreview();
       });
     });
 
-    const dateInput = document.getElementById('res-date');
-    if (dateInput) {
-      dateInput.addEventListener('change', () => {
-        this.selectedDate = dateInput.value;
-        document.getElementById('pass-datetime').textContent = `${this.selectedDate} @ ${this.selectedTimeSlot}`;
-      });
-    }
+    // Name & Phone input live reflection
+    document.getElementById('res-name')?.addEventListener('input', (e) => {
+      const el = document.getElementById('pass-name');
+      if (el) el.textContent = e.target.value || 'Your Name';
+    });
 
-    const nameInput = document.getElementById('res-name');
-    if (nameInput) {
-      nameInput.addEventListener('input', () => {
-        document.getElementById('pass-name').textContent = nameInput.value || 'Your Name';
-      });
-    }
-
+    // Form Submission
     const form = document.getElementById('reservation-form');
     if (form) {
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const name = document.getElementById('res-name').value;
+        const phone = document.getElementById('res-phone').value;
+        const email = document.getElementById('res-email').value;
+        const notes = document.getElementById('res-notes').value;
 
-        const guestName = document.getElementById('res-name').value.trim();
-        const guestPhone = document.getElementById('res-phone').value.trim();
-        const guestEmail = document.getElementById('res-email').value.trim();
-        const specialRequest = document.getElementById('res-notes').value.trim();
-        const bookingCode = `FC-DHK-${Math.floor(1000 + Math.random() * 9000)}`;
-        const isPeak = this._isCurrentSlotPeak();
+        const bookingCode = `FC-DHK-${Math.floor(100 + Math.random() * 900)}`;
+        const deposit = this._isCurrentSlotPeak() ? 500 : 0;
 
-        const newRes = {
-          bookingCode,
-          guestName,
-          guestPhone,
-          guestEmail,
+        const newBooking = {
+          _id: `res_${Date.now()}`,
+          bookingCode: bookingCode,
+          guestName: name,
+          guestPhone: phone,
+          guestEmail: email,
           partySize: this.selectedPartySize,
-          date: this.selectedDate,
+          reservationDate: this.selectedDate,
           timeSlot: this.selectedTimeSlot,
           tablePreference: this.selectedSeating,
-          depositPaid: isPeak ? 500 : 0,
+          depositPaid: deposit,
           status: 'Confirmed',
-          specialRequest
+          specialRequest: notes,
+          createdAt: new Date().toISOString()
         };
 
-        await window.store.db.collection('reservations').insertOne(newRes);
+        await window.store.db.collection('reservations').insertOne(newBooking);
 
+        // Update pass preview to confirmed
         document.getElementById('pass-code').textContent = bookingCode;
-        const statusBadge = document.getElementById('pass-status');
-        statusBadge.className = 'badge badge-success';
-        statusBadge.textContent = 'CONFIRMED ✓';
+        document.getElementById('pass-status').textContent = 'CONFIRMED';
+        document.getElementById('pass-status').className = 'badge badge-success';
 
         window.store.audio.playKitchenBell();
-        window.app.showToast(`🎉 Reservation confirmed! Booking ID ${bookingCode}. SMS sent to ${guestPhone}`, 'success');
-        
-        form.reset();
-        this._loadRecentReservations();
+        window.app.showToast(`Table confirmed! Reference: ${bookingCode}. SMS confirmation sent to ${phone}`, 'success');
+
+        setTimeout(() => {
+          this.render();
+        }, 1500);
       });
     }
   }
 
-  async _loadRecentReservations() {
-    const list = document.getElementById('recent-reservations-list');
-    if (!list) return;
+  _updatePassPreview() {
+    const dtEl = document.getElementById('pass-datetime');
+    const gEl = document.getElementById('pass-guests');
+    const sEl = document.getElementById('pass-seating');
+    const dEl = document.getElementById('pass-deposit');
 
-    const resList = await window.store.db.collection('reservations').find({}, { sort: { createdAt: -1 }, limit: 4 });
-    list.innerHTML = resList.map(r => `
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: var(--bg-surface-elevated); border-radius: var(--radius-sm); font-size: 12.5px;">
-        <div>
-          <strong style="color: #fff;">${r.guestName}</strong> (${r.partySize}p)
-          <div style="font-size: 11px; color: var(--text-muted);">${r.date} @ ${r.timeSlot} • ${r.tablePreference}</div>
-        </div>
-        <span class="badge badge-success" style="font-size: 10px;">${r.bookingCode}</span>
-      </div>
-    `).join('');
+    if (dtEl) dtEl.textContent = `${this.selectedDate} @ ${this.selectedTimeSlot}`;
+    if (gEl) gEl.textContent = `${this.selectedPartySize} Guests`;
+    if (sEl) sEl.textContent = this.selectedSeating;
+    if (dEl) dEl.textContent = `৳${this._isCurrentSlotPeak() ? '500' : '0'}`;
   }
 }
 
