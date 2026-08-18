@@ -323,6 +323,7 @@ window.SEED_DATA = {
     {
       _id: 'ord_101',
       orderNumber: '#FC-DHK-501',
+      userId: 'usr_customer_asif',
       type: 'Dine-In',
       tableNumber: 'T-03',
       customerName: 'Asif Rahman',
@@ -344,6 +345,7 @@ window.SEED_DATA = {
     {
       _id: 'ord_102',
       orderNumber: '#FC-DHK-502',
+      userId: 'usr_customer_nusrat',
       type: 'Dine-In',
       tableNumber: 'T-02',
       customerName: 'Nusrat Jahan',
@@ -365,6 +367,7 @@ window.SEED_DATA = {
     {
       _id: 'ord_103',
       orderNumber: '#FC-DHK-503',
+      userId: 'usr_customer_fahim',
       type: 'Delivery',
       deliveryAddress: 'House 24, Road 7, Dhanmondi, Dhaka',
       customerName: 'Fahim Choudhury',
@@ -383,6 +386,30 @@ window.SEED_DATA = {
       discount: 100,
       totalAmount: 1346,
       paymentMethod: 'Card Payment',
+      paymentStatus: 'Paid'
+    },
+    {
+      _id: 'ord_104',
+      orderNumber: '#FC-DHK-480',
+      userId: 'usr_customer_asif',
+      type: 'Delivery',
+      deliveryAddress: 'House 42, Road 11, Block D, Banani, Dhaka',
+      customerName: 'Asif Rahman',
+      customerPhone: '+880 1711-234567',
+      status: 'Completed',
+      driverName: 'Mehedi Hasan (Delivery Rider #04)',
+      createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
+      items: [
+        { dishId: 'dish_01', name: 'Puran Dhaka Mutton Kacchi Biryani', quantity: 1, unitPrice: 650, modifiers: ['Cold Borhani (+৳80)'], itemTotal: 730 },
+        { dishId: 'dish_04', name: 'Chittagong Beef Kala Bhuna', quantity: 1, unitPrice: 680, modifiers: [], itemTotal: 680 }
+      ],
+      subtotal: 1410,
+      taxVat: 70.50,
+      serviceCharge: 0,
+      deliveryFee: 60,
+      discount: 0,
+      totalAmount: 1540.50,
+      paymentMethod: 'bKash',
       paymentStatus: 'Paid'
     }
   ],

@@ -252,12 +252,52 @@ class OrderingComponent {
     window.app.openModal('modal-checkout');
   }
 
-  // --- Live Order Tracker View ---
-  async renderTracker(specificOrderId = null) {
+  // --- Live Order Tracker View with Real-Life Role Logic ---
+  async renderTracker(specificOrderId = null, activeFilter = 'all') {
     const container = document.getElementById('view-tracking');
     if (!container) return;
 
     const allOrders = await window.store.db.collection('orders').find({}, { sort: { createdAt: -1 } });
+    const user = window.store.currentUser;
+    const role = window.store.currentRole;
+
+    const isStaffAdmin = ['Admin', 'Manager'].includes(role);
+    const isKitchen = role === 'Kitchen';
+    const isCustomer = role === 'Customer';
+
+    // 1. Role-Based Orders Filtering
+    let visibleOrders = [];
+
+    if (isStaffAdmin) {
+      // Admin & Manager: See past, present, and future all system orders
+      if (activeFilter === 'active') {
+        visibleOrders = allOrders.filter(o => ['New', 'Preparing', 'Ready to Serve', 'Out for Delivery'].includes(o.status));
+      } else if (activeFilter === 'delivery') {
+        visibleOrders = allOrders.filter(o => o.type === 'Delivery' && o.status === 'Out for Delivery');
+      } else if (activeFilter === 'completed') {
+        visibleOrders = allOrders.filter(o => o.status === 'Completed');
+      } else {
+        visibleOrders = allOrders;
+      }
+    } else if (isKitchen) {
+      // Kitchen: Sees all active food preparation orders
+      visibleOrders = allOrders.filter(o => ['New', 'Preparing', 'Ready to Serve'].includes(o.status));
+    } else if (isCustomer && user) {
+      // Customer: Sees ONLY his/her own placed orders
+      visibleOrders = allOrders.filter(o => 
+        (o.userId && o.userId === user._id) ||
+        (user.phone && o.customerPhone && o.customerPhone.replace(/[\s-]/g, '') === user.phone.replace(/[\s-]/g, '')) ||
+        (user.name && o.customerName && o.customerName.toLowerCase() === user.name.toLowerCase()) ||
+        o._id === window.store.lastCreatedOrderId
+      );
+    } else {
+      // Guest / Unauthenticated
+      if (window.store.lastCreatedOrderId) {
+        visibleOrders = allOrders.filter(o => o._id === window.store.lastCreatedOrderId);
+      } else {
+        visibleOrders = [];
+      }
+    }
 
     if (specificOrderId) {
       this.activeTrackingOrderId = specificOrderId;
@@ -265,46 +305,105 @@ class OrderingComponent {
 
     let order = null;
     if (this.activeTrackingOrderId) {
-      order = allOrders.find(o => o._id === this.activeTrackingOrderId);
+      order = visibleOrders.find(o => o._id === this.activeTrackingOrderId);
     }
-    if (!order && allOrders.length > 0) {
-      order = allOrders[0];
+    if (!order && visibleOrders.length > 0) {
+      order = visibleOrders[0];
       this.activeTrackingOrderId = order._id;
     }
 
+    // 2. Empty State Handling
     if (!order) {
       container.innerHTML = `
         <div class="tracker-container">
           <div class="tracker-card" style="text-align: center; padding: 60px 20px;">
-            <div style="font-size: 48px; margin-bottom: 12px;">📍</div>
-            <h2 style="color: var(--heading-color); font-size: 22px; margin-bottom: 8px;">No Active Orders Tracking</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">Place an order from our menu to track real-time kitchen and delivery progress.</p>
-            <button class="btn btn-primary" onclick="window.app.navigate('menu')">Browse Menu & Order</button>
+            <div style="font-size: 48px; margin-bottom: 14px;">📍</div>
+            <h2 style="color: var(--heading-color); font-size: 22px; margin-bottom: 8px;">
+              ${isCustomer && user ? `Welcome, ${user.name}!` : 'Live Order Tracking'}
+            </h2>
+            <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 24px; font-size: 14px;">
+              ${isCustomer ? 
+                "You don't have any active orders right now. Explore our authentic Dhaka menu and place your feast to track real-time kitchen preparation and rider dispatch!" :
+                isKitchen ?
+                "No active orders in the kitchen queue. All tickets bumped & served!" :
+                "No orders found matching your search. Please sign in or place an order from the menu to track live progress."
+              }
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+              <button class="btn btn-primary btn-lg" onclick="window.app.navigate('menu')">
+                <span>🍽️ Explore Menu & Order</span>
+              </button>
+              ${!user ? `
+                <button class="btn btn-secondary btn-lg" onclick="window.authComponent.openLoginModal()">
+                  <span>🔑 Sign In to View Order History</span>
+                </button>
+              ` : ''}
+            </div>
           </div>
         </div>
       `;
       return;
     }
 
+    // 3. Multi-Stage Progress Calculation
     const stages = ['New', 'Preparing', 'Ready to Serve', 'Completed'];
     if (order.type === 'Delivery') {
       stages[2] = 'Out for Delivery';
     }
 
     const currentStageIdx = stages.indexOf(order.status) > -1 ? stages.indexOf(order.status) : 1;
-    const progressPercent = (currentStageIdx / (stages.length - 1)) * 100;
 
     container.innerHTML = `
       <div class="tracker-container">
+        
+        <!-- Role-Aware Banner Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--heading-color); margin-bottom: 4px;">
+              ${isStaffAdmin ? '🛡️ Operations Radar — All System Orders (Past, Live & Future)' : 
+                isKitchen ? '🍳 Kitchen Station Radar — Active Food Preparation' :
+                `📍 Live Order Tracker — ${user ? user.name : 'Guest'}`}
+            </h2>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">
+              ${isStaffAdmin ? `Admin & Manager view: Monitoring all ${allOrders.length} transactions across dine-in and delivery.` :
+                isKitchen ? 'Chef station view: Real-time ticket cook stages and preparation times.' :
+                'Real-time tracking of your authentic Dhaka feast from kitchen to table / doorstep.'}
+            </p>
+          </div>
+
+          ${isStaffAdmin ? `
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="btn btn-sm ${activeFilter === 'all' ? 'btn-primary' : 'btn-secondary'}" onclick="window.app.components.ordering.renderTracker(null, 'all')">
+                All (${allOrders.length})
+              </button>
+              <button class="btn btn-sm ${activeFilter === 'active' ? 'btn-primary' : 'btn-secondary'}" onclick="window.app.components.ordering.renderTracker(null, 'active')">
+                Active / In-Prep
+              </button>
+              <button class="btn btn-sm ${activeFilter === 'delivery' ? 'btn-primary' : 'btn-secondary'}" onclick="window.app.components.ordering.renderTracker(null, 'delivery')">
+                Out for Delivery
+              </button>
+              <button class="btn btn-sm ${activeFilter === 'completed' ? 'btn-primary' : 'btn-secondary'}" onclick="window.app.components.ordering.renderTracker(null, 'completed')">
+                Completed
+              </button>
+            </div>
+          ` : ''}
+        </div>
+
         <!-- 1. Live Active Order Tracking Card -->
         <div class="tracker-card">
           <div class="tracker-header">
             <div>
-              <span style="font-size: 11.5px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Live Active Order</span>
+              <span style="font-size: 11.5px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Live Tracked Order</span>
               <div class="tracker-order-id">${order.orderNumber} • ${order.type} ${order.tableNumber ? `(${order.tableNumber})` : ''}</div>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
+                Customer: <strong>${order.customerName || 'Walk-in Guest'}</strong> • Phone: <strong>${order.customerPhone || 'N/A'}</strong>
+              </div>
             </div>
-            <div class="badge badge-${order.status === 'Completed' ? 'success' : order.status === 'New' ? 'amber' : 'primary'}" style="font-size: 13px; padding: 6px 14px;">
-              ⏱️ ${order.status === 'Completed' ? 'Order Delivered / Served' : 'Estimated: ~15-20 Mins'}
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+              <div class="badge badge-${order.status === 'Completed' ? 'success' : order.status === 'New' ? 'amber' : 'primary'}" style="font-size: 13px; padding: 6px 14px;">
+                ⏱️ ${order.status === 'Completed' ? 'Order Delivered / Served' : 'Estimated: ~15-20 Mins'}
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted);">Placed: ${new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
           </div>
 
@@ -329,12 +428,25 @@ class OrderingComponent {
             <div class="rider-info" style="flex: 1;">
               <h4>${order.type === 'Delivery' ? (order.driverName || 'Mehedi Hasan (Delivery Rider #04)') : 'Chef Rony (Kacchi & Grill Master)'}</h4>
               <p>
-                ${order.status === 'New' ? 'Ticket received in kitchen station. Preparing ingredients...' : 
+                ${order.status === 'New' ? 'Ticket received in kitchen station. Preparing fresh ingredients...' : 
                   order.status === 'Preparing' ? 'Kacchi / Curry on active woodfired dum and flame cooking!' :
-                  order.status === 'Out for Delivery' ? 'Rider dispatched on Dhaka roads heading to your address!' :
-                  order.status === 'Ready to Serve' ? 'Plated and ready to be served at your table!' : 'Order completed & enjoyed!'}
+                  order.status === 'Out for Delivery' ? `Rider dispatched heading to ${order.deliveryAddress || 'your address'}!` :
+                  order.status === 'Ready to Serve' ? `Plated fresh and ready at ${order.tableNumber || 'your table'}!` : 'Order completed & enjoyed!'}
               </p>
             </div>
+
+            ${isStaffAdmin ? `
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <select class="form-select" id="staff-update-order-status" style="font-size: 12px; padding: 6px 10px; font-weight: 700;">
+                  <option value="New" ${order.status === 'New' ? 'selected' : ''}>Status: New</option>
+                  <option value="Preparing" ${order.status === 'Preparing' ? 'selected' : ''}>Status: Preparing</option>
+                  <option value="${order.type === 'Delivery' ? 'Out for Delivery' : 'Ready to Serve'}" ${['Out for Delivery', 'Ready to Serve'].includes(order.status) ? 'selected' : ''}>
+                    Status: ${order.type === 'Delivery' ? 'Out for Delivery' : 'Ready to Serve'}
+                  </option>
+                  <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Status: Completed</option>
+                </select>
+              </div>
+            ` : ''}
           </div>
 
           <!-- Ordered Items Summary -->
@@ -361,14 +473,16 @@ class OrderingComponent {
           </div>
         </div>
 
-        <!-- 2. Previous Orders History List -->
+        <!-- 2. Orders History List (Role-Aware) -->
         <div class="data-table-card" style="margin-top: 32px;">
           <div class="table-card-header">
-            <h4 class="table-card-title">📜 Previous Orders History (${allOrders.length})</h4>
-            <span style="font-size: 12px; color: var(--text-secondary);">Select any previous order to view live status</span>
+            <h4 class="table-card-title">
+              📜 ${isStaffAdmin ? `All System Orders History (${visibleOrders.length})` : `My Previous Orders History (${visibleOrders.length})`}
+            </h4>
+            <span style="font-size: 12px; color: var(--text-secondary);">Select any order to view detailed live status</span>
           </div>
           <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
-            ${allOrders.map(ord => {
+            ${visibleOrders.map(ord => {
               const isCurrent = ord._id === order._id;
               const itemsListStr = (ord.items || []).map(i => `${i.quantity}x ${i.name}`).join(', ');
               return `
@@ -378,17 +492,18 @@ class OrderingComponent {
                       <strong style="font-family: var(--font-mono); font-size: 15px; color: var(--heading-color);">${ord.orderNumber}</strong>
                       <span class="badge badge-${ord.type === 'Delivery' ? 'saffron' : 'primary'}">${ord.type} ${ord.tableNumber ? `• ${ord.tableNumber}` : ''}</span>
                       <span class="badge badge-${ord.status === 'Completed' ? 'success' : ord.status === 'New' ? 'amber' : 'primary'}">${ord.status}</span>
+                      ${isStaffAdmin ? `<span style="font-size: 11.5px; color: var(--text-secondary);">• Guest: <strong>${ord.customerName || 'Walk-in'}</strong></span>` : ''}
                     </div>
                     <div style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 2px;">
                       ${itemsListStr}
                     </div>
                     <div style="font-size: 11.5px; color: var(--text-muted);">
-                      Paid via ${ord.paymentMethod || 'Cash'} • Total: <strong>৳${(ord.totalAmount || 0).toLocaleString()}</strong>
+                      Placed: ${new Date(ord.createdAt).toLocaleDateString()} at ${new Date(ord.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • Paid via ${ord.paymentMethod || 'Cash'} • Total: <strong>৳${(ord.totalAmount || 0).toLocaleString()}</strong>
                     </div>
                   </div>
                   <div>
-                    <button class="btn btn-${isCurrent ? 'primary' : 'secondary'} btn-sm" onclick="window.app.components.ordering.renderTracker('${ord._id}')">
-                      ${isCurrent ? '📍 Tracking Now' : 'Track Order ➔'}
+                    <button class="btn btn-${isCurrent ? 'primary' : 'secondary'} btn-sm" onclick="window.app.components.ordering.renderTracker('${ord._id}', '${activeFilter}')">
+                      ${isCurrent ? '📍 Tracking Now' : 'Inspect Radar ➔'}
                     </button>
                   </div>
                 </div>
@@ -399,27 +514,18 @@ class OrderingComponent {
       </div>
     `;
 
-    const advBtn = document.getElementById('btn-advance-status');
-    if (advBtn) {
-      advBtn.addEventListener('click', async () => {
-        const nextStatusMap = {
-          'New': 'Preparing',
-          'Preparing': order.type === 'Delivery' ? 'Out for Delivery' : 'Ready to Serve',
-          'Out for Delivery': 'Completed',
-          'Ready to Serve': 'Completed',
-          'Completed': 'New'
-        };
-        const nextStatus = nextStatusMap[order.status] || 'Preparing';
-
+    // Staff status updater handler
+    const statusSelect = document.getElementById('staff-update-order-status');
+    if (statusSelect) {
+      statusSelect.addEventListener('change', async (e) => {
+        const newStatus = e.target.value;
         await window.store.db.collection('orders').updateOne(
           { _id: order._id },
-          { $set: { status: nextStatus } }
+          { $set: { status: newStatus } }
         );
-
-        order.status = nextStatus;
-        window.store.audio.playKitchenBell();
-        this.renderTracker(order._id);
-        window.app.showToast(`Order status updated to "${nextStatus}"`, 'info');
+        order.status = newStatus;
+        window.app.showToast(`Order ${order.orderNumber} status changed to "${newStatus}"`, 'success');
+        this.renderTracker(order._id, activeFilter);
       });
     }
   }
