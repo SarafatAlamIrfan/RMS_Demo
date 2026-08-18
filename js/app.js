@@ -22,21 +22,23 @@ class Application {
       auth: window.authComponent
     };
 
+    // 1. Initialize Store First
+    await window.store.init();
+
+    // 2. Initialize Components
     this.components.ordering.init();
     this.components.kds.init();
     this.components.rbac.init();
     if (this.components.auth) this.components.auth.init();
 
-    // Initialize Store
-    await window.store.init();
-
-    // Setup global UI listeners
+    // 3. Setup global UI listeners
     this._attachGlobalEvents();
 
-    // Apply initial role restrictions
+    // 4. Apply initial role restrictions & topbar auth badge
     window.rbacComponent.applyRoleRestrictions(window.store.currentRole, window.store.currentUser);
+    if (this.components.auth) this.components.auth.renderTopbarAuthBadge();
 
-    // Render Initial View
+    // 5. Render Initial View
     this.navigate(this.currentView);
     this.components.ordering.renderCartDrawer();
   }

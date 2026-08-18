@@ -163,7 +163,7 @@ class AppStore {
   async init() {
     await this.db.init(window.SEED_DATA);
 
-    // Restore saved session if exists
+    // Restore saved session if exists, or default to Executive Admin (Sadia Islam Dia)
     const savedSession = localStorage.getItem('flavourcraft_auth_session');
     if (savedSession) {
       try {
@@ -176,6 +176,15 @@ class AppStore {
         }
       } catch (e) {
         console.warn('Session parse error:', e);
+      }
+    }
+
+    if (!this.currentUser) {
+      const adminUser = await this.db.collection('users').findOne({ role: 'Admin' });
+      if (adminUser) {
+        this.currentUser = adminUser;
+        this.currentRole = adminUser.role;
+        this.isAuthenticated = true;
       }
     }
 
