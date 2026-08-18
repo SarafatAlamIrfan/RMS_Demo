@@ -1,93 +1,99 @@
 /* ==========================================================================
-   FlavourCraft - Analytics & Visual Reports Stylesheet
+   FlavourCraft - Executive Analytics & Financial Reports Stylesheet
+   Theme: Light Mode (Pinkish Red & Saffron Palette)
    ========================================================================== */
 
 .analytics-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
   gap: 16px;
 }
 
+.analytics-header-row h2 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--heading-color);
+}
+
+/* 1. Scorecards Grid */
 .analytics-scorecards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
   margin-bottom: 28px;
 }
 
 .metric-card {
-  background: var(--bg-surface-card);
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   padding: 22px;
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+  display: flex;
+  flex-direction: column;
 }
 
-.metric-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--primary);
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-md);
 }
 
 .metric-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .metric-label {
   font-size: 13px;
+  font-weight: 700;
   color: var(--text-secondary);
-  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .metric-val {
   font-family: var(--font-heading);
   font-size: 28px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.1;
-  margin-bottom: 6px;
+  font-weight: 900;
+  color: var(--heading-color);
+  line-height: 1.2;
+  margin-bottom: 8px;
 }
 
 .metric-subtext {
   font-size: 12px;
+  font-weight: 600;
   color: var(--color-success);
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
-/* Analytics Charts Layout */
+/* 2. Charts Grid */
 .analytics-charts-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 24px;
   margin-bottom: 28px;
 }
 
-@media (max-width: 990px) {
+@media (max-width: 1024px) {
   .analytics-charts-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .chart-card {
-  background: var(--bg-surface-card);
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   padding: 24px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .chart-card-header {
@@ -95,190 +101,96 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .chart-card-title {
   font-family: var(--font-heading);
-  font-size: 17px;
-  font-weight: 700;
-  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--heading-color);
 }
 
-/* SVG Chart Visualizer */
-.svg-chart-container {
+.chart-svg-wrap {
   width: 100%;
   height: 240px;
 }
 
-.svg-chart-container svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.chart-bar {
-  fill: var(--primary);
-  opacity: 0.85;
-  transition: all 0.25s ease;
-  cursor: pointer;
-}
-
-.chart-bar:hover {
-  opacity: 1;
-  fill: var(--primary-light);
-  filter: drop-shadow(0 0 8px var(--primary));
-}
-
-.chart-grid-line {
-  stroke: rgba(255, 255, 255, 0.06);
-  stroke-dasharray: 4;
-}
-
-.chart-axis-label {
-  fill: var(--text-muted);
-  font-size: 11px;
-  font-family: var(--font-body);
-}
-
-/* Peak Hours Heatmap */
-.peak-hours-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.peak-hour-cell {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 12px 6px;
-  text-align: center;
-  transition: var(--transition-fast);
-}
-
-.peak-hour-time {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.peak-hour-traffic {
-  font-size: 14px;
-  font-weight: 800;
-  font-family: var(--font-heading);
-}
-
-.peak-hour-cell.heat-high {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #fca5a5;
-}
-
-.peak-hour-cell.heat-medium {
-  background: rgba(245, 158, 11, 0.2);
-  border-color: rgba(245, 158, 11, 0.4);
-  color: #fde68a;
-}
-
-.peak-hour-cell.heat-low {
-  background: rgba(16, 185, 129, 0.15);
-  border-color: rgba(16, 185, 129, 0.3);
-  color: #a7f3d0;
-}
-
-/* Top Selling Dish List */
+/* 3. Top Dishes Ranking */
 .top-dishes-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .top-dish-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  background: var(--bg-surface-elevated);
+  padding: 12px 14px;
+  background: #fff5f7;
   border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
 }
 
-.top-dish-rank {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--primary-light);
-  font-size: 12px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.top-dish-info {
-  flex: 1;
-  margin: 0 12px;
+.top-dish-row:hover {
+  background: #fff1f2;
+  border-color: var(--border-medium);
 }
 
 .top-dish-name {
   font-size: 13.5px;
   font-weight: 700;
-  color: #fff;
+  color: var(--heading-color);
 }
 
-.top-dish-sales {
+.top-dish-count {
   font-size: 12px;
-  color: var(--text-muted);
+  font-weight: 800;
+  color: var(--primary);
 }
 
 .top-dish-revenue {
-  font-family: var(--font-heading);
+  font-family: var(--font-mono);
   font-weight: 800;
-  font-size: 14px;
-  color: var(--primary-light);
+  color: var(--heading-color);
+  font-size: 13.5px;
 }
 
-/* Light Mode Overrides for Analytics */
-[data-theme="light"] .metric-card {
+/* 4. Peak Hours Heatmap */
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.heatmap-cell {
   background: #ffffff;
-  border-color: #e2e8f0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  text-align: center;
 }
 
-[data-theme="light"] .metric-label {
-  color: #475569;
+.heatmap-cell.peak {
+  background: #fff1f2;
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 800;
 }
 
-[data-theme="light"] .metric-val {
-  color: #0f172a;
+.heatmap-hour {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 4px;
 }
 
-[data-theme="light"] .analytics-chart-panel {
-  background: #ffffff;
-  border-color: #e2e8f0;
+.heatmap-intensity {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--heading-color);
 }
-
-[data-theme="light"] .chart-title {
-  color: #0f172a;
-}
-
-[data-theme="light"] .chart-axis-label {
-  fill: #64748b;
-}
-
-[data-theme="light"] .top-dish-item {
-  background: #f8fafc;
-  border-color: #e2e8f0;
-}
-
-[data-theme="light"] .top-dish-name {
-  color: #0f172a;
-}
-
-[data-theme="light"] .peak-hour-cell {
-  background: #f8fafc;
-  border-color: #e2e8f0;
-}
-
