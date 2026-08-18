@@ -161,14 +161,11 @@ class AuthComponent {
 
       <!-- Auth Navigation Tabs -->
       <div class="auth-tabs" id="auth-modal-tabs">
-        <button class="auth-tab-btn ${this.activeTab === 'customer' ? 'active' : ''}" data-tab="customer">
-          🍽️ Customer Sign In
-        </button>
-        <button class="auth-tab-btn ${this.activeTab === 'staff' ? 'active' : ''}" data-tab="staff">
-          🛡️ Staff & Admin Portal
+        <button class="auth-tab-btn ${this.activeTab !== 'register' ? 'active' : ''}" data-tab="login">
+          🔑 Sign In
         </button>
         <button class="auth-tab-btn ${this.activeTab === 'register' ? 'active' : ''}" data-tab="register">
-          📝 Register New Account
+          📝 Register Account
         </button>
       </div>
 
@@ -193,39 +190,7 @@ class AuthComponent {
   }
 
   _renderTabForm() {
-    if (this.activeTab === 'customer') {
-      return `
-        <form id="form-customer-login">
-          <div class="form-group">
-            <label class="form-label">Mobile Number or Email Address *</label>
-            <input type="text" class="form-input" id="auth-cust-id" placeholder="+880 1711-234567 or asif.rahman@gmail.com" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Account Password *</label>
-            <input type="password" class="form-input" id="auth-cust-pass" placeholder="Enter your password" required />
-          </div>
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
-            <span>🚀 Sign In</span>
-          </button>
-        </form>
-      `;
-    } else if (this.activeTab === 'staff') {
-      return `
-        <form id="form-staff-login">
-          <div class="form-group">
-            <label class="form-label">Staff Username or Email *</label>
-            <input type="text" class="form-input" id="auth-staff-id" placeholder="Enter staff username (e.g. admin, manager, kitchen)" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Staff Security Password *</label>
-            <input type="password" class="form-input" id="auth-staff-pass" placeholder="••••••••" required />
-          </div>
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
-            <span>🛡️ Authenticate & Unlock Portal</span>
-          </button>
-        </form>
-      `;
-    } else {
+    if (this.activeTab === 'register') {
       return `
         <form id="form-register-customer">
           <div class="form-row">
@@ -251,7 +216,23 @@ class AuthComponent {
             <input type="password" class="form-input" id="reg-pass" placeholder="At least 6 characters" value="123456" required />
           </div>
           <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
-            <span>✨ Create Customer Account</span>
+            <span>✨ Create Account</span>
+          </button>
+        </form>
+      `;
+    } else {
+      return `
+        <form id="form-unified-login">
+          <div class="form-group">
+            <label class="form-label">Username, Mobile Number, or Email *</label>
+            <input type="text" class="form-input" id="auth-login-id" placeholder="e.g. admin, manager, kitchen, or +880 1711-234567" required autofocus />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password *</label>
+            <input type="password" class="form-input" id="auth-login-pass" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
+            <span>🚀 Sign In</span>
           </button>
         </form>
       `;
@@ -259,33 +240,12 @@ class AuthComponent {
   }
 
   _bindFormEvents() {
-    const custForm = document.getElementById('form-customer-login');
-    if (custForm) {
-      custForm.addEventListener('submit', async (e) => {
+    const loginForm = document.getElementById('form-unified-login');
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const id = document.getElementById('auth-cust-id').value.trim();
-        const pass = document.getElementById('auth-cust-pass').value.trim();
-        const res = await window.store.login(id, pass);
-        if (res.success) {
-          window.app.closeModal('modal-auth');
-          window.app.showToast(res.message, 'success');
-          if (this.pendingCallback) {
-            const cb = this.pendingCallback;
-            this.pendingCallback = null;
-            cb(res.user);
-          }
-        } else {
-          window.app.showToast(res.message, 'danger');
-        }
-      });
-    }
-
-    const staffForm = document.getElementById('form-staff-login');
-    if (staffForm) {
-      staffForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('auth-staff-id').value.trim();
-        const pass = document.getElementById('auth-staff-pass').value.trim();
+        const id = document.getElementById('auth-login-id').value.trim();
+        const pass = document.getElementById('auth-login-pass').value.trim();
         const res = await window.store.login(id, pass);
         if (res.success) {
           window.app.closeModal('modal-auth');
@@ -295,7 +255,6 @@ class AuthComponent {
             this.pendingCallback = null;
             cb(res.user);
           } else {
-            // If logging in from staff gate, re-render current view
             window.app.navigate(window.app.currentView);
           }
         } else {

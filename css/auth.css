@@ -129,7 +129,7 @@
 /* Segmented Auth Navigation Tabs */
 .auth-tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 6px;
   background: #f1f5f9;
   padding: 4px;
