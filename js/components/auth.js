@@ -42,18 +42,19 @@ class AuthComponent {
         this.openLoginModal();
       });
     } else {
+      const cleanName = (user.name || '').replace(/\s*\(.*?\)\s*/g, '').trim();
       container.innerHTML = `
         <div class="topbar-auth-pill">
-          <button class="auth-user-btn" id="btn-auth-user-dropdown">
+          <button class="auth-user-btn" id="btn-auth-user-dropdown" title="Logged in as ${cleanName} (${user.role})">
             <span class="auth-user-avatar">${user.avatar || '👤'}</span>
-            <span style="font-weight: 700;">${user.name}</span>
+            <span style="font-weight: 700; white-space: nowrap;">${cleanName}</span>
             <span class="auth-user-role">${user.role}</span>
             <span style="font-size: 10px; opacity: 0.7;">▼</span>
           </button>
 
           <div class="auth-dropdown-menu" id="auth-dropdown-menu">
             <div class="dropdown-user-header">
-              <div class="dropdown-user-name">${user.name}</div>
+              <div class="dropdown-user-name">${cleanName}</div>
               <div class="dropdown-user-contact">${user.phone || user.email || user.username}</div>
             </div>
 
