@@ -108,27 +108,6 @@ class MenuComponent {
           `).join('')}
         </div>
 
-        <!-- Dietary Filters Row -->
-        <div class="menu-controls-row">
-          <div class="dietary-tags-row">
-            <button class="dietary-tag-btn ${this.activeDietary.includes('Spicy') ? 'active spicy' : ''}" data-dietary="Spicy">
-              🌶️ Naga Spicy
-            </button>
-            <button class="dietary-tag-btn ${this.activeDietary.includes('Vegetarian') ? 'active' : ''}" data-dietary="Vegetarian">
-              🌱 Vegetarian
-            </button>
-            <button class="dietary-tag-btn ${this.activeDietary.includes('Vegan') ? 'active' : ''}" data-dietary="Vegan">
-              🌿 Vegan
-            </button>
-            <button class="dietary-tag-btn ${this.activeDietary.includes('100% Halal') || this.activeDietary.includes('Halal') ? 'active halal' : ''}" data-dietary="100% Halal">
-              ✨ 100% Halal
-            </button>
-            <button class="dietary-tag-btn ${this.activeDietary.includes('Gluten-Free') ? 'active' : ''}" data-dietary="Gluten-Free">
-              🌾 Gluten-Free
-            </button>
-          </div>
-        </div>
-
         <!-- Dishes Grid -->
         <div class="menu-grid" id="dishes-grid">
           ${this._renderDishCards(dishes, canManage)}
@@ -187,13 +166,6 @@ class MenuComponent {
     return dishes.filter(dish => {
       if (this.activeCategory !== 'All Categories' && this.activeCategory !== 'All' && dish.category !== this.activeCategory) {
         return false;
-      }
-      if (this.activeDietary.length > 0) {
-        const hasAllTags = this.activeDietary.every(tag => {
-          if (tag === 'Spicy') return dish.spiceLevel > 0;
-          return dish.tags && dish.tags.includes(tag);
-        });
-        if (!hasAllTags) return false;
       }
       if (this.searchQuery) {
         const q = this.searchQuery.toLowerCase();
@@ -299,19 +271,6 @@ class MenuComponent {
       btn.addEventListener('click', (e) => {
         const cat = e.currentTarget.dataset.category;
         this.activeCategory = cat;
-        this.render();
-      });
-    });
-
-    // Dietary filter toggle
-    document.querySelectorAll('.dietary-tag-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const tag = e.currentTarget.dataset.dietary;
-        if (this.activeDietary.includes(tag)) {
-          this.activeDietary = this.activeDietary.filter(t => t !== tag);
-        } else {
-          this.activeDietary.push(tag);
-        }
         this.render();
       });
     });
