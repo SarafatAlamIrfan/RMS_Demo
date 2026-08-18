@@ -335,9 +335,6 @@ class OrderingComponent {
                   order.status === 'Ready to Serve' ? 'Plated and ready to be served at your table!' : 'Order completed & enjoyed!'}
               </p>
             </div>
-            <button class="btn btn-secondary btn-sm" id="btn-advance-status" title="Advance Stage for Live Demo">
-              ⚡ Advance Stage (Demo)
-            </button>
           </div>
 
           <!-- Ordered Items Summary -->

@@ -105,19 +105,17 @@ FlavourCraft features a vibrant **Light Mode** palette designed with **Pinkish R
 - **Executive Analytics & Reports**:
   - 7-day revenue velocity SVG bar chart (e.g. ৳12.37 Lakh turnover).
   - Hourly customer traffic & kitchen rush heatmap.
-  - Top 5 best-selling dishes ranking with revenue contribution.
-  - One-click JSON database export and backup.
+  - Top 5 best-selling dishes ranking.
 - **Authentication, Session & Role-Based Access Control (4 Roles)**:
   - **Customer Order Login Gate**: Guests can browse menu and add dishes to cart freely; clicking *Proceed to Checkout* prompts login/sign-up before confirming.
   - **Staff Operations Gate**: Kitchen KDS, Inventory, and Analytics are locked behind staff authentication.
-  - **One-Click Demo Credentials**:
+  - **Pre-Configured Staff & Customer Credentials**:
     | Role | Name | Identifier / Username | Password | Access Scope |
     | :--- | :--- | :--- | :--- | :--- |
     | 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access across all modules + Menu CRUD |
     | 👨‍💼 **Manager** | **Sarafat Alam Irfan** | `manager` | `manager123` | Operations, Inventory, Analytics + Menu CRUD |
     | 🍳 **Kitchen** | **Chef Rony** | `kitchen` | `kitchen123` | Kitchen KDS, Recipe Specs, Inventory |
     | 🍽️ **Customer** | **Asif Rahman** | `+880 1711-234567` / `customer` | `customer123` | Menu, Reservations, Order Checkout |
-  - Persistent login sessions via `localStorage` with dropdown profile menu & Sign Out action.
 
 ---
 

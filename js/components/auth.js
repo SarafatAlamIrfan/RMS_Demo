@@ -159,38 +159,16 @@ class AuthComponent {
         </div>
       ` : ''}
 
-      <!-- One-Click Demo Quick Login Pills Bar -->
-      <div class="demo-quick-login-box">
-        <div class="demo-quick-login-title">
-          <span>⚡ One-Click Demo Role Login</span>
-          <span style="font-size: 10px; color: var(--text-muted);">Click any role to test</span>
-        </div>
-        <div class="demo-pills-grid">
-          <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Admin')">
-            <span>👑</span> <span>Sadia (Admin)</span>
-          </button>
-          <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Manager')">
-            <span>👨‍💼</span> <span>Sarafat (Manager)</span>
-          </button>
-          <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Kitchen')">
-            <span>🍳</span> <span>Chef Rony (Kitchen)</span>
-          </button>
-          <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Customer')">
-            <span>🍽️</span> <span>Asif (Customer)</span>
-          </button>
-        </div>
-      </div>
-
       <!-- Auth Navigation Tabs -->
       <div class="auth-tabs" id="auth-modal-tabs">
         <button class="auth-tab-btn ${this.activeTab === 'customer' ? 'active' : ''}" data-tab="customer">
-          🍽️ Customer Login
+          🍽️ Customer Sign In
         </button>
         <button class="auth-tab-btn ${this.activeTab === 'staff' ? 'active' : ''}" data-tab="staff">
-          👔 Staff / Admin
+          🛡️ Staff & Admin Portal
         </button>
         <button class="auth-tab-btn ${this.activeTab === 'register' ? 'active' : ''}" data-tab="register">
-          📝 Register (New)
+          📝 Register New Account
         </button>
       </div>
 
@@ -219,16 +197,15 @@ class AuthComponent {
       return `
         <form id="form-customer-login">
           <div class="form-group">
-            <label class="form-label">Mobile Number / Email *</label>
-            <input type="text" class="form-input" id="auth-cust-id" placeholder="+880 1711-234567 or asif.rahman@gmail.com" value="+880 1711-234567" required />
+            <label class="form-label">Mobile Number or Email Address *</label>
+            <input type="text" class="form-input" id="auth-cust-id" placeholder="+880 1711-234567 or asif.rahman@gmail.com" required />
           </div>
           <div class="form-group">
-            <label class="form-label">Password *</label>
-            <input type="password" class="form-input" id="auth-cust-pass" placeholder="Enter your password" value="customer123" required />
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Default demo password: <code>customer123</code></div>
+            <label class="form-label">Account Password *</label>
+            <input type="password" class="form-input" id="auth-cust-pass" placeholder="Enter your password" required />
           </div>
           <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
-            <span>🚀 Sign In & Continue</span>
+            <span>🚀 Sign In</span>
           </button>
         </form>
       `;
@@ -237,12 +214,11 @@ class AuthComponent {
         <form id="form-staff-login">
           <div class="form-group">
             <label class="form-label">Staff Username or Email *</label>
-            <input type="text" class="form-input" id="auth-staff-id" placeholder="admin, manager, cashier, kitchen, rider" value="admin" required />
+            <input type="text" class="form-input" id="auth-staff-id" placeholder="Enter staff username (e.g. admin, manager, kitchen)" required />
           </div>
           <div class="form-group">
             <label class="form-label">Staff Security Password *</label>
-            <input type="password" class="form-input" id="auth-staff-pass" placeholder="••••••••" value="admin123" required />
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Admin Sadia: <code>admin123</code> • Staff: <code>manager123</code> / <code>cashier123</code></div>
+            <input type="password" class="form-input" id="auth-staff-pass" placeholder="••••••••" required />
           </div>
           <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
             <span>🛡️ Authenticate & Unlock Portal</span>
