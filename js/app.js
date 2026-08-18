@@ -204,9 +204,6 @@ class Application {
       const q = e.target.value;
       if (this.currentView === 'menu') {
         this.components.menu.setSearchQuery(q);
-      } else if (this.currentView === 'pos') {
-        this.components.pos.searchQuery = q;
-        this.components.pos.render();
       }
     });
 

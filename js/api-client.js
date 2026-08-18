@@ -116,21 +116,7 @@ class FlavourCraftApiClient {
     return window.store.createReservation(reservationPayload);
   }
 
-  // --- 5. Floor & Tables ---
-  async updateTableStatus(tableId, newStatus) {
-    if (this.isServerAvailable) {
-      try {
-        await fetch(`${this.baseUrl}/tables.php?action=update_status`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: tableId, status: newStatus })
-        });
-      } catch (e) {}
-    }
-    return window.store.updateTableStatus(tableId, newStatus);
-  }
-
-  // --- 6. Inventory & Waste ---
+  // --- 5. Inventory Restock ---
   async restockAll() {
     if (this.isServerAvailable) {
       try {
@@ -138,19 +124,6 @@ class FlavourCraftApiClient {
       } catch (e) {}
     }
     return window.store.reorderAllLowStock();
-  }
-
-  async logFoodWaste(wasteData) {
-    if (this.isServerAvailable) {
-      try {
-        await fetch(`${this.baseUrl}/inventory.php?action=waste`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(wasteData)
-        });
-      } catch (e) {}
-    }
-    return window.store.logFoodWaste(wasteData.ingredientId, wasteData.quantity, wasteData.reason);
   }
 }
 

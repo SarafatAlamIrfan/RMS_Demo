@@ -1,7 +1,7 @@
 <?php
 /**
- * FlavourCraft Dhaka - Inventory, Recipe Costing & Food Waste API
- * Manages Raw Stock Levels, Recipes, and Spoilage in MySQL
+ * FlavourCraft - Inventory & Recipe Costing API
+ * Manages Raw Stock Levels and Recipe Costing in MySQL
  */
 
 require_once __DIR__ . '/config.php';

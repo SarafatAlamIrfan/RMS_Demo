@@ -381,8 +381,6 @@ class AuthComponent {
   renderStaffLockScreen(container, viewName) {
     const viewTitles = {
       'kds': 'Kitchen Display System (KDS)',
-      'floor': 'Floor & Table Map Operations',
-      'pos': 'Point of Sale (POS) Cash Register',
       'inventory': 'Inventory & Recipe Costing',
       'analytics': 'Executive Performance Analytics'
     };
