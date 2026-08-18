@@ -5,7 +5,7 @@
 > **Technology Stack**: HTML5, Plain CSS3, Vanilla JavaScript, PHP, SQL (MySQL)  
 > **Themes Supported**: ☀️ Light Mode (Pinkish red & Saffron)  
 > **Currency Unit**: Bangladeshi Taka (**৳ / BDT**)  
-> **Cuisine Specialization**: Authentic & Familiar Bangladeshi Traditional & Modern Dhaka Cuisine  
+> **Cuisine Specialization**: Authentic & Familiar Bangladeshi Traditional Restaurant Cuisine  
 > **Repository**: [https://github.com/SarafatAlamIrfan/RMS_Demo.git](https://github.com/SarafatAlamIrfan/RMS_Demo.git)
 
 ---
