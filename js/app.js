@@ -6,21 +6,15 @@ class Application {
   constructor() {
     this.currentView = 'menu';
     this.components = {};
-    this.currentTheme = localStorage.getItem('flavourcraft_theme') || 'dark';
   }
 
   async init() {
-    // Apply Theme (Dark or Light)
-    this.setTheme(this.currentTheme, false);
-
     // Initialize Components
     this.components = {
       menu: new window.MenuComponent(),
       reservations: new window.ReservationsComponent(),
       ordering: new window.OrderingComponent(),
       kds: window.kdsComponent,
-      floor: window.floorComponent,
-      pos: window.posComponent,
       inventory: window.inventoryComponent,
       analytics: window.analyticsComponent,
       rbac: window.rbacComponent,
@@ -69,10 +63,8 @@ class Application {
       'reservations': { title: 'Table Reservation System', desc: 'Reserve dining tables in Gulshan, Banani, and Nawab VIP salons' },
       'tracking': { title: 'Live Dhaka Order Tracker', desc: 'Real-time kitchen preparation timeline and dispatch radar' },
       'kds': { title: 'Kitchen Display System (KDS)', desc: 'Live ticket queue, color-coded urgency countdowns & authentic recipes' },
-      'floor': { title: 'Floor & Table Management', desc: 'Interactive 2D restaurant seat map and live occupancy status' },
-      'pos': { title: 'Point of Sale (POS) & Billing', desc: 'Touch cash register, barcode scanner, Mushak-6.3 VAT & thermal receipt' },
       'inventory': { title: 'Inventory & Recipe Costing', desc: 'Automatic stock deductions in Taka, safety alerts & dish profit margins' },
-      'analytics': { title: 'Executive Analytics & Reports', desc: 'Turnover in BDT ৳, Dhaka peak hour heatmaps, top bestsellers & waste' }
+      'analytics': { title: 'Executive Analytics & Reports', desc: 'Turnover in BDT ৳, Dhaka peak hour heatmaps, top bestsellers & database export' }
     };
 
     const header = titles[viewName] || { title: 'FlavourCraft Dhaka Operations', desc: 'Restaurant Management Suite' };

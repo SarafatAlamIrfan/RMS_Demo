@@ -135,31 +135,21 @@ class AppStore {
     this.activePromoCode = null;
     this.listeners = [];
 
-    // Role View Permissions Map
+    // Role View Permissions Map (4 Core Roles)
     this.rolePermissions = {
       'Admin': {
         name: 'Executive Admin',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'floor', 'pos', 'inventory', 'analytics'],
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
         isStaff: true
       },
       'Manager': {
-        name: 'Restaurant Floor Manager',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'floor', 'pos', 'inventory', 'analytics'],
-        isStaff: true
-      },
-      'Cashier': {
-        name: 'POS Billing Cashier',
-        allowedViews: ['pos', 'floor', 'menu', 'tracking'],
+        name: 'Operations Manager',
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
         isStaff: true
       },
       'Kitchen': {
-        name: 'Line & Head Chef',
+        name: 'Kitchen Chef & Ustad',
         allowedViews: ['kds', 'inventory', 'menu'],
-        isStaff: true
-      },
-      'Delivery': {
-        name: 'Delivery Dispatch Rider',
-        allowedViews: ['tracking', 'menu'],
         isStaff: true
       },
       'Customer': {

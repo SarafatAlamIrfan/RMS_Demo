@@ -7,33 +7,21 @@ class RbacComponent {
     this.rolePermissions = {
       'Admin': {
         name: 'Executive Admin',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'floor', 'pos', 'inventory', 'analytics'],
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
         badgeClass: 'admin',
         description: 'Complete operational, financial and system authority.'
       },
       'Manager': {
-        name: 'Restaurant Floor Manager',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'floor', 'pos', 'inventory', 'analytics'],
+        name: 'Operations Manager',
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
         badgeClass: 'manager',
-        description: 'Floor supervision, table allocation, billing overrides and reports.'
-      },
-      'Cashier': {
-        name: 'POS Billing Cashier',
-        allowedViews: ['pos', 'floor', 'menu', 'tracking'],
-        badgeClass: 'cashier',
-        description: 'Cash register operations, split bills, and receipt generation.'
+        description: 'Operations supervision, billing oversight, and analytics.'
       },
       'Kitchen': {
-        name: 'Line & Head Chef',
+        name: 'Kitchen Chef & Ustad',
         allowedViews: ['kds', 'inventory', 'menu'],
         badgeClass: 'kitchen',
-        description: 'Live order queue management, recipe formulation, and waste logs.'
-      },
-      'Delivery': {
-        name: 'Delivery Dispatch Rider',
-        allowedViews: ['tracking', 'menu'],
-        badgeClass: 'rider',
-        description: 'Dispatched order tracking and delivery confirmation.'
+        description: 'Live order queue management, recipe formulation, and stock monitoring.'
       },
       'Customer': {
         name: 'Dining Guest / Foodie',

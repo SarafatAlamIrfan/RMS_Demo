@@ -170,12 +170,6 @@ if ($method === 'POST') {
             }
         }
 
-        // 3. Update Table Occupancy if Dine-In
-        if ($orderType === 'Dine-In' && !empty($tableNumber)) {
-            $tblStmt = $pdo->prepare("UPDATE dining_tables SET status = 'occupied', current_order_id = :ouid WHERE table_number = :tbl");
-            $tblStmt->execute(['ouid' => $orderUid, 'tbl' => $tableNumber]);
-        }
-
         // Commit all changes atomically
         $pdo->commit();
 

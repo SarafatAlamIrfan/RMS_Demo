@@ -156,19 +156,13 @@ class AuthComponent {
             <span>👑</span> <span>Sadia (Admin)</span>
           </button>
           <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Manager')">
-            <span>👩‍💼</span> <span>Tanima (Mgr)</span>
-          </button>
-          <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Cashier')">
-            <span>💳</span> <span>Shakib (POS)</span>
+            <span>👩‍💼</span> <span>Tanima (Manager)</span>
           </button>
           <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Kitchen')">
-            <span>🍳</span> <span>Chef Rony</span>
-          </button>
-          <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Delivery')">
-            <span>🛵</span> <span>Mehedi (Rider)</span>
+            <span>🍳</span> <span>Chef Rony (Kitchen)</span>
           </button>
           <button class="demo-pill-btn" onclick="window.authComponent.handleQuickLogin('Customer')">
-            <span>🍽️</span> <span>Asif (Guest)</span>
+            <span>🍽️</span> <span>Asif (Customer)</span>
           </button>
         </div>
       </div>

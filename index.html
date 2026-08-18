@@ -59,14 +59,6 @@
           <span>Kitchen Display (KDS)</span>
           <span class="nav-badge danger" id="nav-kds-badge" style="display:none;">LIVE</span>
         </a>
-        <a class="nav-item" data-view="floor" id="nav-floor">
-          <span class="icon">🗺️</span>
-          <span>Floor & Table Map</span>
-        </a>
-        <a class="nav-item" data-view="pos" id="nav-pos">
-          <span class="icon">💳</span>
-          <span>POS & Billing</span>
-        </a>
 
         <div class="nav-section-title">Admin & Inventory</div>
         <a class="nav-item" data-view="inventory" id="nav-inventory">
@@ -101,14 +93,11 @@
           </div>
           <div class="topbar-search">
             <span>🔍</span>
-            <input type="text" id="global-search-input" placeholder="Search dishes, ingredients, tables..." />
-        <div class="topbar-right">
-          <!-- Light / Dark Theme Switcher -->
-          <button class="theme-toggle-btn" id="btn-theme-toggle" title="Toggle Light / Dark Mode">
-            <span class="theme-icon" id="theme-toggle-icon">☀️</span>
-            <span id="theme-toggle-text">Light Mode</span>
-          </button>
+            <input type="text" id="global-search-input" placeholder="Search dishes, ingredients..." />
+          </div>
+        </div>
 
+        <div class="topbar-right">
           <!-- Dynamic Auth Status & Login Button -->
           <div id="topbar-auth-container"></div>
 
@@ -127,8 +116,6 @@
         <section class="view-section" id="view-reservations"></section>
         <section class="view-section" id="view-tracking"></section>
         <section class="view-section" id="view-kds"></section>
-        <section class="view-section" id="view-floor"></section>
-        <section class="view-section" id="view-pos"></section>
         <section class="view-section" id="view-inventory"></section>
         <section class="view-section" id="view-analytics"></section>
       </main>
@@ -250,8 +237,6 @@
   <script src="js/components/reservations.js"></script>
   <script src="js/components/ordering.js"></script>
   <script src="js/components/kds.js"></script>
-  <script src="js/components/floor.js"></script>
-  <script src="js/components/pos.js"></script>
   <script src="js/components/inventory.js"></script>
   <script src="js/components/analytics.js"></script>
   <script src="js/components/rbac.js"></script>

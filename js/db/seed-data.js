@@ -434,21 +434,11 @@ window.SEED_DATA = {
       _id: 'usr_manager', 
       username: 'manager', 
       password: 'manager123',
-      name: 'Tanima Ahmed (Floor Lead)', 
+      name: 'Tanima Ahmed (Operations Lead)', 
       role: 'Manager', 
       avatar: '👩‍💻', 
       phone: '+880 1710-000002',
       email: 'tanima@flavourcraft.bd' 
-    },
-    { 
-      _id: 'usr_cashier', 
-      username: 'cashier', 
-      password: 'cashier123',
-      name: 'Shakib Al Hasan (POS Lead)', 
-      role: 'Cashier', 
-      avatar: '🧑‍💻', 
-      phone: '+880 1710-000003',
-      email: 'shakib@flavourcraft.bd' 
     },
     { 
       _id: 'usr_kitchen', 
@@ -459,16 +449,6 @@ window.SEED_DATA = {
       avatar: '🍳', 
       phone: '+880 1710-000004',
       email: 'rony@flavourcraft.bd' 
-    },
-    { 
-      _id: 'usr_rider', 
-      username: 'rider', 
-      password: 'rider123',
-      name: 'Mehedi Hasan (Rider #04)', 
-      role: 'Delivery', 
-      avatar: '🛵', 
-      phone: '+880 1710-000005',
-      email: 'mehedi@flavourcraft.bd' 
     },
     { 
       _id: 'usr_customer_asif', 

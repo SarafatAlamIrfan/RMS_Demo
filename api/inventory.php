@@ -45,19 +45,10 @@ if ($method === 'GET') {
         $rec['ingredients'] = $groupedIngs[$rec['id']] ?? [];
     }
 
-    // 3. Food Waste Logs
-    $wasteStmt = $pdo->query("SELECT waste_uid as id, ingredient_uid as ingredientId, ingredient_name as ingredientName, quantity, unit, reason, cost_loss as costLoss, logged_by as loggedBy, created_at as createdAt FROM food_waste ORDER BY id DESC");
-    $waste = $wasteStmt->fetchAll();
-    foreach ($waste as &$w) {
-        $w['quantity'] = (float)$w['quantity'];
-        $w['costLoss'] = (float)$w['costLoss'];
-    }
-
     sendResponse([
         'success' => true,
         'inventory' => $inventory,
-        'recipes' => $recipes,
-        'waste' => $waste
+        'recipes' => $recipes
     ]);
 }
 
@@ -82,52 +73,5 @@ if ($method === 'POST' && $action === 'restock') {
     sendResponse(['success' => true, 'message' => 'All inventory stocks replenished to safe levels!']);
 }
 
-// ----------------------------------------------------------------------------
-// 3. POST /api/inventory.php?action=waste - Log Kitchen Food Waste
-// ----------------------------------------------------------------------------
-if ($method === 'POST' && $action === 'waste') {
-    $input = getJsonInput();
-    $ingId = $input['ingredientId'] ?? '';
-    $ingName = $input['ingredientName'] ?? '';
-    $qty = (float)($input['quantity'] ?? 0);
-    $unit = $input['unit'] ?? 'g';
-    $reason = $input['reason'] ?? 'Spoilage';
-    $costLoss = (float)($input['costLoss'] ?? 0);
-    $loggedBy = $input['loggedBy'] ?? 'Chef Rony';
-
-    if (empty($ingId) || $qty <= 0) {
-        sendResponse(['success' => false, 'error' => 'Ingredient ID and valid quantity are required.'], 400);
-    }
-
-    $wasteUid = 'wst_' . time() . '_' . rand(100, 999);
-
-    $pdo->beginTransaction();
-    try {
-        $stmt = $pdo->prepare("
-            INSERT INTO food_waste (waste_uid, ingredient_uid, ingredient_name, quantity, unit, reason, cost_loss, logged_by)
-            VALUES (:wuid, :iuid, :iname, :qty, :unit, :reason, :loss, :logby)
-        ");
-        $stmt->execute([
-            'wuid' => $wasteUid,
-            'iuid' => $ingId,
-            'iname' => $ingName,
-            'qty' => $qty,
-            'unit' => $unit,
-            'reason' => $reason,
-            'loss' => $costLoss,
-            'logby' => $loggedBy
-        ]);
-
-        // Deduct wasted quantity from inventory
-        $deductStmt = $pdo->prepare("UPDATE inventory SET current_stock = GREATEST(0, current_stock - :qty) WHERE ingredient_uid = :iuid");
-        $deductStmt->execute(['qty' => $qty, 'iuid' => $ingId]);
-
-        $pdo->commit();
-        sendResponse(['success' => true, 'message' => 'Food waste logged and inventory updated.']);
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        sendResponse(['success' => false, 'error' => 'Failed to log food waste: ' . $e->getMessage()], 500);
-    }
-}
-
 sendResponse(['success' => false, 'error' => 'Method not allowed.'], 405);
+
