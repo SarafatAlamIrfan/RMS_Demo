@@ -65,16 +65,29 @@ class AuthComponent {
             ${user.role === 'Customer' ? `
               <button class="dropdown-item" onclick="window.app.navigate('tracking'); window.authComponent.toggleDropdown(false);">
                 <span>📍</span>
-                <span>My Active Orders</span>
+                <span>Live Order Tracker</span>
               </button>
               <button class="dropdown-item" onclick="window.app.navigate('reservations'); window.authComponent.toggleDropdown(false);">
                 <span>📅</span>
-                <span>My Bookings</span>
+                <span>Table Bookings</span>
+              </button>
+            ` : user.role === 'Kitchen' ? `
+              <button class="dropdown-item" onclick="window.app.navigate('kds'); window.authComponent.toggleDropdown(false);">
+                <span>🍳</span>
+                <span>Kitchen Display (KDS)</span>
+              </button>
+              <button class="dropdown-item" onclick="window.app.navigate('inventory'); window.authComponent.toggleDropdown(false);">
+                <span>📦</span>
+                <span>Inventory & Recipes</span>
               </button>
             ` : `
-              <button class="dropdown-item" onclick="window.app.navigate('pos'); window.authComponent.toggleDropdown(false);">
-                <span>💳</span>
-                <span>Launch POS Register</span>
+              <button class="dropdown-item" onclick="window.app.navigate('analytics'); window.authComponent.toggleDropdown(false);">
+                <span>📊</span>
+                <span>Executive Analytics</span>
+              </button>
+              <button class="dropdown-item" onclick="window.app.navigate('inventory'); window.authComponent.toggleDropdown(false);">
+                <span>📦</span>
+                <span>Inventory & Recipes</span>
               </button>
             `}
 
