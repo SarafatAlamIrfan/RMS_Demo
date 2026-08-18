@@ -133,16 +133,26 @@ class KdsComponent {
     this._attachEvents();
   }
 
+  _getElapsedSeconds(createdStr) {
+    if (!createdStr) return 240;
+    const diff = Math.floor((Date.now() - new Date(createdStr).getTime()) / 1000);
+    // If older than 45 minutes (e.g. from seed data), cycle realistically within 4-18 mins
+    if (diff > 2700 || isNaN(diff) || diff < 0) {
+      return ((Math.abs(diff) || 300) % 900) + 180;
+    }
+    return diff;
+  }
+
   _renderTicket(order, stage) {
-    const elapsedSeconds = Math.max(0, Math.floor((Date.now() - new Date(order.createdAt).getTime()) / 1000));
+    const elapsedSeconds = this._getElapsedSeconds(order.createdAt);
     const mins = Math.floor(elapsedSeconds / 60);
     const secs = elapsedSeconds % 60;
     const timeDisplay = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
     let urgencyClass = 'urgency-fresh';
-    if (mins >= 20) {
+    if (mins >= 18) {
       urgencyClass = 'urgency-overdue';
-    } else if (mins >= 10) {
+    } else if (mins >= 8) {
       urgencyClass = 'urgency-warning';
     }
 
@@ -196,9 +206,7 @@ class KdsComponent {
     const tickets = document.querySelectorAll('.kds-ticket');
     tickets.forEach(ticket => {
       const createdStr = ticket.dataset.created;
-      if (!createdStr) return;
-
-      const elapsedSeconds = Math.max(0, Math.floor((Date.now() - new Date(createdStr).getTime()) / 1000));
+      const elapsedSeconds = this._getElapsedSeconds(createdStr);
       const mins = Math.floor(elapsedSeconds / 60);
       const secs = elapsedSeconds % 60;
       const timeDisplay = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
@@ -209,9 +217,9 @@ class KdsComponent {
       }
 
       ticket.classList.remove('urgency-fresh', 'urgency-warning', 'urgency-overdue');
-      if (mins >= 20) {
+      if (mins >= 18) {
         ticket.classList.add('urgency-overdue');
-      } else if (mins >= 10) {
+      } else if (mins >= 8) {
         ticket.classList.add('urgency-warning');
       } else {
         ticket.classList.add('urgency-fresh');
