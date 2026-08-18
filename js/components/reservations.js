@@ -158,9 +158,6 @@ class ReservationsComponent {
                   <span class="pass-val" id="pass-deposit" style="color: var(--accent-saffron-light);">৳${this._isCurrentSlotPeak() ? '500' : '0'}</span>
                 </div>
               </div>
-              <div class="pass-verification-box">
-                <span>📱 Instant SMS & Email Confirmation Dispatched</span>
-              </div>
             </div>
 
             <!-- Recent Confirmed Bookings -->
@@ -282,7 +279,7 @@ class ReservationsComponent {
         document.getElementById('pass-status').className = 'badge badge-success';
 
         window.store.audio.playKitchenBell();
-        window.app.showToast(`Table confirmed! Reference: ${bookingCode}. SMS confirmation sent to ${phone}`, 'success');
+        window.app.showToast(`Table confirmed! Booking Reference: ${bookingCode}`, 'success');
 
         setTimeout(() => {
           this.render();
