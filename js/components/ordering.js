@@ -253,24 +253,33 @@ class OrderingComponent {
   }
 
   // --- Live Order Tracker View ---
-  async renderTracker() {
+  async renderTracker(specificOrderId = null) {
     const container = document.getElementById('view-tracking');
     if (!container) return;
 
-    if (!this.activeTrackingOrder) {
-      const latestOrder = await window.store.db.collection('orders').findOne({}, { sort: { createdAt: -1 } });
-      this.activeTrackingOrder = latestOrder;
+    const allOrders = await window.store.db.collection('orders').find({}, { sort: { createdAt: -1 } });
+
+    if (specificOrderId) {
+      this.activeTrackingOrderId = specificOrderId;
     }
 
-    const order = this.activeTrackingOrder;
+    let order = null;
+    if (this.activeTrackingOrderId) {
+      order = allOrders.find(o => o._id === this.activeTrackingOrderId);
+    }
+    if (!order && allOrders.length > 0) {
+      order = allOrders[0];
+      this.activeTrackingOrderId = order._id;
+    }
 
     if (!order) {
       container.innerHTML = `
         <div class="tracker-container">
           <div class="tracker-card" style="text-align: center; padding: 60px 20px;">
             <div style="font-size: 48px; margin-bottom: 12px;">📍</div>
-            <h2 style="color: #fff; font-size: 22px; margin-bottom: 8px;">No Active Orders Tracking</h2>
-            <p style="color: var(--text-muted);">Place an order from our Bengali menu to track real-time kitchen and rider progress.</p>
+            <h2 style="color: var(--heading-color); font-size: 22px; margin-bottom: 8px;">No Active Orders Tracking</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Place an order from our menu to track real-time kitchen and delivery progress.</p>
+            <button class="btn btn-primary" onclick="window.app.navigate('menu')">Browse Menu & Order</button>
           </div>
         </div>
       `;
@@ -287,70 +296,107 @@ class OrderingComponent {
 
     container.innerHTML = `
       <div class="tracker-container">
+        <!-- 1. Live Active Order Tracking Card -->
         <div class="tracker-card">
           <div class="tracker-header">
             <div>
-              <span style="font-size: 12px; color: var(--primary); font-weight: 700; text-transform: uppercase;">Live Order Tracking</span>
+              <span style="font-size: 11.5px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Live Active Order</span>
               <div class="tracker-order-id">${order.orderNumber} • ${order.type} ${order.tableNumber ? `(${order.tableNumber})` : ''}</div>
             </div>
-            <div class="tracker-eta-badge">
-              <span>⏱️</span>
-              <span>Estimated: ~${order.status === 'Completed' ? 'Delivered' : '15-20 Mins'}</span>
+            <div class="badge badge-${order.status === 'Completed' ? 'success' : order.status === 'New' ? 'amber' : 'primary'}" style="font-size: 13px; padding: 6px 14px;">
+              ⏱️ ${order.status === 'Completed' ? 'Order Delivered / Served' : 'Estimated: ~15-20 Mins'}
             </div>
           </div>
 
           <!-- Multi-stage Visual Progress Bar -->
-          <div class="progress-timeline">
-            <div class="progress-timeline-bar" style="width: ${progressPercent}%;"></div>
+          <div class="timeline-progress-bar">
             ${stages.map((stage, idx) => {
               const isCompleted = idx < currentStageIdx;
               const isActive = idx === currentStageIdx;
               const icons = ['📝', '🍳', order.type === 'Delivery' ? '🛵' : '🍽️', '✅'];
               return `
                 <div class="timeline-step ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}">
-                  <div class="step-circle">${icons[idx]}</div>
-                  <span class="step-label">${stage}</span>
+                  <div class="timeline-dot">${icons[idx]}</div>
+                  <span class="timeline-label">${stage}</span>
                 </div>
               `;
             }).join('')}
           </div>
 
-          <!-- Driver or Kitchen Dispatch Radar -->
-          <div class="delivery-radar-card" style="margin-bottom: 24px;">
-            <div class="driver-avatar">${order.type === 'Delivery' ? '🛵' : '👨‍🍳'}</div>
-            <div class="driver-info">
-              <div class="driver-name">${order.type === 'Delivery' ? (order.driverName || 'Mehedi Hasan (Delivery Rider #04)') : 'Master Chef Masud (Biryani & Grill Station)'}</div>
-              <div class="driver-status">
-                ${order.status === 'New' ? 'Ticket received in kitchen, handi preparing...' : 
-                  order.status === 'Preparing' ? 'Kacchi / Curry on active dum and woodfired cooking!' :
-                  order.status === 'Out for Delivery' ? 'Rider dispatched on Dhaka roads!' :
-                  order.status === 'Ready to Serve' ? 'Plated and ready to serve at your dining table!' : 'Order completed & enjoyed!'}
-              </div>
+          <!-- Driver / Kitchen Station Radar Box -->
+          <div class="rider-radar-box">
+            <div class="rider-avatar">${order.type === 'Delivery' ? '🛵' : '👨‍🍳'}</div>
+            <div class="rider-info" style="flex: 1;">
+              <h4>${order.type === 'Delivery' ? (order.driverName || 'Mehedi Hasan (Delivery Rider #04)') : 'Chef Rony (Kacchi & Grill Master)'}</h4>
+              <p>
+                ${order.status === 'New' ? 'Ticket received in kitchen station. Preparing ingredients...' : 
+                  order.status === 'Preparing' ? 'Kacchi / Curry on active woodfired dum and flame cooking!' :
+                  order.status === 'Out for Delivery' ? 'Rider dispatched on Dhaka roads heading to your address!' :
+                  order.status === 'Ready to Serve' ? 'Plated and ready to be served at your table!' : 'Order completed & enjoyed!'}
+              </p>
             </div>
-            <button class="btn btn-secondary btn-sm" id="btn-advance-status" title="Simulate Kitchen Stage Advancement">
+            <button class="btn btn-secondary btn-sm" id="btn-advance-status" title="Advance Stage for Live Demo">
               ⚡ Advance Stage (Demo)
             </button>
           </div>
 
-          <!-- Order Item Breakdown in Taka -->
-          <div style="border-top: 1px solid var(--border-subtle); padding-top: 20px;">
-            <h4 style="color: #fff; font-size: 15px; margin-bottom: 12px;">Ordered Culinary Selection</h4>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              ${order.items.map(item => `
+          <!-- Ordered Items Summary -->
+          <div style="border-top: 1px solid var(--border-subtle); padding-top: 20px; margin-top: 20px;">
+            <h4 style="color: var(--heading-color); font-size: 15px; font-weight: 800; margin-bottom: 14px;">Ordered Culinary Selection</h4>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              ${(order.items || []).map(item => `
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13.5px;">
                   <div>
-                    <span style="font-weight: 700; color: var(--primary-light);">${item.quantity}x</span>
-                    <strong style="color: #fff;">${item.name}</strong>
-                    ${item.modifiers && item.modifiers.length ? `<div style="font-size: 11px; color: var(--text-muted);">${item.modifiers.join(', ')}</div>` : ''}
+                    <span style="font-weight: 800; color: var(--primary); margin-right: 6px;">${item.quantity}x</span>
+                    <strong style="color: var(--heading-color);">${item.name}</strong>
+                    ${item.modifiers && item.modifiers.length ? `<div style="font-size: 11.5px; color: var(--primary); margin-top: 2px;">${item.modifiers.join(', ')}</div>` : ''}
                   </div>
-                  <span style="font-weight: 700; color: #fff;">৳${(item.itemTotal || (item.unitPrice * item.quantity)).toLocaleString()}</span>
+                  <span style="font-weight: 800; font-family: var(--font-mono); color: var(--heading-color);">
+                    ৳${(item.itemTotal || (item.unitPrice * item.quantity)).toLocaleString()}
+                  </span>
                 </div>
               `).join('')}
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-medium); font-size: 16px; font-weight: 800; color: #fff;">
-              <span>Total Paid (${order.paymentMethod})</span>
-              <span style="color: var(--primary-light);">৳${order.totalAmount.toLocaleString()}</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-medium); font-size: 16px; font-weight: 900; color: var(--heading-color);">
+              <span>Total Paid (${order.paymentMethod || 'bKash Pay'})</span>
+              <span style="color: var(--primary); font-family: var(--font-heading); font-size: 20px;">৳${(order.totalAmount || 0).toLocaleString()}</span>
             </div>
+          </div>
+        </div>
+
+        <!-- 2. Previous Orders History List -->
+        <div class="data-table-card" style="margin-top: 32px;">
+          <div class="table-card-header">
+            <h4 class="table-card-title">📜 Previous Orders History (${allOrders.length})</h4>
+            <span style="font-size: 12px; color: var(--text-secondary);">Select any previous order to view live status</span>
+          </div>
+          <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            ${allOrders.map(ord => {
+              const isCurrent = ord._id === order._id;
+              const itemsListStr = (ord.items || []).map(i => `${i.quantity}x ${i.name}`).join(', ');
+              return `
+                <div style="background: ${isCurrent ? '#fff1f2' : '#ffffff'}; border: 1.5px solid ${isCurrent ? 'var(--primary)' : 'var(--border-subtle)'}; border-radius: var(--radius-md); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; transition: var(--transition-fast);">
+                  <div style="flex: 1; min-width: 240px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                      <strong style="font-family: var(--font-mono); font-size: 15px; color: var(--heading-color);">${ord.orderNumber}</strong>
+                      <span class="badge badge-${ord.type === 'Delivery' ? 'saffron' : 'primary'}">${ord.type} ${ord.tableNumber ? `• ${ord.tableNumber}` : ''}</span>
+                      <span class="badge badge-${ord.status === 'Completed' ? 'success' : ord.status === 'New' ? 'amber' : 'primary'}">${ord.status}</span>
+                    </div>
+                    <div style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 2px;">
+                      ${itemsListStr}
+                    </div>
+                    <div style="font-size: 11.5px; color: var(--text-muted);">
+                      Paid via ${ord.paymentMethod || 'Cash'} • Total: <strong>৳${(ord.totalAmount || 0).toLocaleString()}</strong>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="btn btn-${isCurrent ? 'primary' : 'secondary'} btn-sm" onclick="window.app.components.ordering.renderTracker('${ord._id}')">
+                      ${isCurrent ? '📍 Tracking Now' : 'Track Order ➔'}
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
       </div>
@@ -375,7 +421,7 @@ class OrderingComponent {
 
         order.status = nextStatus;
         window.store.audio.playKitchenBell();
-        this.renderTracker();
+        this.renderTracker(order._id);
         window.app.showToast(`Order status updated to "${nextStatus}"`, 'info');
       });
     }

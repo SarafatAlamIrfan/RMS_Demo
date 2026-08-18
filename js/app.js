@@ -14,6 +14,7 @@ class Application {
       menu: new window.MenuComponent(),
       reservations: new window.ReservationsComponent(),
       ordering: new window.OrderingComponent(),
+      tracking: { render: () => this.components.ordering.renderTracker() },
       kds: window.kdsComponent,
       inventory: window.inventoryComponent,
       analytics: window.analyticsComponent,
