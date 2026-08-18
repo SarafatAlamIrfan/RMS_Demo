@@ -561,6 +561,8 @@ window.SEED_DATA = {
       name: 'Sadia Islam Dia', 
       role: 'Admin', 
       avatar: '👩‍💼', 
+      department: 'Executive Board',
+      shift: 'Full Day & All Access',
       phone: '+880 1710-000001',
       email: 'sadia.dia@flavourcraft.bd' 
     },
@@ -571,6 +573,8 @@ window.SEED_DATA = {
       name: 'Sarafat Alam Irfan', 
       role: 'Manager', 
       avatar: '👨‍💼', 
+      department: 'General Operations',
+      shift: 'Full Day & All Access',
       phone: '+880 1710-000002',
       email: 'irfan@flavourcraft.bd' 
     },
@@ -581,8 +585,46 @@ window.SEED_DATA = {
       name: 'Chef Rony', 
       role: 'Kitchen', 
       avatar: '🍳', 
+      department: 'Kitchen & Food Prep',
+      shift: 'Morning & Dinner Shift',
       phone: '+880 1710-000004',
       email: 'rony@flavourcraft.bd' 
+    },
+    { 
+      _id: 'usr_cashier', 
+      username: 'cashier', 
+      password: 'cashier123',
+      name: 'Tanvir Hossain', 
+      role: 'Cashier', 
+      avatar: '💵', 
+      department: 'Front Desk & Billing',
+      shift: 'Morning Shift (10 AM - 4 PM)',
+      phone: '+880 1710-000005',
+      email: 'tanvir@flavourcraft.bd' 
+    },
+    { 
+      _id: 'usr_staff_anika', 
+      username: 'anika', 
+      password: 'staff123',
+      name: 'Anika Tabassum', 
+      role: 'Staff', 
+      avatar: '🍽️', 
+      department: 'Dining Floor Lead',
+      shift: 'Evening Shift (4 PM - 12 AM)',
+      phone: '+880 1710-000006',
+      email: 'anika@flavourcraft.bd' 
+    },
+    { 
+      _id: 'usr_rider_mehedi', 
+      username: 'rider', 
+      password: 'rider123',
+      name: 'Mehedi Hasan', 
+      role: 'Rider', 
+      avatar: '🛵', 
+      department: 'Express Delivery Fleet',
+      shift: 'Peak Dinner Hours (6 PM - 11 PM)',
+      phone: '+880 1710-000007',
+      email: 'mehedi@flavourcraft.bd' 
     },
     { 
       _id: 'usr_customer_asif', 

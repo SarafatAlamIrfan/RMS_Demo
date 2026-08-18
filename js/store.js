@@ -125,7 +125,7 @@ class AudioEngine {
 
 class AppStore {
   constructor() {
-    this.db = new MongoDatabase('flavourcraft_dhaka_v10_exact_categories');
+    this.db = new MongoDatabase('flavourcraft_dhaka_v11_staff_mgmt');
     this.audio = new AudioEngine();
     this.currentUser = null;
     this.currentRole = 'Customer'; // Default unauthenticated/guest role

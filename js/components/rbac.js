@@ -7,13 +7,13 @@ class RbacComponent {
     this.rolePermissions = {
       'Admin': {
         name: 'Executive Admin',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics', 'staff'],
         badgeClass: 'admin',
         description: 'Complete operational, financial and system authority.'
       },
       'Manager': {
         name: 'Operations Manager',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics', 'staff'],
         badgeClass: 'manager',
         description: 'Operations supervision, billing oversight, and analytics.'
       },

@@ -1,0 +1,119 @@
+/**
+ * FlavourCraft - Staff & Team Management Stylesheet
+ * Theme: Light Mode (Pinkish Red & Saffron Palette)
+ */
+
+.staff-mgmt-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+.staff-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.staff-main-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--heading-color);
+  margin-bottom: 4px;
+}
+
+.staff-sub-title {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0;
+}
+
+/* Metrics Scorecards Grid */
+.staff-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1100px) {
+  .staff-metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .staff-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.staff-metric-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+.staff-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.staff-metric-icon {
+  font-size: 26px;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  background: #fff5f7;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.staff-metric-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.staff-metric-val {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--heading-color);
+  line-height: 1.2;
+}
+
+.staff-metric-lbl {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+/* Badge colors for staff roles */
+.badge-manager {
+  background: #fffbeb;
+  color: var(--accent-saffron-dark);
+  border: 1px solid var(--accent-saffron-light);
+}
+
+.badge-neutral {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}

@@ -18,6 +18,7 @@ class Application {
       kds: window.kdsComponent,
       inventory: window.inventoryComponent,
       analytics: window.analyticsComponent,
+      staff: window.staffComponent,
       rbac: window.rbacComponent,
       auth: window.authComponent
     };
@@ -60,14 +61,15 @@ class Application {
       targetSection.classList.add('active');
     }
 
-    // Update Topbar titles
+    // Update topbar titles
     const titles = {
       'menu': { title: 'Dhaka Heritage & Contemporary Menu', desc: 'Crafted with prime local meats, Baghabari ghee & wild Sylheti spices' },
-      'reservations': { title: 'Table Reservation System', desc: 'Reserve dining tables in Gulshan, Banani, and Nawab VIP salons' },
+      'reservations': { title: 'Table Reservation System', desc: 'Reserve dining tables with instant digital confirmation pass' },
       'tracking': { title: 'Live Dhaka Order Tracker', desc: 'Real-time kitchen preparation timeline and dispatch radar' },
       'kds': { title: 'Kitchen Display System (KDS)', desc: 'Live ticket queue, color-coded urgency countdowns & authentic recipes' },
       'inventory': { title: 'Inventory & Recipe Costing', desc: 'Automatic stock deductions in Taka, safety alerts & dish profit margins' },
-      'analytics': { title: 'Executive Analytics & Reports', desc: 'Turnover in BDT ৳, Dhaka peak hour heatmaps, top bestsellers & database export' }
+      'analytics': { title: 'Executive Analytics & Reports', desc: 'Turnover in BDT ৳, Dhaka peak hour heatmaps, top bestsellers & database export' },
+      'staff': { title: 'Staff & Team Directory', desc: 'Manage restaurant staff, shifts, access credentials & role permissions' }
     };
 
     const header = titles[viewName] || { title: 'FlavourCraft Dhaka Operations', desc: 'Restaurant Management Suite' };
