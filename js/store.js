@@ -125,7 +125,7 @@ class AudioEngine {
 
 class AppStore {
   constructor() {
-    this.db = new MongoDatabase('flavourcraft_dhaka_v11_staff_mgmt');
+    this.db = new MongoDatabase('flavourcraft_dhaka_v12_clean_rbac');
     this.audio = new AudioEngine();
     this.currentUser = null;
     this.currentRole = 'Customer'; // Default unauthenticated/guest role
@@ -135,21 +135,36 @@ class AppStore {
     this.activePromoCode = null;
     this.listeners = [];
 
-    // Role View Permissions Map (4 Core Roles)
+    // Role View Permissions Map
     this.rolePermissions = {
       'Admin': {
         name: 'Executive Admin',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics', 'staff'],
         isStaff: true
       },
       'Manager': {
         name: 'Operations Manager',
-        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics'],
+        allowedViews: ['menu', 'reservations', 'tracking', 'kds', 'inventory', 'analytics', 'staff'],
         isStaff: true
       },
       'Kitchen': {
         name: 'Kitchen Chef & Ustad',
         allowedViews: ['kds', 'inventory', 'menu'],
+        isStaff: true
+      },
+      'Cashier': {
+        name: 'Cashier & Front Desk',
+        allowedViews: ['menu', 'reservations', 'tracking'],
+        isStaff: true
+      },
+      'Staff': {
+        name: 'Dining Floor Staff',
+        allowedViews: ['menu', 'reservations', 'tracking'],
+        isStaff: true
+      },
+      'Rider': {
+        name: 'Delivery Fleet Rider',
+        allowedViews: ['menu', 'tracking'],
         isStaff: true
       },
       'Customer': {

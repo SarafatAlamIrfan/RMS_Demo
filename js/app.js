@@ -79,9 +79,7 @@ class Application {
     // --- Role Access Control Verification ---
     const hasAccess = window.store.hasPermission(viewName);
     if (!hasAccess) {
-      if (window.authComponent && targetSection) {
-        window.authComponent.renderStaffLockScreen(targetSection, viewName);
-      }
+      this.navigate('menu');
       return;
     }
 

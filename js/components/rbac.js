@@ -23,6 +23,24 @@ class RbacComponent {
         badgeClass: 'kitchen',
         description: 'Live order queue management, recipe formulation, and stock monitoring.'
       },
+      'Cashier': {
+        name: 'Cashier & Front Desk',
+        allowedViews: ['menu', 'reservations', 'tracking'],
+        badgeClass: 'staff',
+        description: 'Front desk billing and guest order management.'
+      },
+      'Staff': {
+        name: 'Dining Floor Staff',
+        allowedViews: ['menu', 'reservations', 'tracking'],
+        badgeClass: 'staff',
+        description: 'Dining floor hospitality and order assistance.'
+      },
+      'Rider': {
+        name: 'Delivery Fleet Rider',
+        allowedViews: ['menu', 'tracking'],
+        badgeClass: 'staff',
+        description: 'Live dispatch radar and food delivery.'
+      },
       'Customer': {
         name: 'Dining Guest / Foodie',
         allowedViews: ['menu', 'reservations', 'tracking'],
@@ -44,12 +62,10 @@ class RbacComponent {
     const sidebarCard = document.querySelector('.user-profile-card');
     if (sidebarCard) {
       sidebarCard.style.cursor = 'pointer';
-      sidebarCard.title = 'Click to Sign In or Switch Staff Profile';
+      sidebarCard.title = 'Click to Sign In or Switch Profile';
       sidebarCard.addEventListener('click', () => {
-        if (!window.store.isLoggedIn()) {
+        if (window.authComponent) {
           window.authComponent.openLoginModal();
-        } else {
-          window.authComponent.openLoginModal({ tab: 'staff' });
         }
       });
     }
@@ -85,6 +101,25 @@ class RbacComponent {
         }
       }
     });
+
+    // Smartly show/hide sidebar section header titles
+    document.querySelectorAll('.nav-section-title').forEach(sectionTitle => {
+      let sibling = sectionTitle.nextElementSibling;
+      let hasVisibleChild = false;
+      while (sibling && !sibling.classList.contains('nav-section-title')) {
+        if (sibling.classList.contains('nav-item') && sibling.style.display !== 'none') {
+          hasVisibleChild = true;
+          break;
+        }
+        sibling = sibling.nextElementSibling;
+      }
+      sectionTitle.style.display = hasVisibleChild ? 'block' : 'none';
+    });
+
+    // If current active view is not allowed for this role, redirect to public menu
+    if (window.app && window.app.currentView && !perm.allowedViews.includes(window.app.currentView)) {
+      window.app.navigate('menu');
+    }
   }
 }
 
