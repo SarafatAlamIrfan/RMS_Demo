@@ -127,7 +127,7 @@
     <div class="cart-drawer-header">
       <div class="cart-drawer-title">
         <span>🛒</span>
-        <span>Your Order Basket</span>
+        <span>Your Feast Basket</span>
       </div>
       <button class="modal-close" id="btn-close-cart">✕</button>
     </div>
@@ -140,27 +140,27 @@
       <div class="bill-breakdown">
         <div class="bill-row">
           <span>Subtotal</span>
-          <span id="bill-subtotal">$0.00</span>
+          <span id="bill-subtotal">৳0</span>
         </div>
         <div class="bill-row">
           <span>Discount (Promo)</span>
-          <span id="bill-discount" style="color: var(--color-success);">-$0.00</span>
+          <span id="bill-discount" style="color: var(--color-success);">-৳0</span>
         </div>
         <div class="bill-row">
-          <span>VAT (10%)</span>
-          <span id="bill-vat">$0.00</span>
+          <span>VAT (5%)</span>
+          <span id="bill-vat">৳0</span>
         </div>
         <div class="bill-row">
-          <span>Service Charge (10%)</span>
-          <span id="bill-service">$0.00</span>
+          <span>Service Charge (5%)</span>
+          <span id="bill-service">৳0</span>
         </div>
         <div class="bill-row">
-          <span>Delivery Fee</span>
-          <span id="bill-delivery">$0.00</span>
+          <span>Dhaka Delivery Fee</span>
+          <span id="bill-delivery">৳0</span>
         </div>
         <div class="bill-row total">
           <span>TOTAL PAYABLE</span>
-          <span class="price" id="bill-total">$0.00</span>
+          <span class="price" id="bill-total">৳0</span>
         </div>
       </div>
       <button class="btn btn-primary btn-lg" style="width: 100%;" id="btn-checkout-drawer">
@@ -170,7 +170,7 @@
   </aside>
 
   <!-- Modal: Item Customizer -->
-  <div class="modal-backdrop" id="modal-customizer">
+  <div class="modal-backdrop" id="modal-item-customizer">
     <div class="modal-dialog customizer-dialog">
       <div class="modal-header">
         <div class="modal-title">Customize Culinary Creation</div>
@@ -178,10 +178,6 @@
       </div>
       <div class="modal-body" id="customizer-modal-content">
         <!-- Injected dynamically -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary modal-close">Cancel</button>
-        <button class="btn btn-primary" id="btn-add-to-cart-confirm">Add to Order Basket</button>
       </div>
     </div>
   </div>
