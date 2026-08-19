@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'Customer' => [
                 'user_uid' => 'usr_customer',
                 'username' => 'customer',
-                'name' => 'Asif Rahman',
+                'name' => 'Arnob Rahman',
                 'role' => 'Customer',
-                'avatar' => '🍽️',
-                'email' => 'asif.rahman@gmail.com',
+                'avatar' => '🌟',
+                'email' => 'arnob.rahman@gmail.com',
                 'phone' => '+880 1711-234567'
             ]
         ];
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $ins_stmt = $pdo->prepare("
                         INSERT INTO users (user_uid, username, password, name, role, avatar, phone, email)
-                        VALUES (?, ?, ?, ?, 'Customer', '🍽️', ?, ?)
+                        VALUES (?, ?, ?, ?, 'Customer', '🌟', ?, ?)
                     ");
                     $ins_stmt->execute([$uid, $username, $password, $name, $phone, $email]);
 
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'username' => $username,
                         'name' => $name,
                         'role' => 'Customer',
-                        'avatar' => '🍽️',
+                        'avatar' => '🌟',
                         'email' => $email,
                         'phone' => $phone
                     ];
@@ -153,9 +153,9 @@ require_once __DIR__ . '/includes/header.php';
           <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>" />
           <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 10px; border: 2px solid <?php echo ($current_user['role'] === 'Customer') ? '#10b981' : '#e2e8f0'; ?>; background: <?php echo ($current_user['role'] === 'Customer') ? '#ecfdf5' : '#f8fafc'; ?>; cursor: pointer; text-align: left;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <span style="font-size: 1.4rem;">🍽️</span>
+              <span style="font-size: 1.4rem;">🌟</span>
               <div>
-                <div style="font-weight: 800; color: #0f172a; font-size: 0.9rem;">Asif Rahman</div>
+                <div style="font-weight: 800; color: #0f172a; font-size: 0.9rem;">Arnob Rahman</div>
                 <div style="font-size: 0.75rem; color: #10b981; font-weight: 700;">Dining Customer</div>
               </div>
             </div>

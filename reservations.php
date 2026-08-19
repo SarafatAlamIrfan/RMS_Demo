@@ -132,7 +132,7 @@ require_once __DIR__ . '/includes/header.php';
             <input type="hidden" name="role" value="Customer" />
             <input type="hidden" name="redirect" value="reservations.php" />
             <button type="submit" style="width: 100%; background: #fff; border: 1px solid #cbd5e1; color: #334155; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
-              ⚡ 1-Click Demo Login (Asif Rahman)
+              ⚡ 1-Click Demo Login (Arnob Rahman)
             </button>
           </form>
         </div>

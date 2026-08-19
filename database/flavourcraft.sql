@@ -140,7 +140,7 @@ INSERT INTO `users` (`user_uid`, `username`, `password`, `name`, `role`, `avatar
 ('usr_admin', 'admin', 'admin123', 'Sadia Islam Dia', 'Admin', '👩‍💼', '+880 1710-000001', 'sadia.dia@flavourcraft.bd', 'Banani, Dhaka'),
 ('usr_manager', 'manager', 'manager123', 'Sarafat Alam Irfan', 'Manager', '👨‍💼', '+880 1710-000002', 'irfan@flavourcraft.bd', 'Gulshan 2, Dhaka'),
 ('usr_kitchen', 'kitchen', 'kitchen123', 'Chef Rony (Biryani Ustad)', 'Kitchen', '🍳', '+880 1710-000004', 'rony@flavourcraft.bd', 'Old Dhaka, Dhaka'),
-('usr_customer', 'customer', 'customer123', 'Asif Rahman', 'Customer', '🍽️', '+880 1711-234567', 'asif.rahman@gmail.com', 'House 42, Road 11, Block D, Banani, Dhaka');
+('usr_customer', 'customer', 'customer123', 'Arnob Rahman', 'Customer', '🌟', '+880 1711-234567', 'arnob.rahman@gmail.com', 'House 42, Road 11, Block D, Banani, Dhaka');
 
 INSERT INTO `categories` (`slug`, `name`, `icon`, `display_order`) VALUES
 ('Kacchi & Biryani', 'Kacchi & Biryani', '🍛', 1),
