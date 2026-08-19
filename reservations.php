@@ -122,19 +122,10 @@ require_once __DIR__ . '/includes/header.php';
           Please sign in to your customer account or register to confirm table bookings, select dining zones, and access your digital pass.
         </p>
 
-        <div style="display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto;">
+        <div style="max-width: 280px; margin: 0 auto;">
           <a href="login.php?redirect=reservations.php" style="display: block; background: #e11d48; color: #fff; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(225,29,72,0.3);">
             🔑 Sign In / Register Account
           </a>
-          
-          <form method="POST" action="login.php" style="margin:0;">
-            <input type="hidden" name="action" value="quick_switch" />
-            <input type="hidden" name="role" value="Customer" />
-            <input type="hidden" name="redirect" value="reservations.php" />
-            <button type="submit" style="width: 100%; background: #fff; border: 1px solid #cbd5e1; color: #334155; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
-              ⚡ 1-Click Demo Login (Arnob Rahman)
-            </button>
-          </form>
         </div>
       </div>
     <?php else: ?>
