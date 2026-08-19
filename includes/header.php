@@ -88,12 +88,12 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
       </nav>
 
       <div class="sidebar-footer">
-        <a href="login.php" style="text-decoration:none; color:inherit; display:block;">
-          <div class="user-profile-card" style="cursor:pointer;" title="Click to switch role or account">
-            <div class="user-avatar"><?php echo htmlspecialchars($current_user['avatar'] ?? '👩‍💼'); ?></div>
+        <a href="<?php echo isset($_SESSION['user']) ? 'profile.php' : 'login.php'; ?>" style="text-decoration:none; color:inherit; display:block;">
+          <div class="user-profile-card" style="cursor:pointer;" title="<?php echo isset($_SESSION['user']) ? 'Click to view & edit your profile' : 'Click to sign in'; ?>">
+            <div class="user-avatar"><?php echo htmlspecialchars($current_user['avatar'] ?? '👤'); ?></div>
             <div class="user-info">
-              <div class="user-name"><?php echo htmlspecialchars($current_user['name'] ?? 'Sadia Islam Dia'); ?></div>
-              <div class="user-role-badge"><?php echo htmlspecialchars($current_user['role'] ?? 'Admin'); ?></div>
+              <div class="user-name"><?php echo htmlspecialchars($current_user['name'] ?? 'Guest Customer'); ?></div>
+              <div class="user-role-badge"><?php echo htmlspecialchars($current_user['role'] ?? 'Guest'); ?></div>
             </div>
           </div>
         </a>
@@ -119,9 +119,13 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
         </div>
 
         <div class="topbar-right">
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
             <?php if (isset($_SESSION['user'])): ?>
-              <a href="login.php" class="btn btn-secondary" style="padding:6px 14px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; color:#334155; font-weight:600;">
+              <a href="profile.php" class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; color:#334155; font-weight:600;" title="Edit Profile">
+                <span>👤</span>
+                <span>Profile</span>
+              </a>
+              <a href="login.php" class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; color:#334155; font-weight:600;" title="Switch Role">
                 <span><?php echo htmlspecialchars($current_user['avatar'] ?? '👤'); ?></span>
                 <span>Role: <strong><?php echo htmlspecialchars($current_user['role']); ?></strong></span>
               </a>
