@@ -55,7 +55,12 @@ if ($pdo) {
       Slow-cooked Kacchi Biryani with Baghabari Ghee, sizzling Chittagong Kala Bhuna, and stone-ground Padma Shorshe Ilish.
     </p>
   </div>
-  <div style="display: flex; gap: 12px;">
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <?php if (in_array($current_user['role'] ?? '', ['Admin', 'Manager'])): ?>
+      <a href="menu_manage.php" style="background: #0f172a; color: #fff; padding: 12px 20px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
+        <span>📋</span> Manage Menu (CRUD)
+      </a>
+    <?php endif; ?>
     <a href="reservations.php" style="background: #fff; color: #e11d48; padding: 12px 22px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
       <span>📅</span> Book a Table
     </a>
@@ -144,9 +149,14 @@ if ($pdo) {
         <div style="padding: 20px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
           <div>
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.3;">
+              <h3 style="font-size: 1.15rem; margin: 0; color: #0f172a; font-weight: 700; flex-grow: 1;">
                 <?php echo htmlspecialchars($dish['name']); ?>
               </h3>
+              <?php if (in_array($current_user['role'] ?? '', ['Admin', 'Manager'])): ?>
+                <a href="menu_manage.php?edit=<?php echo urlencode($dish['item_uid']); ?>#form-card" style="font-size: 0.75rem; background: #eff6ff; color: #1d4ed8; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-decoration: none; margin-left: 8px; white-space: nowrap;">
+                  ✏️ Edit
+                </a>
+              <?php endif; ?>
             </div>
             
             <p style="font-size: 0.85rem; color: #64748b; line-height: 1.5; margin: 0 0 16px; min-height: 38px;">

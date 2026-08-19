@@ -72,6 +72,10 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
 
         <?php if (in_array($current_user['role'] ?? '', ['Admin', 'Manager'])): ?>
         <div class="nav-section-title">Admin & Operations</div>
+        <a class="nav-item <?php echo ($current_page === 'menu_manage.php') ? 'active' : ''; ?>" href="menu_manage.php" id="nav-menu-manage">
+          <span class="icon">📋</span>
+          <span>Menu Management</span>
+        </a>
         <a class="nav-item <?php echo ($current_page === 'inventory.php') ? 'active' : ''; ?>" href="inventory.php" id="nav-inventory">
           <span class="icon">📦</span>
           <span>Inventory & Recipes</span>
