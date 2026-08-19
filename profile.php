@@ -44,8 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
             $_SESSION['user']['delivery_address'] = $delivery_address;
             $_SESSION['user']['avatar'] = $avatar;
 
-            $user = get_current_user_data();
             set_flash('success', 'Profile information updated successfully!');
+            header('Location: profile.php');
+            exit;
         } catch (PDOException $e) {
             set_flash('error', 'Profile update failed: ' . $e->getMessage());
         }
@@ -54,23 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     }
 }
 
-$db_user = null;
-if ($pdo && !empty($user['user_uid'])) {
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE user_uid = ? LIMIT 1");
-        $stmt->execute([$user['user_uid']]);
-        $db_user = $stmt->fetch();
-    } catch (PDOException $e) {
-    }
-}
-
-$current_name = $db_user['name'] ?? $user['name'];
-$current_phone = $db_user['phone'] ?? ($user['phone'] ?? '');
-$current_email = $db_user['email'] ?? ($user['email'] ?? '');
-$current_address = $db_user['delivery_address'] ?? ($user['delivery_address'] ?? '');
-$current_avatar = $db_user['avatar'] ?? ($user['avatar'] ?? '👤');
-$current_role = $db_user['role'] ?? $user['role'];
-$current_username = $db_user['username'] ?? $user['username'];
+$user = get_current_user_data();
 
 $page_title = 'My Profile & Account Settings - FlavourCraft';
 $page_heading = 'User Profile & Preferences';
@@ -84,31 +69,31 @@ require_once __DIR__ . '/includes/header.php';
   <div style="background: #fff; border-radius: 16px; padding: 28px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: center;">
     
     <div style="width: 90px; height: 90px; border-radius: 50%; background: #fff1f2; border: 3px solid #e11d48; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 16px; box-shadow: 0 4px 12px rgba(225,29,72,0.15);">
-      <?php echo htmlspecialchars($current_avatar); ?>
+      <?php echo htmlspecialchars($user['avatar'] ?? '👤'); ?>
     </div>
 
     <h3 style="margin: 0 0 4px; font-size: 1.25rem; color: #0f172a;">
-      <?php echo htmlspecialchars($current_name); ?>
+      <?php echo htmlspecialchars($user['name']); ?>
     </h3>
     
     <div style="margin-bottom: 12px;">
       <span style="display: inline-block; background: #e11d48; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
-        ● <?php echo htmlspecialchars($current_role); ?>
+        ● <?php echo htmlspecialchars($user['role']); ?>
       </span>
     </div>
 
     <div style="border-top: 1px solid #f1f5f9; padding-top: 16px; font-size: 0.85rem; color: #64748b; text-align: left; display: flex; flex-direction: column; gap: 10px;">
       <div>
         <span style="font-weight: 600; color: #334155;">Username:</span> 
-        <code>@<?php echo htmlspecialchars($current_username); ?></code>
+        <code>@<?php echo htmlspecialchars($user['username']); ?></code>
       </div>
       <div>
         <span style="font-weight: 600; color: #334155;">Phone:</span> 
-        <span><?php echo htmlspecialchars($current_phone ?: 'Not provided'); ?></span>
+        <span><?php echo htmlspecialchars($user['phone'] ?? 'Not provided'); ?></span>
       </div>
       <div>
         <span style="font-weight: 600; color: #334155;">Email:</span> 
-        <span><?php echo htmlspecialchars($current_email ?: 'Not provided'); ?></span>
+        <span><?php echo htmlspecialchars($user['email'] ?? 'Not provided'); ?></span>
       </div>
     </div>
 
@@ -135,20 +120,20 @@ require_once __DIR__ . '/includes/header.php';
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
         <div>
           <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Full Name *</label>
-          <input type="text" name="name" required value="<?php echo htmlspecialchars($current_name); ?>" placeholder="Your Full Name" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          <input type="text" name="name" required value="<?php echo htmlspecialchars($user['name']); ?>" placeholder="Your Full Name" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
         </div>
 
         <div>
           <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Profile Avatar Emoji</label>
           <select name="avatar" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
-            <option value="👩‍💼" <?php echo ($current_avatar === '👩‍💼') ? 'selected' : ''; ?>>👩‍💼 Executive Female</option>
-            <option value="👨‍💼" <?php echo ($current_avatar === '👨‍💼') ? 'selected' : ''; ?>>👨‍💼 Executive Male</option>
-            <option value="🍳" <?php echo ($current_avatar === '🍳') ? 'selected' : ''; ?>>🍳 Head Baburchi / Chef</option>
-            <option value="🍽️" <?php echo ($current_avatar === '🍽️') ? 'selected' : ''; ?>>🍽️ Dining Customer</option>
-            <option value="👤" <?php echo ($current_avatar === '👤') ? 'selected' : ''; ?>>👤 Member / Staff</option>
-            <option value="🌟" <?php echo ($current_avatar === '🌟') ? 'selected' : ''; ?>>🌟 VIP Gold Member</option>
-            <option value="👑" <?php echo ($current_avatar === '👑') ? 'selected' : ''; ?>>👑 Royal Patron</option>
-            <option value="🛵" <?php echo ($current_avatar === '🛵') ? 'selected' : ''; ?>>🛵 Express Rider</option>
+            <option value="👩‍💼" <?php echo (($user['avatar'] ?? '') === '👩‍💼') ? 'selected' : ''; ?>>👩‍💼 Executive Female</option>
+            <option value="👨‍💼" <?php echo (($user['avatar'] ?? '') === '👨‍💼') ? 'selected' : ''; ?>>👨‍💼 Executive Male</option>
+            <option value="🍳" <?php echo (($user['avatar'] ?? '') === '🍳') ? 'selected' : ''; ?>>🍳 Head Baburchi / Chef</option>
+            <option value="🍽️" <?php echo (($user['avatar'] ?? '') === '🍽️') ? 'selected' : ''; ?>>🍽️ Dining Customer</option>
+            <option value="👤" <?php echo (($user['avatar'] ?? '') === '👤') ? 'selected' : ''; ?>>👤 Member / Staff</option>
+            <option value="🌟" <?php echo (($user['avatar'] ?? '') === '🌟') ? 'selected' : ''; ?>>🌟 VIP Gold Member</option>
+            <option value="👑" <?php echo (($user['avatar'] ?? '') === '👑') ? 'selected' : ''; ?>>👑 Royal Patron</option>
+            <option value="🛵" <?php echo (($user['avatar'] ?? '') === '🛵') ? 'selected' : ''; ?>>🛵 Express Rider</option>
           </select>
         </div>
       </div>
@@ -156,18 +141,18 @@ require_once __DIR__ . '/includes/header.php';
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
         <div>
           <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Contact Phone Number</label>
-          <input type="text" name="phone" value="<?php echo htmlspecialchars($current_phone); ?>" placeholder="+880 1700-000000" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" placeholder="+880 1700-000000" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
         </div>
 
         <div>
           <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Email Address</label>
-          <input type="email" name="email" value="<?php echo htmlspecialchars($current_email); ?>" placeholder="user@example.com" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" placeholder="user@example.com" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
         </div>
       </div>
 
       <div style="margin-bottom: 16px;">
         <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Default Home / Delivery Address</label>
-        <textarea name="delivery_address" rows="2" placeholder="e.g. House 42, Road 11, Block D, Banani, Dhaka" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;"><?php echo htmlspecialchars($current_address); ?></textarea>
+        <textarea name="delivery_address" rows="2" placeholder="e.g. House 42, Road 11, Block D, Banani, Dhaka" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;"><?php echo htmlspecialchars($user['delivery_address'] ?? ''); ?></textarea>
       </div>
 
       <div style="background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #e2e8f0; margin-bottom: 24px;">

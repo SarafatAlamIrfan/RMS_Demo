@@ -62,7 +62,19 @@ function get_cart_count() {
 }
 
 function get_current_user_data() {
+    global $pdo;
     if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {
+        if ($pdo && !empty($_SESSION['user']['user_uid'])) {
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM users WHERE user_uid = ? LIMIT 1");
+                $stmt->execute([$_SESSION['user']['user_uid']]);
+                $db_user = $stmt->fetch();
+                if ($db_user) {
+                    $_SESSION['user'] = array_merge($_SESSION['user'], $db_user);
+                }
+            } catch (PDOException $e) {
+            }
+        }
         return $_SESSION['user'];
     }
     return [
