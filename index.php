@@ -133,15 +133,9 @@ if ($pdo) {
             <?php endif; ?>
           </div>
 
-          <div style="position: absolute; bottom: 12px; right: 12px; display: flex; gap: 6px;">
-            <span style="background: rgba(255, 255, 255, 0.92); color: #0f172a; padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+          <div style="position: absolute; bottom: 12px; right: 12px;">
+            <span style="background: rgba(255, 255, 255, 0.92); color: #0f172a; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
               ⏱️ <?php echo (int)$dish['prep_time_minutes']; ?> mins
-            </span>
-            <span style="background: rgba(255, 255, 255, 0.92); color: #e11d48; padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-              <?php 
-                $spices = (int)$dish['spice_level'];
-                echo ($spices === 0) ? '🌱 Mild' : str_repeat('🌶️', $spices);
-              ?>
             </span>
           </div>
         </div>
@@ -168,28 +162,6 @@ if ($pdo) {
             <input type="hidden" name="action" value="add" />
             <input type="hidden" name="item_uid" value="<?php echo htmlspecialchars($dish['item_uid']); ?>" />
             <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>" />
-
-            <div style="display: flex; gap: 8px; margin-bottom: 12px; font-size: 0.8rem;">
-              <div style="flex: 1;">
-                <label style="display: block; color: #475569; font-weight: 600; margin-bottom: 4px;">Spice Level</label>
-                <select name="spice_level" style="width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.8rem; background: #fff;">
-                  <option value="Regular">Standard Spice</option>
-                  <option value="Mild">Mild</option>
-                  <option value="Spicy">Extra Spicy</option>
-                  <option value="Naga Hot">Naga Morich (Super Hot)</option>
-                </select>
-              </div>
-
-              <div style="flex: 1;">
-                <label style="display: block; color: #475569; font-weight: 600; margin-bottom: 4px;">Add-on</label>
-                <select name="addon" style="width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.8rem; background: #fff;">
-                  <option value="">No Add-on</option>
-                  <option value="Borhani">+ Borhani (+৳80)</option>
-                  <option value="Extra Aloo">+ Extra Aloo (+৳40)</option>
-                  <option value="Jali Kabab">+ Jali Kabab (+৳120)</option>
-                </select>
-              </div>
-            </div>
 
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
               <div>

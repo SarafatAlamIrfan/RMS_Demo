@@ -57,12 +57,6 @@ $total_delivery = $subtotal + $vat + $delivery_fee;
               <?php endif; ?>
               <div>
                 <h4 style="margin: 0 0 4px; font-size: 1rem; color: #0f172a;"><?php echo htmlspecialchars($item['name']); ?></h4>
-                <div style="font-size: 0.8rem; color: #64748b;">
-                  <span>Spice: <strong><?php echo htmlspecialchars($item['spice'] ?? 'Regular'); ?></strong></span>
-                  <?php if (!empty($item['addon'])): ?>
-                    <span style="margin-left: 8px; color: #e11d48;">+ <?php echo htmlspecialchars($item['addon']); ?></span>
-                  <?php endif; ?>
-                </div>
                 <div style="font-size: 0.85rem; font-weight: 700; color: #e11d48; margin-top: 2px;">
                   <?php echo format_bdt($item['price']); ?> each
                 </div>

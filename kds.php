@@ -14,7 +14,7 @@ if ($pdo) {
     try {
         $stmt = $pdo->query("
             SELECT o.*, 
-                   GROUP_CONCAT(CONCAT(oi.quantity, 'x ', oi.item_name, ' (', COALESCE(oi.modifiers, 'Standard'), ')') SEPARATOR '||') AS items_summary
+                   GROUP_CONCAT(CONCAT(oi.quantity, 'x ', oi.item_name) SEPARATOR '||') AS items_summary
             FROM orders o
             LEFT JOIN order_items oi ON o.order_uid = oi.order_uid
             WHERE o.status IN ('New', 'Preparing', 'Ready to Serve')

@@ -13,8 +13,6 @@ $pdo = get_db();
 if ($action === 'add') {
     $item_uid = trim($_POST['item_uid'] ?? '');
     $quantity = max(1, (int)($_POST['quantity'] ?? 1));
-    $spice = $_POST['spice_level'] ?? 'Regular';
-    $addon = $_POST['addon'] ?? '';
     
     $item = null;
     if ($pdo && $item_uid) {
@@ -24,16 +22,7 @@ if ($action === 'add') {
     }
     
     if ($item) {
-        $addon_price = 0;
-        if ($addon === 'Borhani') {
-            $addon_price = 80;
-        } elseif ($addon === 'Extra Aloo') {
-            $addon_price = 40;
-        } elseif ($addon === 'Jali Kabab') {
-            $addon_price = 120;
-        }
-
-        $cart_key = $item_uid . '_' . md5($spice . '_' . $addon);
+        $cart_key = $item_uid;
         
         if (isset($_SESSION['cart'][$cart_key])) {
             $_SESSION['cart'][$cart_key]['quantity'] += $quantity;
@@ -41,18 +30,15 @@ if ($action === 'add') {
             $_SESSION['cart'][$cart_key] = [
                 'item_uid' => $item['item_uid'],
                 'name' => $item['name'],
-                'price' => (float)$item['price'] + $addon_price,
-                'base_price' => (float)$item['price'],
+                'price' => (float)$item['price'],
                 'quantity' => $quantity,
                 'image_url' => $item['image_url'],
-                'spice' => $spice,
-                'addon' => $addon,
-                'addon_price' => $addon_price
+                'category_slug' => $item['category_slug']
             ];
         }
         set_flash('success', "Added {$quantity}x {$item['name']} to your cart.");
     } else {
-        set_flash('error', "Could not find selected dish.");
+        set_flash('error', 'Could not find selected dish.');
     }
 } elseif ($action === 'update') {
     $cart_key = $_POST['cart_key'] ?? $_GET['cart_key'] ?? '';
@@ -62,9 +48,9 @@ if ($action === 'add') {
         $_SESSION['cart'][$cart_key]['quantity'] += $delta;
         if ($_SESSION['cart'][$cart_key]['quantity'] <= 0) {
             unset($_SESSION['cart'][$cart_key]);
-            set_flash('success', "Item removed from cart.");
+            set_flash('success', 'Item removed from cart.');
         } else {
-            set_flash('success', "Cart updated.");
+            set_flash('success', 'Cart updated.');
         }
     }
 } elseif ($action === 'remove') {
@@ -76,8 +62,8 @@ if ($action === 'add') {
     }
 } elseif ($action === 'clear') {
     $_SESSION['cart'] = [];
-    set_flash('success', "Cart cleared.");
+    set_flash('success', 'Cart cleared.');
 }
 
-header("Location: $redirect");
+header('Location: ' . $redirect);
 exit;

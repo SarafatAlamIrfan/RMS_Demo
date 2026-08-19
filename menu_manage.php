@@ -46,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         $description = trim($_POST['description'] ?? '');
         $image_url = handle_image_upload();
         $tags = trim($_POST['tags'] ?? '100% Halal');
-        $spice_level = (int)($_POST['spice_level'] ?? 1);
         $prep_time = (int)($_POST['prep_time_minutes'] ?? 10);
         $is_available = isset($_POST['is_available']) ? 1 : 0;
         $item_uid = 'dish_' . bin2hex(random_bytes(4));
@@ -58,10 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         if ($name && $price > 0) {
             try {
                 $stmt = $pdo->prepare("
-                    INSERT INTO menu_items (item_uid, sku, name, category_slug, price, description, image_url, tags, spice_level, is_available, prep_time_minutes)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO menu_items (item_uid, sku, name, category_slug, price, description, image_url, tags, is_available, prep_time_minutes)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
-                $stmt->execute([$item_uid, $sku, $name, $category_slug, $price, $description, $image_url, $tags, $spice_level, $is_available, $prep_time]);
+                $stmt->execute([$item_uid, $sku, $name, $category_slug, $price, $description, $image_url, $tags, $is_available, $prep_time]);
                 set_flash('success', "New dish '{$name}' added to menu successfully!");
                 header('Location: menu_manage.php');
                 exit;
@@ -81,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         $current_db_image = $_POST['current_image'] ?? '';
         $image_url = handle_image_upload($current_db_image);
         $tags = trim($_POST['tags'] ?? '100% Halal');
-        $spice_level = (int)($_POST['spice_level'] ?? 1);
         $prep_time = (int)($_POST['prep_time_minutes'] ?? 10);
         $is_available = isset($_POST['is_available']) ? 1 : 0;
 
@@ -89,10 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
             try {
                 $stmt = $pdo->prepare("
                     UPDATE menu_items 
-                    SET name = ?, sku = ?, category_slug = ?, price = ?, description = ?, image_url = ?, tags = ?, spice_level = ?, is_available = ?, prep_time_minutes = ?
+                    SET name = ?, sku = ?, category_slug = ?, price = ?, description = ?, image_url = ?, tags = ?, is_available = ?, prep_time_minutes = ?
                     WHERE item_uid = ?
                 ");
-                $stmt->execute([$name, $sku, $category_slug, $price, $description, $image_url, $tags, $spice_level, $is_available, $prep_time, $item_uid]);
+                $stmt->execute([$name, $sku, $category_slug, $price, $description, $image_url, $tags, $is_available, $prep_time, $item_uid]);
                 set_flash('success', "Dish '{$name}' updated successfully!");
                 header('Location: menu_manage.php');
                 exit;
@@ -367,7 +365,7 @@ require_once __DIR__ . '/includes/header.php';
 
       <div style="margin-bottom: 12px;">
         <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Dietary & Special Tags</label>
-        <input type="text" name="tags" value="<?php echo htmlspecialchars($edit_item['tags'] ?? '100% Halal, Chef Special'); ?>" placeholder="100% Halal, Chef Special, Spicy" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;" />
+        <input type="text" name="tags" value="<?php echo htmlspecialchars($edit_item['tags'] ?? '100% Halal, Chef Special'); ?>" placeholder="100% Halal, Chef Special" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;" />
       </div>
 
       <div style="margin-bottom: 12px;">
@@ -375,20 +373,9 @@ require_once __DIR__ . '/includes/header.php';
         <textarea name="description" rows="3" placeholder="Dish description, ingredients, cooking style..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;"><?php echo htmlspecialchars($edit_item['description'] ?? ''); ?></textarea>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
-        <div>
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Spice Level</label>
-          <select name="spice_level" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;">
-            <option value="0" <?php echo (($edit_item['spice_level'] ?? 1) == 0) ? 'selected' : ''; ?>>0 - Mild / Sweet</option>
-            <option value="1" <?php echo (($edit_item['spice_level'] ?? 1) == 1) ? 'selected' : ''; ?>>1 - Medium Spiced</option>
-            <option value="2" <?php echo (($edit_item['spice_level'] ?? 1) == 2) ? 'selected' : ''; ?>>2 - Dhaka Spicy 🌶️</option>
-            <option value="3" <?php echo (($edit_item['spice_level'] ?? 1) == 3) ? 'selected' : ''; ?>>3 - Naga Fiery 🔥</option>
-          </select>
-        </div>
-        <div>
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Prep Time (Mins)</label>
-          <input type="number" name="prep_time_minutes" value="<?php echo htmlspecialchars($edit_item['prep_time_minutes'] ?? '10'); ?>" min="1" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;" />
-        </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Prep Time (Minutes)</label>
+        <input type="number" name="prep_time_minutes" value="<?php echo htmlspecialchars($edit_item['prep_time_minutes'] ?? '10'); ?>" min="1" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;" />
       </div>
 
       <div style="margin-bottom: 18px;">

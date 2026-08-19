@@ -74,7 +74,7 @@ if ($pdo) {
 
         foreach ($cart as $item) {
             $item_qty = (int)$item['quantity'];
-            $modifiers = trim(($item['spice'] ?? 'Regular') . ' | ' . ($item['addon'] ?? ''));
+            $modifiers = null;
             $item_total = $item['price'] * $item_qty;
 
             $item_stmt->execute([
