@@ -1,9 +1,3 @@
-/**
- * FlavourCraft - Authentication, Session & Access Control Stylesheet
- * Theme: Light Mode (Pinkish Red & Saffron Palette)
- */
-
-/* 1. Topbar Auth Pill & Dropdown Menu */
 .topbar-auth-pill {
   position: relative;
   display: flex;
@@ -121,12 +115,12 @@
   color: var(--color-danger);
 }
 
-/* 2. Login & Registration Modal */
+
 .auth-modal-dialog {
   max-width: 500px;
 }
 
-/* Segmented Auth Navigation Tabs */
+
 .auth-tabs {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -167,7 +161,7 @@
   border: 1px solid var(--border-subtle);
 }
 
-/* Staff Quick Select Grid in Staff Tab */
+
 .staff-quick-select-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

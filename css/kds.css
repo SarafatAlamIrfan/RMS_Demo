@@ -1,8 +1,3 @@
-/* ==========================================================================
-   FlavourCraft - Kitchen Display System (KDS) Stylesheet
-   Theme: Light Mode (Pinkish Red & Saffron Palette)
-   ========================================================================== */
-
 .kds-top-controls {
   display: flex;
   align-items: center;
@@ -61,7 +56,7 @@
   background: var(--color-success-bg);
 }
 
-/* 1. KDS Kanban Columns */
+
 .kds-board-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -112,7 +107,7 @@
   min-height: 480px;
 }
 
-/* 2. Individual Ticket Cards */
+
 .kds-ticket {
   background: #ffffff;
   border: 1.5px solid var(--border-subtle);

@@ -1,8 +1,3 @@
-/* ==========================================================================
-   FlavourCraft - Table Reservations Stylesheet
-   Theme: Light Mode (Pinkish Red & Saffron Palette)
-   ========================================================================== */
-
 .reservation-container {
   max-width: 1080px;
   margin: 0 auto;
@@ -38,7 +33,7 @@
   }
 }
 
-/* 1. Main Booking Form Glass Card */
+
 .glass-card {
   background: #ffffff;
   border: 1px solid var(--border-subtle);
@@ -58,7 +53,7 @@
   gap: 8px;
 }
 
-/* Party Size Quick Selector */
+
 .party-size-chips {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -97,7 +92,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Seating Zone Preference Cards */
+
 .seating-preference-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -151,7 +146,7 @@
   line-height: 1.35;
 }
 
-/* Time Slots Grid */
+
 .time-slots-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -203,7 +198,7 @@
   font-size: 12.5px;
 }
 
-/* 2. Digital Reservation Guest Pass Card (No QR) */
+
 .reservation-pass-card {
   background: #0f172a;
   color: #ffffff;
@@ -272,7 +267,7 @@
   font-weight: 700;
 }
 
-/* 3. Recent Confirmed Bookings Box */
+
 .recent-bookings-box {
   background: #ffffff;
   border: 1px solid var(--border-subtle);

@@ -1,9 +1,3 @@
-/* ==========================================================================
-   FlavourCraft - Ordering, Cart Drawer, Checkout & Live Order Tracker
-   Theme: Light Mode (Pinkish Red & Saffron Palette)
-   ========================================================================== */
-
-/* 1. Cart Floating Slide-Out Drawer */
 .cart-drawer {
   position: fixed;
   top: 0;
@@ -196,7 +190,7 @@
   font-family: var(--font-heading);
 }
 
-/* 2. Order Checkout Modal */
+
 .order-type-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -279,7 +273,7 @@
   text-align: center;
 }
 
-/* 3. Live Order Tracker View */
+
 .tracker-container {
   max-width: 800px;
   margin: 0 auto;

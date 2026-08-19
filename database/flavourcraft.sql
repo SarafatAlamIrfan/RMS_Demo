@@ -1,16 +1,8 @@
--- ============================================================================
--- FlavourCraft - Basic Relational SQL Database Schema & Seed Data
--- Managing Director & Admin: Sadia Islam Dia
--- Currency: Bangladeshi Taka (৳ / BDT)
--- Roles: Admin, Manager, Kitchen, Customer
--- ============================================================================
-
-CREATE DATABASE IF NOT EXISTS `flavourcraft_dhaka` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `flavourcraft_dhaka`;
+CREATE DATABASE IF NOT EXISTS `flavourcraft` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `flavourcraft`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
--- 1. Table: users (4 Roles: Admin, Manager, Kitchen, Customer)
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,24 +11,22 @@ CREATE TABLE `users` (
   `password` VARCHAR(255) NOT NULL,
   `name` VARCHAR(100) NOT NULL,
   `role` ENUM('Admin', 'Manager', 'Kitchen', 'Customer') NOT NULL DEFAULT 'Customer',
-  `avatar` VARCHAR(20) DEFAULT '👤',
+  `avatar` VARCHAR(50) DEFAULT NULL,
   `phone` VARCHAR(30) DEFAULT NULL,
   `email` VARCHAR(100) DEFAULT NULL,
   `delivery_address` TEXT DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 2. Table: categories
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `slug` VARCHAR(50) UNIQUE NOT NULL,
   `name` VARCHAR(100) NOT NULL,
-  `icon` VARCHAR(20) DEFAULT '🍽️',
+  `icon` VARCHAR(50) DEFAULT NULL,
   `display_order` INT DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 3. Table: menu_items
 DROP TABLE IF EXISTS `menu_items`;
 CREATE TABLE `menu_items` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +45,6 @@ CREATE TABLE `menu_items` (
   FOREIGN KEY (`category_slug`) REFERENCES `categories` (`slug`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 4. Table: inventory (Raw Ingredients in grams / units)
 DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE `inventory` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -69,7 +58,6 @@ CREATE TABLE `inventory` (
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 5. Table: recipes
 DROP TABLE IF EXISTS `recipes`;
 CREATE TABLE `recipes` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -80,7 +68,6 @@ CREATE TABLE `recipes` (
   FOREIGN KEY (`menu_item_uid`) REFERENCES `menu_items` (`item_uid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 6. Table: recipe_ingredients (Bill of Materials)
 DROP TABLE IF EXISTS `recipe_ingredients`;
 CREATE TABLE `recipe_ingredients` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -94,7 +81,6 @@ CREATE TABLE `recipe_ingredients` (
   FOREIGN KEY (`ingredient_uid`) REFERENCES `inventory` (`ingredient_uid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 7. Table: orders
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -117,7 +103,6 @@ CREATE TABLE `orders` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 8. Table: order_items
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -131,7 +116,6 @@ CREATE TABLE `order_items` (
   FOREIGN KEY (`order_uid`) REFERENCES `orders` (`order_uid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 9. Table: reservations
 DROP TABLE IF EXISTS `reservations`;
 CREATE TABLE `reservations` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -152,27 +136,19 @@ CREATE TABLE `reservations` (
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-
--- ============================================================================
--- SEED DATA
--- ============================================================================
-
--- Users (4 Roles)
 INSERT INTO `users` (`user_uid`, `username`, `password`, `name`, `role`, `avatar`, `phone`, `email`, `delivery_address`) VALUES
 ('usr_admin', 'admin', 'admin123', 'Sadia Islam Dia', 'Admin', '👩‍💼', '+880 1710-000001', 'sadia.dia@flavourcraft.bd', 'Banani, Dhaka'),
 ('usr_manager', 'manager', 'manager123', 'Sarafat Alam Irfan', 'Manager', '👨‍💼', '+880 1710-000002', 'irfan@flavourcraft.bd', 'Gulshan 2, Dhaka'),
 ('usr_kitchen', 'kitchen', 'kitchen123', 'Chef Rony (Biryani Ustad)', 'Kitchen', '🍳', '+880 1710-000004', 'rony@flavourcraft.bd', 'Old Dhaka, Dhaka'),
 ('usr_customer', 'customer', 'customer123', 'Asif Rahman', 'Customer', '🍽️', '+880 1711-234567', 'asif.rahman@gmail.com', 'House 42, Road 11, Block D, Banani, Dhaka');
 
--- Categories
 INSERT INTO `categories` (`slug`, `name`, `icon`, `display_order`) VALUES
-('Bengali Food', 'Bengali Food', '🍛', 1),
-('Chinese', 'Chinese', '🥢', 2),
-('Appetizer', 'Appetizer', '🍤', 3),
-('Drinks & Coffee', 'Drinks & Coffee', '☕', 4),
-('Dessert', 'Dessert', '🍨', 5);
+('Kacchi & Biryani', 'Kacchi & Biryani', '🍛', 1),
+('Beef, Mutton & Chicken', 'Beef, Mutton & Chicken', '🥩', 2),
+('Fish & Seafood', 'Fish & Seafood', '🐟', 3),
+('Kabab & Street Food', 'Kabab & Street Food', '🍢', 4),
+('Drinks & Desserts', 'Drinks & Desserts', '🍨', 5);
 
--- 15 Authentic Dishes in ৳ BDT
 INSERT INTO `menu_items` (`item_uid`, `sku`, `name`, `category_slug`, `price`, `description`, `image_url`, `tags`, `spice_level`, `is_available`, `prep_time_minutes`) VALUES
 ('dish_01', 'KAC-101', 'Puran Dhaka Mutton Kacchi Biryani', 'Kacchi & Biryani', 650.00, 'Authentic Old Dhaka style tender mutton kacchi with fragrant Chinigura rice, spiced soft aloo, aloo bukhara, and Baghabari pure ghee. Served with cold Borhani.', 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80', '100% Halal, Chef Special', 1, 1, 5),
 ('dish_02', 'TEH-102', 'Old Dhaka Beef Tehari', 'Kacchi & Biryani', 480.00, 'Traditional mustard oil beef tehari cooked with aromatic Katari-bhog rice, tender bite-sized beef pieces, whole green chilies, and rich beef broth.', 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=600&auto=format&fit=crop&q=80', '100% Halal, Spicy', 2, 1, 5),
@@ -190,7 +166,6 @@ INSERT INTO `menu_items` (`item_uid`, `sku`, `name`, `category_slug`, `price`, `
 ('dish_14', 'DES-602', 'Bogura Shahi Mishti Doi', 'Drinks & Desserts', 180.00, 'Authentic caramelized traditional Bogura sweet curd served chilled in traditional clay pot.', 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&auto=format&fit=crop&q=80', 'Vegetarian, 100% Halal', 0, 1, 2),
 ('dish_15', 'DES-603', 'Sweet Rasmalai Bowl (4 pcs)', 'Drinks & Desserts', 220.00, 'Soft cottage cheese chenna balls soaked in thick saffron-cardamom flavored clotted malai milk with chopped pistachios.', 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80', 'Vegetarian, 100% Halal', 0, 1, 3);
 
--- Raw Ingredients Inventory
 INSERT INTO `inventory` (`ingredient_uid`, `name`, `category`, `current_stock`, `threshold`, `unit`, `cost_per_unit`) VALUES
 ('ing_mutton', 'Fresh Bengal Mutton Cuts', 'Meats', 18500.00, 5000.00, 'g', 1.10),
 ('ing_beef', 'Fresh Bengal Beef Cuts', 'Meats', 22000.00, 6000.00, 'g', 0.85),
@@ -207,7 +182,6 @@ INSERT INTO `inventory` (`ingredient_uid`, `name`, `category`, `current_stock`, 
 ('ing_fuchka_puri', 'Crispy Fuchka Shells', 'Bakery', 250.00, 80.00, 'pcs', 3.00),
 ('ing_chicken_wings', 'Fresh Chicken Wings', 'Poultry', 18.00, 40.00, 'pcs', 25.00);
 
--- Recipes
 INSERT INTO `recipes` (`recipe_uid`, `menu_item_uid`, `dish_name`, `selling_price`) VALUES
 ('rec_kacchi', 'dish_01', 'Puran Dhaka Mutton Kacchi Biryani', 650.00),
 ('rec_tehari', 'dish_02', 'Old Dhaka Beef Tehari', 480.00),
@@ -236,6 +210,5 @@ INSERT INTO `recipe_ingredients` (`recipe_uid`, `ingredient_uid`, `ingredient_na
 ('rec_fuchka', 'ing_fuchka_puri', 'Crispy Fuchka Puris', 10.00, 'pcs', 3.00),
 ('rec_fuchka', 'ing_potato', 'Mashed Spiced Potato & Dubli', 120.00, 'g', 0.25);
 
--- Sample Confirmed Reservation
 INSERT INTO `reservations` (`booking_uid`, `booking_code`, `guest_name`, `guest_phone`, `guest_email`, `party_size`, `reservation_date`, `time_slot`, `table_preference`, `deposit_paid`, `status`, `special_request`) VALUES
-('res_01', 'FC-DHK-801', 'Farhan Kabir', '+880 1712-998877', 'farhan.kabir@gmail.com', 4, CURDATE(), '20:00', 'Family Lounge', 500.00, 'Confirmed', 'Family dinner. Extra spicy kacchi biryani & borhani setup.');
+('res_01', 'FC-801', 'Farhan Kabir', '+880 1712-998877', 'farhan.kabir@gmail.com', 4, CURDATE(), '20:00', 'Family Lounge', 500.00, 'Confirmed', 'Family dinner. Extra spicy kacchi biryani & borhani setup.');

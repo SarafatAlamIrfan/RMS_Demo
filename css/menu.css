@@ -1,9 +1,3 @@
-/* ==========================================================================
-   FlavourCraft - Menu, Hero Banner & Customizer Styles
-   Theme: Light Mode (Pinkish Red & Saffron Palette)
-   ========================================================================== */
-
-/* 1. Hero Banner Matching Reference Image */
 .dhaka-hero-banner {
   position: relative;
   border-radius: var(--radius-xl);
@@ -114,7 +108,7 @@
   border-color: #ffffff;
 }
 
-/* 2. Chef's Special Recommendations Section */
+
 .chefs-specials-section {
   margin-bottom: 40px;
 }
@@ -245,7 +239,7 @@
   font-family: var(--font-heading);
 }
 
-/* 3. Category Filter Navigation Bar */
+
 .category-filter-bar {
   display: flex;
   align-items: center;
@@ -284,7 +278,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* 4. Dietary Tags Controls */
+
 .menu-controls-row {
   margin-bottom: 24px;
 }
@@ -320,7 +314,7 @@
   font-weight: 800;
 }
 
-/* 5. Menu Grid & Dish Cards */
+
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -482,7 +476,7 @@
   filter: brightness(1.08);
 }
 
-/* 6. Item Customizer Drawer / Modal */
+
 .customizer-header-card {
   display: flex;
   gap: 16px;
@@ -585,7 +579,7 @@
   padding: 4px 8px;
 }
 
-/* 7. Admin & Manager Dish Management Action Toolbar */
+
 .admin-dish-bar {
   display: flex;
   align-items: center;

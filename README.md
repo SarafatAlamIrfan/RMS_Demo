@@ -41,7 +41,7 @@
   - Clean, straightforward PHP scripts using `PDO` prepared statements with zero complex frameworks.
   - Basic database queries (SELECT, INSERT, UPDATE) with transaction support.
 - **Database (Basic SQL / MySQL)**:
-  - Normalized MySQL schema in `database/flavourcraft_dhaka.sql`.
+  - Normalized MySQL schema in `database/flavourcraft.sql`.
   - Normalized tables (`users`, `categories`, `menu_items`, `recipes`, `recipe_ingredients`, `orders`, `order_items`, `reservations`, `inventory`) with foreign keys and complete Bangladeshi seed data for 1-click import in **phpMyAdmin / XAMPP / WAMP**.
 - **Execution Flexibility**:
   - **Server Mode**: Runs on standard Apache / PHP / MySQL stack (XAMPP).
@@ -143,92 +143,95 @@ FlavourCraft features a vibrant **Light Mode** palette designed with **Pinkish R
 
 ## 🗄️ Basic Database Schema & SQL Architecture
 
-Located in [`database/flavourcraft_dhaka.sql`](file:///d:/Personal%20Projects/FlavourCraft/database/flavourcraft_dhaka.sql) and [`database/flavourcraft.sql`](file:///d:/Personal%20Projects/FlavourCraft/database/flavourcraft.sql):
+Located in [`database/flavourcraft.sql`](file:///d:/Personal%20Projects/FlavourCraft/database/flavourcraft.sql):
 - `users`: User authentication, 4 roles (Admin Sadia Islam Dia, Manager, Kitchen, Customer), contact & delivery address.
 - `categories`: Menu category taxonomy.
 - `menu_items`: Complete dish catalog with pricing, tags, and preparation times.
 - `recipes` & `recipe_ingredients`: Bill of materials per portion for stock deduction.
 - `inventory`: Raw meat, fish, grain, and spice stock levels with safety thresholds.
-- `orders` & `order_items`: Customer orders with line items, 5% VAT, and 5% service charge.
-- `reservations`: Bookings, party sizes, and peak hour deposit tracking.
+- `orders` & `order_items`: Customer orders with line items, 5% VAT, and delivery fees.
+- `reservations`: Bookings, party sizes, and confirmed dining table tracking.
 
 ---
 
-## 🔌 Basic PHP Backend Architecture
+## 🔌 Basic PHP Architecture (Multi-Page Server-Side Rendering)
 
-Located in `api/`:
-- `api/config.php`: MySQL PDO connection and JSON response helper.
-- `api/auth.php`: Login, registration, and user listings.
-- `api/menu.php`: Menu item retrieval and availability toggles.
-- `api/orders.php`: Order placement with automatic SQL recipe stock deduction and KDS status updates.
-- `api/reservations.php`: Table booking and e-Pass generation.
-- `api/inventory.php`: Raw stock restock and recipe costing.
-- `api/analytics.php`: Turnover in Taka, top bestsellers, and peak hour metrics.
+- `config/db.php`: Database connection via PDO, session starter, and BDT formatting helper.
+- `includes/header.php`: Shared HTML header, Google fonts, stylesheets, sidebar navigation, topbar, and cart badge.
+- `includes/footer.php`: Shared footer and script tags.
+- `includes/auth_check.php`: Basic PHP role-based permission verification.
+- `index.php`: Digital Menu catalog with category filter (`?category=...`), search (`?search=...`), and Add to Cart forms.
+- `cart.php`: Cart items table, subtotal, VAT 5%, delivery charge calculation, and Bangladeshi checkout form.
+- `cart_action.php`: Session cart processor for adding, incrementing, decrementing, and removing dishes.
+- `place_order.php`: Processes order `$_POST`, executes PDO transaction to save orders/items, and deducts inventory according to recipe ingredients.
+- `reservations.php`: Table booking form with instant digital reservation e-Pass generation.
+- `track_order.php`: Live order tracker with status stages (`New` ➔ `Preparing` ➔ `Ready to Serve` ➔ `Completed`), rider radar, and itemized receipt.
+- `kds.php`: Kitchen Display System displaying live tickets for chefs with cooking specs.
+- `kds_action.php`: Status update processor for advancing kitchen tickets.
+- `inventory.php`: Raw ingredient stock management with low-stock alerts and recipe profit margin calculations.
+- `analytics.php`: Executive Analytics for Managing Director **Sadia Islam Dia** (SQL SUM/COUNT revenue turnover and dish sales).
+- `staff.php`: Staff roster and shift management.
+- `login.php`: Credentials login + 1-Click Role Switcher for instant academic demonstration.
+- `logout.php`: Session destroy and redirect.
 
 ---
 
 ## 📁 Directory Structure
 
 ```
-d:/Personal Projects/FlavourCraft/
-├── index.html                      # Single-Page Application Master Shell
-├── README.md                       # Complete Project Documentation
-├── implementation_plan.md          # Technical Architecture & Implementation Plan
-├── .gitignore                      # Git ignore rules
+FlavourCraft/
+├── config/
+│   └── db.php                  # Database connection (PDO with MySQL localhost/flavourcraft)
+├── includes/
+│   ├── header.php              # Global HTML <head>, fonts, CSS, Sidebar Navigation & Topbar
+│   ├── footer.php              # Common footer, script includes, and closing tags
+│   └── auth_check.php          # Session validation helper for protected routes (Admin/Staff)
+├── css/                        # Existing rich CSS stylesheets (Light mode, Pinkish Red & Saffron)
+│   ├── variables.css
+│   ├── style.css
+│   ├── menu.css
+│   ├── ordering.css
+│   ├── reservations.css
+│   ├── kds.css
+│   ├── inventory.css
+│   ├── analytics.css
+│   ├── staff.css
+│   ├── rbac.css
+│   └── auth.css
+├── js/                         # Client-side helpers (alerts, DOM utilities)
+│   └── main.js
 ├── database/
-│   ├── flavourcraft.sql            # Basic MySQL Schema & Seed Data Script
-│   └── flavourcraft_dhaka.sql      # MySQL Import Script
-├── api/
-│   ├── config.php                  # Basic Database Connection (PDO)
-│   ├── auth.php                    # Basic Authentication Script (4 Roles)
-│   ├── menu.php                    # Basic Menu & Availability Script
-│   ├── orders.php                  # Basic Orders & Recipe Stock Deduction Script
-│   ├── reservations.php            # Basic Table Reservations Script
-│   ├── inventory.php               # Basic Inventory Stock & Restock Script
-│   └── analytics.php               # Basic Financial & Turnover Analytics Script
-├── css/
-│   ├── variables.css               # Design tokens, Pinkish Red & Saffron Light Mode
-│   ├── style.css                   # Global layout, sidebar navigation, topbar & buttons
-│   ├── menu.css                    # Menu cards, spice meters, customizer drawer
-│   ├── ordering.css                # Cart drawer, checkout, live tracking progress
-│   ├── reservations.css            # Table booking, seat selector & digital e-pass
-│   ├── kds.css                     # Kitchen tickets, urgency timers, audio chimes
-│   ├── inventory.css               # Stock table, recipe margins, low-stock alerts
-│   ├── analytics.css               # Sales SVG charts, peak hour heatmaps, metric cards
-│   ├── rbac.css                    # Role badges & permission indicators
-│   └── auth.css                    # Authentication modal, demo pills, dropdown menu & lock screen
-└── js/
-    ├── db/
-    │   ├── mongo-db.js             # Client-side Document Engine (Fallback / Offline)
-    │   └── seed-data.js            # Initial dataset (Menu, Stock, Orders, Admin: Sadia Islam Dia)
-    ├── api-client.js               # Frontend API Client (PHP & MySQL Backend Bridge)
-    ├── store.js                    # Reactive state, Web Audio synthesizer, Auto-deduction, Auth engine
-    ├── app.js                      # Main controller, router, & toast manager
-    └── components/
-        ├── auth.js                 # Authentication controller, login modal, registration & staff gate
-        ├── menu.js                 # Menu component & item customizer
-        ├── reservations.js         # Table reservations & digital ticket generator
-        ├── ordering.js             # Checkout with login gate, payment gateways & live tracker
-        ├── kds.js                  # Kitchen Display System & recipe specs
-        ├── inventory.js            # Stock inventory, recipe costing & restock
-        ├── analytics.js            # Analytics charts & JSON DB export
-        └── rbac.js                 # Role-based permissions & navigation filtering
+│   └── flavourcraft.sql        # Complete relational MySQL schema & seed data
+├── index.php                   # Home & Digital Menu Catalog (Category filter, search, customizer)
+├── cart.php                    # Shopping cart, subtotal, VAT (5%), delivery, checkout form
+├── cart_action.php             # POST processor: add/remove/update cart session items
+├── place_order.php             # POST processor: inserts order & order_items, deducts stock, redirects
+├── reservations.php            # Table booking page + POST processor for reservation pass
+├── track_order.php             # Live Order Tracker (search order by ID, visual step progress)
+├── kds.php                     # Kitchen Display System (view live tickets, auto-refresh)
+├── kds_action.php              # POST processor: update order status (Cooking, Ready, Dispatched)
+├── inventory.php               # Inventory stock management & recipe costing (Admin/Manager)
+├── analytics.php               # Executive Analytics (Sadia Islam Dia dashboard with SQL SUM/COUNT metrics)
+├── staff.php                   # Staff roster & role-based management
+├── login.php                   # Login page (Admin, Chef, Server, Customer switch/credentials)
+└── logout.php                  # Destroys PHP session and redirects to index.php
 ```
 
 ---
 
-## 🏁 How to Run
+## 🏁 How to Run on XAMPP / WAMP (Basic PHP)
 
-### Option 1: Full-Stack Mode (XAMPP / WAMP / Apache + MySQL)
-1. Copy the `FlavourCraft` folder into your XAMPP `htdocs` directory (e.g. `C:\xampp\htdocs\FlavourCraft`).
-2. Start **Apache** and **MySQL** in the XAMPP Control Panel.
-3. Open **phpMyAdmin** (`http://localhost/phpmyadmin`).
-4. Click **Import** and select `database/flavourcraft_dhaka.sql` (or `database/flavourcraft.sql`), then click **Go**.
-5. Open your browser and navigate to:
+1. Copy the `FlavourCraft` folder into your XAMPP `htdocs` directory:
    ```
-   http://localhost/FlavourCraft/index.html
+   C:\xampp\htdocs\FlavourCraft
    ```
-
-### Option 2: Standalone Browser Demo (Zero Server Setup)
-1. Double-click [`index.html`](file:///d:/Personal%20Projects/FlavourCraft/index.html) or open it directly in any browser (Chrome, Edge, Firefox).
-2. The built-in client engine will load all seed data, allowing full demonstration of all customer, kitchen, inventory, authentication, and light theme features!
+2. Start **Apache** and **MySQL** in the **XAMPP Control Panel**.
+3. Open your browser and go to **phpMyAdmin**:
+   ```
+   http://localhost/phpmyadmin
+   ```
+4. Click **Import**, choose the file [`database/flavourcraft.sql`](file:///d:/Personal%20Projects/FlavourCraft/database/flavourcraft.sql), and click **Go**.
+5. Open your browser and go to:
+   ```
+   http://localhost/FlavourCraft/index.php
+   ```

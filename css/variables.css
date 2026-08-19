@@ -1,10 +1,5 @@
-/**
- * FlavourCraft - Global Design Tokens & Theme Variables
- * Theme: Light Mode (Pinkish Red & Saffron Palette)
- */
-
 :root {
-  /* Surface & Canvas Colors */
+  
   --bg-canvas: #fff5f7;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #fff1f2;
@@ -15,19 +10,19 @@
   --bg-sidebar: #ffffff;
   --bg-topbar: rgba(255, 245, 247, 0.92);
 
-  /* Typography Colors */
+  
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-inverse: #ffffff;
   --heading-color: #0f172a;
 
-  /* Borders & Dividers */
+  
   --border-subtle: #fecdd3;
   --border-medium: #fda4af;
   --border-focus: #e11d48;
 
-  /* Brand Accents (Vibrant Pinkish Red & Warm Saffron) */
+  
   --primary: #e11d48;
   --primary-light: #f43f5e;
   --primary-dark: #be123c;
@@ -39,7 +34,7 @@
   --accent-saffron-dark: #d97706;
   --saffron-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
 
-  /* Semantic State Colors */
+  
   --color-success: #059669;
   --color-success-bg: #ecfdf5;
   --color-success-border: #a7f3d0;
@@ -53,24 +48,24 @@
   --color-info-bg: #f0f9ff;
   --color-info-border: #bae6fd;
 
-  /* Elevation Shadows */
+  
   --shadow-sm: 0 1px 3px rgba(225, 29, 72, 0.06);
   --shadow-md: 0 4px 14px rgba(225, 29, 72, 0.08);
   --shadow-lg: 0 10px 25px rgba(225, 29, 72, 0.10);
   --shadow-xl: 0 20px 35px rgba(0, 0, 0, 0.08);
   --shadow-glow: 0 0 16px rgba(225, 29, 72, 0.25);
 
-  /* Typography Families */
+  
   --font-heading: 'Outfit', 'Playfair Display', -apple-system, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Layout Dimensions */
+  
   --sidebar-width: 260px;
   --topbar-height: 70px;
 
-  /* Border Radii */
+  
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -78,7 +73,7 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Transitions */
+  
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
   --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
