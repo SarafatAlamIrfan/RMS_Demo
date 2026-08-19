@@ -116,12 +116,17 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
 
         <div class="topbar-right">
           <div style="display:flex; align-items:center; gap:10px;">
-            <a href="login.php" class="btn btn-secondary" style="padding:6px 14px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; color:#334155; font-weight:600;">
-              <span><?php echo htmlspecialchars($current_user['avatar'] ?? '👤'); ?></span>
-              <span>Role: <strong><?php echo htmlspecialchars($current_user['role'] ?? 'Guest'); ?></strong></span>
-            </a>
             <?php if (isset($_SESSION['user'])): ?>
-              <a href="logout.php" class="btn btn-sm" style="padding:6px 10px; font-size:0.8rem; text-decoration:none; background:#fee2e2; color:#b91c1c; border-radius:6px; font-weight:600;">Logout</a>
+              <a href="login.php" class="btn btn-secondary" style="padding:6px 14px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; color:#334155; font-weight:600;">
+                <span><?php echo htmlspecialchars($current_user['avatar'] ?? '👤'); ?></span>
+                <span>Role: <strong><?php echo htmlspecialchars($current_user['role']); ?></strong></span>
+              </a>
+              <a href="logout.php" class="btn btn-sm" style="padding:6px 12px; font-size:0.85rem; text-decoration:none; background:#fee2e2; color:#b91c1c; border-radius:6px; font-weight:700;">🚪 Logout</a>
+            <?php else: ?>
+              <a href="login.php" class="btn btn-primary" style="padding:7px 16px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border-radius:8px; background:#0f172a; color:#fff; font-weight:700;">
+                <span>🔑</span>
+                <span>Sign In / Demo</span>
+              </a>
             <?php endif; ?>
           </div>
 

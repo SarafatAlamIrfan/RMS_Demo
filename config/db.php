@@ -62,15 +62,15 @@ function get_cart_count() {
 }
 
 function get_current_user_data() {
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {
         return $_SESSION['user'];
     }
     return [
-        'user_uid' => 'usr_admin',
-        'username' => 'admin',
-        'name' => 'Sadia Islam Dia',
-        'role' => 'Admin',
-        'avatar' => '👩‍💼',
-        'email' => 'sadia.dia@flavourcraft.bd'
+        'user_uid' => null,
+        'username' => 'guest',
+        'name' => 'Guest Customer',
+        'role' => 'Guest',
+        'avatar' => '👤',
+        'email' => null
     ];
 }
