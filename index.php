@@ -74,11 +74,21 @@ if ($pdo) {
       <span>All Dishes</span>
     </a>
 
-    <?php foreach ($categories as $cat): ?>
+    <?php 
+    $cat_icons = [
+        'Kacchi & Biryani' => '🍛',
+        'Beef, Mutton & Chicken' => '🥩',
+        'Fish & Seafood' => '🐟',
+        'Kabab & Street Food' => '🍢',
+        'Drinks & Desserts' => '🍨'
+    ];
+    foreach ($categories as $cat): 
+      $icon = (!empty($cat['icon']) && strpos($cat['icon'], '?') === false) ? $cat['icon'] : ($cat_icons[$cat['slug']] ?? '🍽️');
+    ?>
       <a href="index.php?category=<?php echo urlencode($cat['slug']); ?><?php echo !empty($search_query) ? '&search=' . urlencode($search_query) : ''; ?>" 
          class="category-tab-pill <?php echo ($selected_category === $cat['slug']) ? 'active' : ''; ?>"
          style="padding: 10px 20px; border-radius: 30px; font-weight: 600; text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; transition: all 0.2s; <?php echo ($selected_category === $cat['slug']) ? 'background: #e11d48; color: #fff; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);' : 'background: #fff; color: #475569; border: 1px solid #e2e8f0;'; ?>">
-        <span><?php echo htmlspecialchars($cat['icon']); ?></span>
+        <span><?php echo $icon; ?></span>
         <span><?php echo htmlspecialchars($cat['name']); ?></span>
       </a>
     <?php endforeach; ?>
