@@ -16,6 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $booking_uid = 'res_' . bin2hex(random_bytes(5));
     $booking_code = 'FC-RES-' . rand(100, 999);
 
+    if (!isset($_SESSION['my_reservations']) || !is_array($_SESSION['my_reservations'])) {
+        $_SESSION['my_reservations'] = [];
+    }
+    $_SESSION['my_reservations'][] = $booking_code;
+
     if ($pdo && $guest_name && $guest_phone) {
         try {
             $stmt = $pdo->prepare("
@@ -43,11 +48,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$user = get_current_user_data();
+$is_staff = ($user['role'] === 'Admin' || $user['role'] === 'Manager');
+
 $reservations = [];
 if ($pdo) {
     try {
-        $stmt = $pdo->query("SELECT * FROM reservations ORDER BY reservation_date DESC, id DESC LIMIT 6");
-        $reservations = $stmt->fetchAll();
+        if ($is_staff) {
+            $stmt = $pdo->query("SELECT * FROM reservations ORDER BY reservation_date DESC, id DESC LIMIT 10");
+            $reservations = $stmt->fetchAll();
+        } else {
+            $my_codes = $_SESSION['my_reservations'] ?? [];
+            $user_phone = $user['phone'] ?? '';
+            $user_name = ($user['role'] !== 'Guest') ? $user['name'] : '';
+
+            $conditions = [];
+            $params = [];
+
+            if (!empty($my_codes)) {
+                $placeholders = implode(',', array_fill(0, count($my_codes), '?'));
+                $conditions[] = "booking_code IN ($placeholders)";
+                $params = array_merge($params, $my_codes);
+            }
+            if ($user_phone) {
+                $conditions[] = "guest_phone = ?";
+                $params[] = $user_phone;
+            }
+            if ($user_name) {
+                $conditions[] = "guest_name = ?";
+                $params[] = $user_name;
+            }
+
+            if (!empty($conditions)) {
+                $sql = "SELECT * FROM reservations WHERE " . implode(' OR ', $conditions) . " ORDER BY id DESC";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($params);
+                $reservations = $stmt->fetchAll();
+            }
+        }
     } catch (PDOException $e) {
     }
 }
@@ -73,18 +111,18 @@ require_once __DIR__ . '/includes/header.php';
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
         <div>
           <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Guest Name *</label>
-          <input type="text" name="guest_name" required placeholder="e.g. Farhan Kabir" value="<?php echo htmlspecialchars($current_user['name'] ?? 'Farhan Kabir'); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          <input type="text" name="guest_name" required placeholder="e.g. Farhan Kabir" value="<?php echo ($current_user['role'] !== 'Guest') ? htmlspecialchars($current_user['name']) : ''; ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
         </div>
         <div>
           <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Phone Number *</label>
-          <input type="text" name="guest_phone" required placeholder="+880 1712-000000" value="+880 1712-998877" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          <input type="text" name="guest_phone" required placeholder="+880 1712-000000" value="<?php echo htmlspecialchars($current_user['phone'] ?? ''); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
         <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Email Address *</label>
-          <input type="email" name="guest_email" required placeholder="guest@example.com" value="farhan.kabir@gmail.com" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Email Address</label>
+          <input type="email" name="guest_email" placeholder="guest@example.com" value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
         </div>
         <div>
           <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Party Size (Guests) *</label>
@@ -138,13 +176,20 @@ require_once __DIR__ . '/includes/header.php';
   <div style="display: flex; flex-direction: column; gap: 20px;">
     
     <div style="background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-      <h3 style="font-size: 1.15rem; margin: 0 0 16px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-        <span>🎟️</span> Confirmed Table e-Passes
+      <h3 style="font-size: 1.15rem; margin: 0 0 6px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+        <span>🎟️</span> <?php echo $is_staff ? 'Confirmed Table e-Passes (Admin & Manager View)' : 'Your Confirmed Table e-Pass'; ?>
       </h3>
+      <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 16px;">
+        <?php echo $is_staff ? 'Full guest table booking directory.' : '🔒 Private: Only you and restaurant management can view your booking.'; ?>
+      </p>
 
       <?php if (empty($reservations)): ?>
-        <div style="padding: 30px; text-align: center; color: #64748b;">
-          No previous reservations found. Book a table on the left to generate your digital e-Pass!
+        <div style="padding: 35px 20px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🍽️</div>
+          <div style="font-weight: 700; color: #334155; margin-bottom: 4px;">No Active Bookings</div>
+          <div style="font-size: 0.85rem;">
+            <?php echo $is_staff ? 'No guest reservations in the system.' : 'Complete the reservation form on the left to confirm your table and view your digital e-Pass.'; ?>
+          </div>
         </div>
       <?php else: ?>
         <div style="display: flex; flex-direction: column; gap: 14px;">
@@ -176,6 +221,17 @@ require_once __DIR__ . '/includes/header.php';
           <?php endforeach; ?>
         </div>
       <?php endif; ?>
+    </div>
+
+    <div style="background: #fff; border-radius: 16px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+      <h4 style="font-size: 0.95rem; margin: 0 0 10px; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+        <span>ℹ️</span> Reservation Policy & Notes
+      </h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 0.8rem; color: #64748b; line-height: 1.6;">
+        <li>Tables are held for up to 15 minutes past scheduled booking time.</li>
+        <li>For corporate events or groups exceeding 12 guests, contact our Banquet Manager.</li>
+        <li>100% Halal kitchen certification guaranteed.</li>
+      </ul>
     </div>
 
   </div>
