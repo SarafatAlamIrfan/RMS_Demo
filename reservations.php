@@ -1,9 +1,19 @@
 <?php
 require_once __DIR__ . '/config/db.php';
 
+$user = get_current_user_data();
+$is_guest = ($user['role'] === 'Guest');
+$is_staff = ($user['role'] === 'Admin' || $user['role'] === 'Manager');
+
 $pdo = get_db();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($is_guest) {
+        set_flash('error', 'Please sign in or register an account before booking a table.');
+        header('Location: login.php?redirect=reservations.php');
+        exit;
+    }
+
     $guest_name = trim($_POST['guest_name'] ?? '');
     $guest_phone = trim($_POST['guest_phone'] ?? '');
     $guest_email = trim($_POST['guest_email'] ?? '');
@@ -48,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$user = get_current_user_data();
-$is_staff = ($user['role'] === 'Admin' || $user['role'] === 'Manager');
-
 $reservations = [];
 if ($pdo) {
     try {
@@ -60,7 +67,7 @@ if ($pdo) {
         } else {
             $my_codes = $_SESSION['my_reservations'] ?? [];
             $user_phone = $user['phone'] ?? '';
-            $user_name = ($user['role'] !== 'Guest') ? $user['name'] : '';
+            $user_name = (!$is_guest) ? $user['name'] : '';
 
             $conditions = [];
             $params = [];
@@ -107,70 +114,95 @@ require_once __DIR__ . '/includes/header.php';
       Instant table confirmation with digital e-Pass for your dining party.
     </p>
 
-    <form method="POST" action="reservations.php">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-        <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Guest Name *</label>
-          <input type="text" name="guest_name" required placeholder="e.g. Farhan Kabir" value="<?php echo ($current_user['role'] !== 'Guest') ? htmlspecialchars($current_user['name']) : ''; ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
-        </div>
-        <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Phone Number *</label>
-          <input type="text" name="guest_phone" required placeholder="+880 1712-000000" value="<?php echo htmlspecialchars($current_user['phone'] ?? ''); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+    <?php if ($is_guest): ?>
+      <div style="background: #fff1f2; border: 2px dashed #f43f5e; border-radius: 14px; padding: 28px 20px; text-align: center;">
+        <div style="font-size: 2.8rem; margin-bottom: 12px;">🔐</div>
+        <h3 style="margin: 0 0 8px; color: #9f1239; font-size: 1.15rem;">Sign In or Register Required</h3>
+        <p style="color: #475569; font-size: 0.85rem; line-height: 1.5; margin: 0 0 20px; max-width: 380px; margin-left: auto; margin-right: auto;">
+          Please sign in to your customer account or register to confirm table bookings, select dining zones, and access your digital pass.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto;">
+          <a href="login.php?redirect=reservations.php" style="display: block; background: #e11d48; color: #fff; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(225,29,72,0.3);">
+            🔑 Sign In / Register Account
+          </a>
+          
+          <form method="POST" action="login.php" style="margin:0;">
+            <input type="hidden" name="action" value="quick_switch" />
+            <input type="hidden" name="role" value="Customer" />
+            <input type="hidden" name="redirect" value="reservations.php" />
+            <button type="submit" style="width: 100%; background: #fff; border: 1px solid #cbd5e1; color: #334155; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
+              ⚡ 1-Click Demo Login (Asif Rahman)
+            </button>
+          </form>
         </div>
       </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-        <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Email Address</label>
-          <input type="email" name="guest_email" placeholder="guest@example.com" value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+    <?php else: ?>
+      <form method="POST" action="reservations.php">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Guest Name *</label>
+            <input type="text" name="guest_name" required placeholder="e.g. Asif Rahman" value="<?php echo htmlspecialchars($current_user['name']); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Phone Number *</label>
+            <input type="text" name="guest_phone" required placeholder="+880 1712-000000" value="<?php echo htmlspecialchars($current_user['phone'] ?? '+880 1711-234567'); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          </div>
         </div>
-        <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Party Size (Guests) *</label>
-          <select name="party_size" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
-            <option value="2">2 Persons (Couple Table)</option>
-            <option value="4" selected>4 Persons (Standard Table)</option>
-            <option value="6">6 Persons (Large Family)</option>
-            <option value="8">8 Persons (Feast Group)</option>
-            <option value="12">12+ Persons (VIP Hall)</option>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Email Address</label>
+            <input type="email" name="guest_email" placeholder="guest@example.com" value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Party Size (Guests) *</label>
+            <select name="party_size" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
+              <option value="2">2 Persons (Couple Table)</option>
+              <option value="4" selected>4 Persons (Standard Table)</option>
+              <option value="6">6 Persons (Large Family)</option>
+              <option value="8">8 Persons (Feast Group)</option>
+              <option value="12">12+ Persons (VIP Hall)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Date *</label>
+            <input type="date" name="reservation_date" required value="<?php echo date('Y-m-d'); ?>" min="<?php echo date('Y-m-d'); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Time Slot *</label>
+            <select name="time_slot" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
+              <option value="13:00">1:00 PM (Lunch Feast)</option>
+              <option value="14:30">2:30 PM (Afternoon Dining)</option>
+              <option value="19:30" selected>7:30 PM (Prime Dinner)</option>
+              <option value="21:00">9:00 PM (Late Dinner)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Dining Zone Preference</label>
+          <select name="table_preference" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
+            <option value="Ground Floor Heritage Lounge">Ground Floor Heritage Lounge</option>
+            <option value="Rooftop Garden View">Rooftop Garden View</option>
+            <option value="Family VIP Hall">Family VIP Private Hall</option>
+            <option value="Outdoor Gazebo">Outdoor Gazebo</option>
           </select>
         </div>
-      </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-        <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Date *</label>
-          <input type="date" name="reservation_date" required value="<?php echo date('Y-m-d'); ?>" min="<?php echo date('Y-m-d'); ?>" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;" />
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Special Notes / Dietary Requests</label>
+          <textarea name="special_request" rows="2" placeholder="e.g. Birthday cake arrangement, extra spicy setup..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;"></textarea>
         </div>
-        <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Time Slot *</label>
-          <select name="time_slot" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
-            <option value="13:00">1:00 PM (Lunch Feast)</option>
-            <option value="14:30">2:30 PM (Afternoon Dining)</option>
-            <option value="19:30" selected>7:30 PM (Prime Dinner)</option>
-            <option value="21:00">9:00 PM (Late Dinner)</option>
-          </select>
-        </div>
-      </div>
 
-      <div style="margin-bottom: 14px;">
-        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Dining Zone Preference</label>
-        <select name="table_preference" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
-          <option value="Ground Floor Heritage Lounge">Ground Floor Heritage Lounge</option>
-          <option value="Rooftop Garden View">Rooftop Garden View</option>
-          <option value="Family VIP Hall">Family VIP Private Hall</option>
-          <option value="Outdoor Gazebo">Outdoor Gazebo</option>
-        </select>
-      </div>
-
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Special Notes / Dietary Requests</label>
-        <textarea name="special_request" rows="2" placeholder="e.g. Birthday cake arrangement, extra spicy setup..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;"></textarea>
-      </div>
-
-      <button type="submit" style="width: 100%; background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.35);">
-        ✨ Confirm Table Reservation
-      </button>
-    </form>
+        <button type="submit" style="width: 100%; background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.35);">
+          ✨ Confirm Table Reservation
+        </button>
+      </form>
+    <?php endif; ?>
   </div>
 
   <div style="display: flex; flex-direction: column; gap: 20px;">
@@ -188,7 +220,11 @@ require_once __DIR__ . '/includes/header.php';
           <div style="font-size: 2rem; margin-bottom: 8px;">🍽️</div>
           <div style="font-weight: 700; color: #334155; margin-bottom: 4px;">No Active Bookings</div>
           <div style="font-size: 0.85rem;">
-            <?php echo $is_staff ? 'No guest reservations in the system.' : 'Complete the reservation form on the left to confirm your table and view your digital e-Pass.'; ?>
+            <?php if ($is_guest): ?>
+              Please sign in or register to view your table passes.
+            <?php else: ?>
+              Complete the reservation form on the left to confirm your table and view your digital e-Pass.
+            <?php endif; ?>
           </div>
         </div>
       <?php else: ?>
