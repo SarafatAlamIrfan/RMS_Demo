@@ -1,129 +1,139 @@
 # 🔥 FlavourCraft - Modern Bangladeshi Restaurant Management System
 
 > **Managing Director & Admin**: Sadia Islam Dia  
-> **Technology Stack**: HTML5, Plain CSS3, Vanilla JavaScript, PHP, SQL (MySQL)  
-> **Themes Supported**: ☀️ Light Mode (Pinkish Red & Saffron)  
+> **General Restaurant Manager**: Sarafat Alam Irfan  
+> **Head Baburchi (Kitchen Chef)**: Chef Rony  
+> **Technology Stack**: HTML5, Plain CSS3, Vanilla JavaScript, PHP (Basic / Procedural / PDO), SQL (MySQL)  
+> **Themes Supported**: ☀️ Light Mode (Pinkish Red & Saffron Amber)  
 > **Currency**: Bangladeshi Taka (৳ / BDT)  
 > **Cuisine**: Authentic & Familiar Bangladeshi Restaurant Cuisine  
-> **Roles**: 👑 Admin, 👩‍💼 Manager, 🍳 Kitchen, 🍽️ Customer  
+> **Roles**: 👑 Admin, 👨‍💼 Manager, 🍳 Kitchen Staff, 🌟 Customer, 👤 Guest  
 
 ---
 
 ## 📖 Table of Contents
 1. [Project Overview](#-project-overview)
 2. [Technology Stack & Architecture](#-technology-stack--architecture)
-3. [Light Mode Theming (Pinkish Red & Saffron)](#-light-mode-theming-pinkish-red--saffron)
+3. [Pre-Configured System Accounts](#-pre-configured-system-accounts)
 4. [Core Feature Breakdown](#-core-feature-breakdown)
-   - [Customer-Facing Portal](#1-customer-facing-portal)
-   - [Kitchen & Operations](#2-kitchen--operations)
-   - [Admin & Inventory Control](#3-admin--inventory-control)
+   - [Customer Experience & Digital Dining](#1-customer-experience--digital-dining)
+   - [Kitchen Operations & KDS](#2-kitchen-operations--kds)
+   - [Admin & Manager Management Hub](#3-admin--manager-management-hub)
+   - [User Profile Management](#4-user-profile-management)
 5. [Bangladeshi Menu & Food Catalog](#-bangladeshi-menu--food-catalog)
-6. [Basic Database Schema & SQL Architecture](#-basic-database-schema--sql-architecture)
-7. [Basic PHP Backend Architecture](#-basic-php-backend-architecture)
-8. [Directory Structure](#-directory-structure)
-9. [How to Run (XAMPP / PHP Server & Standalone)](#-how-to-run)
+6. [Database Schema & SQL Architecture](#-database-schema--sql-architecture)
+7. [Directory Structure](#-directory-structure)
+8. [Step-by-Step Tutorial: How to Run the Project](#-step-by-step-tutorial-how-to-run-the-project)
+   - [Method 1: Using XAMPP (Standard Apache & phpMyAdmin)](#method-1-using-xampp-standard-apache--phpmyadmin)
+   - [Method 2: Using PHP Built-In Server (Fastest CLI Setup)](#method-2-using-php-built-in-server-fastest-cli-setup)
+   - [Method 3: How to Access on Mobile Phones / Other Devices (WiFi LAN)](#method-3-how-to-access-on-mobile-phones--other-devices-over-wifi-lan)
 
 ---
 
 ## 🌟 Project Overview
 
-**FlavourCraft** is an all-in-one, beginner-friendly restaurant operations platform designed specifically for Bangladeshi dining establishments. It unifies customer online ordering, table bookings with instant digital passes, digital Kitchen Display System (KDS), automated recipe ingredient stock deductions, and executive revenue analytics in Bangladeshi Taka.
+**FlavourCraft** is an all-in-one, beginner-friendly restaurant operations management platform engineered specifically for traditional and modern Bangladeshi dining establishments. 
+
+Built using core web fundamentals (**HTML, CSS, JS, PHP, SQL**), it delivers a seamless end-to-end experience:
+- Digital public dining menu with live category filters and instant dish search.
+- Menu Catalog Management (CRUD) with local dish photo file uploads.
+- Guest authentication gate & privacy-protected table reservation booking with digital passes.
+- Direct-to-kitchen digital ordering with automatic raw ingredient inventory deduction.
+- Real-time Kitchen Display System (KDS) with ticket stage bumping for chefs.
+- User profile management with customizable avatar icons and delivery addresses.
+- Executive revenue analytics & profit margin calculation in Bangladeshi Taka (BDT).
 
 ---
 
 ## 💻 Technology Stack & Architecture
 
 - **Frontend**: 
-  - **HTML5**: Semantic, accessible, beginner-friendly markup.
-  - **Plain CSS3**: Custom design tokens, CSS Grid/Flexbox, Glassmorphism, animations, responsive design.
-  - **Vanilla JavaScript**: Clean, modular ES6 classes with standard `fetch()` API client (`js/api-client.js`).
+  - **HTML5**: Clean, accessible, semantic markup.
+  - **Plain CSS3**: Curated color tokens (Pinkish Red `#e11d48` & Saffron `#f59e0b`), CSS Grid, Flexbox, glassmorphism, responsive across desktop and mobile.
+  - **Vanilla JavaScript**: Lightweight interactive DOM logic and real-time calculation.
 - **Backend (Basic PHP)**:
-  - Clean, straightforward PHP scripts using `PDO` prepared statements with zero complex frameworks.
-  - Basic database queries (SELECT, INSERT, UPDATE) with transaction support.
-- **Database (Basic SQL / MySQL)**:
-  - Normalized MySQL schema in `database/flavourcraft.sql`.
-  - Normalized tables (`users`, `categories`, `menu_items`, `recipes`, `recipe_ingredients`, `orders`, `order_items`, `reservations`, `inventory`) with foreign keys and complete Bangladeshi seed data for 1-click import in **phpMyAdmin / XAMPP / WAMP**.
-- **Execution Flexibility**:
-  - **Server Mode**: Runs on standard Apache / PHP / MySQL stack (XAMPP).
-  - **Standalone Mode**: Can also run directly in any web browser for immediate demonstration.
+  - Multi-page server-side rendering with clean procedural scripts.
+  - Secure database access using PHP `PDO` prepared statements.
+  - Session-based Role-Based Access Control (RBAC) with redirect authentication gates.
+- **Database (MySQL)**:
+  - Normalized relational database (`database/flavourcraft.sql`) with tables for users, categories, menu items, recipes, ingredients, orders, and reservations.
+- **Media & File Storage**:
+  - Native PHP multipart file upload handling saving dish photos to `uploads/`.
 
 ---
 
-## ☀️ Light Mode Theming (Pinkish Red & Saffron)
+## 🔐 Pre-Configured System Accounts
 
-FlavourCraft features a vibrant **Light Mode** palette designed with **Pinkish Red & Saffron Amber Accents**:
-- **Canvas Base**: Soft, clean porcelain background (`#fff5f7` with subtle rose-pink tint).
-- **Surface Cards**: Pure white (`#ffffff`) with delicate pink-tinted borders (`#fed7d7` / `#fecdd3`).
-- **Brand Accents**: 
-  - **Primary Pinkish Red**: `#e11d48` / `#be123c` (Rose Crimson / Naga Red).
-  - **Secondary Saffron**: `#f59e0b` / `#d97706` (Warm Saffron Ghee glow).
-- **Typography**: Deep charcoal slate (`#0f172a` and `#334155`) for crisp, readable menus and tickets.
+FlavourCraft includes 4 role-based accounts ready out-of-the-box:
+
+| Role | Full Name | Username | Password | Access Scope & Permissions |
+| :--- | :--- | :--- | :--- | :--- |
+| 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access: Menu CRUD, Inventory, Analytics, Staff, Reservations, KDS, Orders. |
+| 👨‍💼 **Manager** | **Sarafat Alam Irfan** | `manager` | `manager123` | Operations management: Menu CRUD, Inventory, Reservations, KDS, Analytics. |
+| 🍳 **Kitchen** | **Chef Rony** | `kitchen` | `kitchen123` | Kitchen Operations: KDS Live Screen, order stage transitions, Recipe specs. |
+| 🌟 **Customer** | **Arnob Rahman** | `customer` | `customer123` | Dining Customer: Browse menu, place orders, book tables, view personal passes & profile. |
 
 ---
 
 ## 🚀 Core Feature Breakdown
 
-### 1. Customer-Facing Portal
-- **Digital Interactive Menu**:
-  - Categorized tabs: *Kacchi & Biryani*, *Beef, Mutton & Chicken*, *Fish & Seafood*, *Kabab & Street Food*, *Drinks & Desserts*.
-  - Dietary filter pills: *Naga Spicy (🔥)*, *100% Halal*, *Vegetarian*, *Vegan*, *Gluten-Free*.
-  - Instant dish search and live availability toggles.
-- **Item Customizer Drawer**:
-  - Add-ons: *Extra Biryani Aloo (+৳60)*, *Cold Borhani (+৳80)*, *Mutton Jali Kabab (+৳140)*, *Naga Morich Fire Dip (+৳50)*.
-  - Heat level selector: *Shahi Mild*, *Dhaka Regular 🌶️*, *Naga Fiery 🔥*.
-  - Special allergy/preparation notes with real-time price updates.
-- **Table Reservation System**:
-  - Date & time slot picker with ৳500 refundable deposit during peak dinner hours (7:30 PM – 9:30 PM).
-  - Party size selector (1 to 12+ guests) across *Main Dining Hall*, *Family Lounge*, *Terrace Patio*, and *VIP Banquet Salon*.
-  - Automated simulated SMS & Email confirmation with unique Booking ID.
-- **Ordering & Checkout with Customer Login Gate**:
-  - Multi-mode ordering: **Dine-In**, **Takeaway**, and **Dhaka Home Delivery** (৳60 flat fee).
-  - Intercepts checkout for unauthenticated guests, requiring login/signup and auto-prefilling customer contact & delivery address upon login.
-  - Integrated payment options: **bKash Merchant Pay**, **Nagad / Rocket**, **BRAC / City Bank Visa/Mastercard**, and **Cash on Delivery**.
-  - Promo discounts (`DHAKA10`, `KACCHI20`, `GULSHAN25`).
-- **Live Order Progress Tracker**:
-  - Interactive multi-stage visual timeline (*Order Received* ➔ *Cooking in Handi / Dum* ➔ *Ready to Serve / Out for Delivery* ➔ *Completed*).
-  - Delivery rider tracker (Mehedi Hasan #04) and estimated countdown timer.
+### 1. Customer Experience & Digital Dining
+- **Interactive Culinary Menu ([index.php](file:///d:/Personal%20Projects/FlavourCraft/index.php))**:
+  - Category filter pills: *🍛 Kacchi & Biryani*, *🥩 Beef, Mutton & Chicken*, *🐟 Fish & Seafood*, *🍢 Kabab & Street Food*, *🍨 Drinks & Desserts*.
+  - Instant dish search and prep time badges.
+  - 1-click quantity selector and shopping cart integration.
+- **Shopping Cart & Checkout ([cart.php](file:///d:/Personal%20Projects/FlavourCraft/cart.php))**:
+  - Live subtotal, 5% standard Bangladeshi VAT, and delivery fee calculation.
+  - Multi-mode ordering: **Dine-In**, **Takeaway**, and **Home Delivery**.
+  - Payment methods: **bKash**, **Nagad / Rocket**, **Visa / Mastercard**, or **Cash on Delivery**.
+- **Table Reservation System ([reservations.php](file:///d:/Personal%20Projects/FlavourCraft/reservations.php))**:
+  - **Guest Gate**: Requires customers to log in or register before booking a table.
+  - **Privacy Filter**: Regular customers only view their own confirmed reservation passes; Admin and Manager view the complete master reservation book.
+- **Live Order Progress Tracker ([track_order.php](file:///d:/Personal%20Projects/FlavourCraft/track_order.php))**:
+  - Real-time 4-stage visual timeline (*Received* ➔ *Preparing in Kitchen* ➔ *Ready to Serve / Dispatched* ➔ *Completed*).
 
-### 2. Kitchen & Operations
-- **Kitchen Display System (KDS)**:
-  - 3-column ticket queue (*New Incoming*, *In Preparation*, *Ready for Service*).
-  - Dynamic color-coded urgency countdown timers (<10m Green, 10–20m Yellow, >20m Crimson Alert).
-  - Web Audio synthetic arrival chimes on new orders.
-  - **Line Cook Recipe Specs Modal**: Click *Recipe* on any ticket to view exact portion quantities in grams/milliliters.
-  - One-click stage bump buttons.
+---
 
-### 3. Admin & Inventory Control
-- **Recipe Costing & Profit Margin Analysis**:
-  - Direct recipe-to-ingredient links with real-time food cost and gross profit margin calculations in Taka.
-  - Food cost percentage health indicators (e.g. 24.8% Optimal vs. >35% Warning).
-- **Automatic Stock Deduction Engine**:
-  - Placed orders automatically reduce raw ingredient inventory in SQL via atomic database transactions.
-- **Low-Stock Alert System**:
-  - Real-time safety threshold monitoring with urgent alert banner.
-  - One-click *Quick Reorder All* action to replenish inventory.
-- **Executive Analytics & Reports**:
-  - 7-day revenue velocity SVG bar chart (e.g. ৳12.37 Lakh turnover).
-  - Hourly customer traffic & kitchen rush heatmap.
-  - Top 5 best-selling dishes ranking.
-- **Authentication, Session & Role-Based Access Control (4 Roles)**:
-  - **Customer Order Login Gate**: Guests can browse menu and add dishes to cart freely; clicking *Proceed to Checkout* prompts login/sign-up before confirming.
-  - **Staff Operations Gate**: Kitchen KDS, Inventory, and Analytics are locked behind staff authentication.
-  - **Pre-Configured Staff & Customer Credentials**:
-    | Role | Name | Identifier / Username | Password | Access Scope |
-    | :--- | :--- | :--- | :--- | :--- |
-    | 👑 **Admin** | **Sadia Islam Dia** | `admin` | `admin123` | Full access across all modules + Menu CRUD |
-    | 👨‍💼 **Manager** | **Sarafat Alam Irfan** | `manager` | `manager123` | Operations, Inventory, Analytics + Menu CRUD |
-    | 🍳 **Kitchen** | **Chef Rony** | `kitchen` | `kitchen123` | Kitchen KDS, Recipe Specs, Inventory |
-    | 🍽️ **Customer** | **Asif Rahman** | `+880 1711-234567` / `customer` | `customer123` | Menu, Reservations, Order Checkout |
+### 2. Kitchen Operations & KDS
+- **Kitchen Display System ([kds.php](file:///d:/Personal%20Projects/FlavourCraft/kds.php))**:
+  - Restricted strictly to **Admin**, **Manager**, and **Kitchen Staff**.
+  - 3-column ticket workflow: *New Incoming*, *In Preparation*, and *Ready for Service*.
+  - Stage advance button to notify servers and update customer tracking in real time.
+
+---
+
+### 3. Admin & Manager Management Hub
+- **Menu Catalog Management (CRUD) ([menu_manage.php](file:///d:/Personal%20Projects/FlavourCraft/menu_manage.php))**:
+  - **Create**: Add new dishes with name, SKU, category, price in ৳ BDT, preparation time, tags, description, and photo.
+  - **Read**: Live searchable and filterable dish catalog.
+  - **Update**: Edit existing dishes, update prices, change descriptions, or replace photos.
+  - **Delete**: Remove discontinued items with confirmation protection.
+  - **Photo Upload**: Supports direct image file upload (`.jpg`, `.png`, `.webp`, `.gif`) or external photo URLs.
+  - **Stock Status Toggle**: 1-click toggle to mark items *Available* or *Sold Out*.
+- **Inventory & Recipe Stock Control ([inventory.php](file:///d:/Personal%20Projects/FlavourCraft/inventory.php))**:
+  - Automatic deduction of raw ingredients (e.g. Mutton, Chinigura Rice, Baghabari Ghee, Mustard Oil) whenever orders are placed.
+  - Low-stock threshold alerts with 1-click reorder.
+  - Recipe costing and gross profit margin percentage analytics.
+- **Executive Analytics ([analytics.php](file:///d:/Personal%20Projects/FlavourCraft/analytics.php))**:
+  - Total revenue turnover, orders completed, average order value, and top 5 best-selling dishes.
+- **Staff Roster Management ([staff.php](file:///d:/Personal%20Projects/FlavourCraft/staff.php))**:
+  - Manage employee directory, roles, and shift allocations.
+
+---
+
+### 4. User Profile Management
+- **Profile View & Edit ([profile.php](file:///d:/Personal%20Projects/FlavourCraft/profile.php))**:
+  - Allows any logged-in user to update their full name, phone number, email address, and home delivery address.
+  - Emoji Avatar Selector (👩‍💼, 👨‍💼, 🍳, 🌟, 👑, 🍽️, 🥘, ☕).
+  - Optional secure password change.
 
 ---
 
 ## 🍲 Bangladeshi Menu & Food Catalog
 
-| SKU | Dish Name | Category | Price | Description |
+| SKU | Dish Name | Category | Price (BDT) | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `KAC-101` | **Puran Dhaka Mutton Kacchi Biryani** | Kacchi & Biryani | **৳650** | Tender mutton kacchi with fragrant Chinigura rice, spiced aloo, and ghee. Served with Borhani. |
+| `KAC-101` | **Puran Dhaka Mutton Kacchi Biryani** | Kacchi & Biryani | **৳650** | Old Dhaka tender mutton kacchi with fragrant Chinigura rice, spiced aloo, and Baghabari pure ghee. |
 | `TEH-102` | **Old Dhaka Beef Tehari** | Kacchi & Biryani | **৳480** | Mustard oil beef tehari cooked with Katari-bhog rice, tender beef, and green chilies. |
 | `ROS-103` | **Biye Bari Chicken Roast with Polao** | Kacchi & Biryani | **৳520** | Wedding-style thick gravy chicken roast, fragrant ghee polao, and egg. |
 | `BEEF-201`| **Chittagong Beef Kala Bhuna** | Beef, Mutton & Chicken | **৳680** | Slow-roasted dark caramelized beef curry with radhuni, black pepper, and garlic. |
@@ -141,38 +151,16 @@ FlavourCraft features a vibrant **Light Mode** palette designed with **Pinkish R
 
 ---
 
-## 🗄️ Basic Database Schema & SQL Architecture
+## 🗄️ Database Schema & SQL Architecture
 
 Located in [`database/flavourcraft.sql`](file:///d:/Personal%20Projects/FlavourCraft/database/flavourcraft.sql):
-- `users`: User authentication, 4 roles (Admin Sadia Islam Dia, Manager, Kitchen, Customer), contact & delivery address.
-- `categories`: Menu category taxonomy.
-- `menu_items`: Complete dish catalog with pricing, tags, and preparation times.
-- `recipes` & `recipe_ingredients`: Bill of materials per portion for stock deduction.
-- `inventory`: Raw meat, fish, grain, and spice stock levels with safety thresholds.
-- `orders` & `order_items`: Customer orders with line items, 5% VAT, and delivery fees.
-- `reservations`: Bookings, party sizes, and confirmed dining table tracking.
-
----
-
-## 🔌 Basic PHP Architecture (Multi-Page Server-Side Rendering)
-
-- `config/db.php`: Database connection via PDO, session starter, and BDT formatting helper.
-- `includes/header.php`: Shared HTML header, Google fonts, stylesheets, sidebar navigation, topbar, and cart badge.
-- `includes/footer.php`: Shared footer and script tags.
-- `includes/auth_check.php`: Basic PHP role-based permission verification.
-- `index.php`: Digital Menu catalog with category filter (`?category=...`), search (`?search=...`), and Add to Cart forms.
-- `cart.php`: Cart items table, subtotal, VAT 5%, delivery charge calculation, and Bangladeshi checkout form.
-- `cart_action.php`: Session cart processor for adding, incrementing, decrementing, and removing dishes.
-- `place_order.php`: Processes order `$_POST`, executes PDO transaction to save orders/items, and deducts inventory according to recipe ingredients.
-- `reservations.php`: Table booking form with instant digital reservation e-Pass generation.
-- `track_order.php`: Live order tracker with status stages (`New` ➔ `Preparing` ➔ `Ready to Serve` ➔ `Completed`), rider radar, and itemized receipt.
-- `kds.php`: Kitchen Display System displaying live tickets for chefs with cooking specs.
-- `kds_action.php`: Status update processor for advancing kitchen tickets.
-- `inventory.php`: Raw ingredient stock management with low-stock alerts and recipe profit margin calculations.
-- `analytics.php`: Executive Analytics for Managing Director **Sadia Islam Dia** (SQL SUM/COUNT revenue turnover and dish sales).
-- `staff.php`: Staff roster and shift management.
-- `login.php`: Credentials login + 1-Click Role Switcher for instant academic demonstration.
-- `logout.php`: Session destroy and redirect.
+- **`users`**: User records, passwords, roles (`Admin`, `Manager`, `Kitchen`, `Customer`), contact details, avatars, and delivery addresses.
+- **`categories`**: Menu categories with slug, display order, and emoji icons.
+- **`menu_items`**: Complete culinary catalog with SKU, price, description, image path, tags, and availability flag.
+- **`recipes` & `recipe_ingredients`**: Bill of materials per portion mapping dishes to inventory items.
+- **`inventory`**: Raw meat, fish, dairy, grain, and spice stock with units, costs, and alert thresholds.
+- **`orders` & `order_items`**: Order headers, line items, customer details, status, and payment breakdown.
+- **`reservations`**: Table booking records, guest details, party size, dining zone, and status.
 
 ---
 
@@ -181,12 +169,12 @@ Located in [`database/flavourcraft.sql`](file:///d:/Personal%20Projects/FlavourC
 ```
 FlavourCraft/
 ├── config/
-│   └── db.php                  # Database connection (PDO with MySQL localhost/flavourcraft)
+│   └── db.php                  # Database connection (PDO MySQL), session starter, helpers
 ├── includes/
-│   ├── header.php              # Global HTML <head>, fonts, CSS, Sidebar Navigation & Topbar
-│   ├── footer.php              # Common footer, script includes, and closing tags
-│   └── auth_check.php          # Session validation helper for protected routes (Admin/Staff)
-├── css/                        # Existing rich CSS stylesheets (Light mode, Pinkish Red & Saffron)
+│   ├── header.php              # Global HTML head, fonts, sidebar navigation, topbar, user badge
+│   ├── footer.php              # Standard page footer and global closing tags
+│   └── auth_check.php          # Route protection & role verification helper
+├── css/                        # Responsive CSS stylesheets (Light mode, Rose Pink & Saffron)
 │   ├── variables.css
 │   ├── style.css
 │   ├── menu.css
@@ -198,40 +186,116 @@ FlavourCraft/
 │   ├── staff.css
 │   ├── rbac.css
 │   └── auth.css
-├── js/                         # Client-side helpers (alerts, DOM utilities)
-│   └── main.js
+├── js/
+│   └── main.js                 # Frontend interactive scripts
+├── uploads/                    # Directory for user-uploaded dish photos
 ├── database/
-│   └── flavourcraft.sql        # Complete relational MySQL schema & seed data
-├── index.php                   # Home & Digital Menu Catalog (Category filter, search, customizer)
-├── cart.php                    # Shopping cart, subtotal, VAT (5%), delivery, checkout form
-├── cart_action.php             # POST processor: add/remove/update cart session items
-├── place_order.php             # POST processor: inserts order & order_items, deducts stock, redirects
-├── reservations.php            # Table booking page + POST processor for reservation pass
-├── track_order.php             # Live Order Tracker (search order by ID, visual step progress)
-├── kds.php                     # Kitchen Display System (view live tickets, auto-refresh)
-├── kds_action.php              # POST processor: update order status (Cooking, Ready, Dispatched)
-├── inventory.php               # Inventory stock management & recipe costing (Admin/Manager)
-├── analytics.php               # Executive Analytics (Sadia Islam Dia dashboard with SQL SUM/COUNT metrics)
-├── staff.php                   # Staff roster & role-based management
-├── login.php                   # Login page (Admin, Chef, Server, Customer switch/credentials)
-└── logout.php                  # Destroys PHP session and redirects to index.php
+│   └── flavourcraft.sql        # Clean, comment-free MySQL schema & complete seed data
+├── index.php                   # Digital Menu Catalog & Hero Banner
+├── menu_manage.php             # Menu Catalog CRUD + Photo Upload (Admin & Manager)
+├── cart.php                    # Shopping Cart, VAT, and Checkout Form
+├── cart_action.php             # POST handler: Cart item addition/removal/quantity
+├── place_order.php             # POST handler: Processes checkout, creates order, deducts stock
+├── reservations.php            # Table Reservations + Auth Gate + Digital Pass
+├── track_order.php             # Live Order Progress & Rider Radar Tracker
+├── kds.php                     # Kitchen Display System (Admin, Manager, Kitchen)
+├── kds_action.php              # POST handler: Advances ticket status
+├── inventory.php               # Raw Stock Control & Recipe Costing
+├── analytics.php               # Executive Sales & Revenue Analytics
+├── staff.php                   # Staff Roster & Employee Directory
+├── profile.php                 # User Profile View & Edit (Name, Avatar, Password)
+├── login.php                   # Account Sign In & New Customer Registration
+├── logout.php                  # Session termination & redirect
+└── README.md                   # Project documentation & execution guide
 ```
 
 ---
 
-## 🏁 How to Run on XAMPP / WAMP (Basic PHP)
+## 🛠️ Step-by-Step Tutorial: How to Run the Project
 
-1. Copy the `FlavourCraft` folder into your XAMPP `htdocs` directory:
-   ```
-   C:\xampp\htdocs\FlavourCraft
-   ```
-2. Start **Apache** and **MySQL** in the **XAMPP Control Panel**.
-3. Open your browser and go to **phpMyAdmin**:
-   ```
-   http://localhost/phpmyadmin
-   ```
-4. Click **Import**, choose the file [`database/flavourcraft.sql`](file:///d:/Personal%20Projects/FlavourCraft/database/flavourcraft.sql), and click **Go**.
-5. Open your browser and go to:
-   ```
-   http://localhost/FlavourCraft/index.php
-   ```
+### Method 1: Using XAMPP (Standard Apache & phpMyAdmin)
+
+#### Step 1: Install XAMPP
+- Download and install XAMPP for Windows, macOS, or Linux from [apachefriends.org](https://www.apachefriends.org/).
+
+#### Step 2: Copy Project to `htdocs`
+- Copy or move the entire `FlavourCraft` folder into your XAMPP `htdocs` directory:
+  - **Windows**: `C:\xampp\htdocs\FlavourCraft` (or `D:\xampp\htdocs\FlavourCraft`)
+  - **macOS**: `/Applications/XAMPP/xamppfiles/htdocs/FlavourCraft`
+  - **Linux**: `/opt/lampp/htdocs/FlavourCraft`
+
+#### Step 3: Start Services
+- Open the **XAMPP Control Panel**.
+- Click **Start** next to **Apache**.
+- Click **Start** next to **MySQL**.
+
+#### Step 4: Import Database in phpMyAdmin
+1. Open your web browser and go to: `http://localhost/phpmyadmin`
+2. In the left sidebar, click **New** to create a database:
+   - Database name: `flavourcraft`
+   - Collation: `utf8mb4_general_ci`
+   - Click **Create**.
+3. Select the newly created `flavourcraft` database from the left menu.
+4. Click on the **Import** tab at the top.
+5. Click **Choose File** (Browse) and select:
+   `C:\xampp\htdocs\FlavourCraft\database\flavourcraft.sql`
+6. Scroll down and click **Import** (or **Go**).
+
+#### Step 5: Launch the Application
+- Open your browser and navigate to:
+  ```
+  http://localhost/FlavourCraft/index.php
+  ```
+- Sign in using any of the credentials from the [Accounts Table](#-pre-configured-system-accounts).
+
+---
+
+### Method 2: Using PHP Built-In Server (Fastest CLI Setup)
+
+If you have PHP and MySQL installed (via XAMPP or standalone), you can run FlavourCraft in seconds without configuring virtual hosts:
+
+#### Step 1: Start MySQL Database
+- Ensure MySQL is running on port `3306`.
+- Import the database if you haven't already:
+  ```bash
+  mysql -u root -e "CREATE DATABASE IF NOT EXISTS flavourcraft;"
+  mysql -u root flavourcraft < "database/flavourcraft.sql"
+  ```
+
+#### Step 2: Start PHP Built-In Server
+- Open your terminal / command prompt inside the `FlavourCraft` project directory.
+- Run:
+  ```bash
+  php -S localhost:8000
+  ```
+  *(Or if using XAMPP's PHP on Windows: `& "D:\xampp\php\php.exe" -S localhost:8000`)*
+
+#### Step 3: Open in Browser
+- Navigate to:
+  ```
+  http://localhost:8000/
+  ```
+
+---
+
+### Method 3: How to Access on Mobile Phones / Other Devices (over WiFi LAN)
+
+To test and demonstrate the responsive design on mobile phones, tablets, or other laptops connected to the same local network:
+
+1. **Find your Computer's Local IP Address**:
+   - **Windows**: Open Command Prompt / PowerShell and type `ipconfig`. Look for the **IPv4 Address** (e.g. `192.168.1.25`).
+   - **macOS / Linux**: Open Terminal and type `ifconfig` or `ip a`. Look for `inet 192.168.x.x`.
+
+2. **Start the PHP Server on All Network Interfaces**:
+   - Run the server bound to `0.0.0.0`:
+     ```bash
+     php -S 0.0.0.0:8000
+     ```
+
+3. **Open on your Mobile Phone**:
+   - Connect your phone to the **same WiFi network** as your computer.
+   - Open Chrome / Safari on your phone and browse to:
+     ```
+     http://192.168.1.25:8000/
+     ```
+     *(Replace `192.168.1.25` with your computer's actual IPv4 address).*
