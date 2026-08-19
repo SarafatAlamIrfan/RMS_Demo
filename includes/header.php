@@ -61,13 +61,16 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
           <span>Live Order Tracker</span>
         </a>
 
+        <?php if (in_array($current_user['role'] ?? '', ['Admin', 'Manager', 'Kitchen'])): ?>
         <div class="nav-section-title">Operations & Kitchen</div>
         <a class="nav-item <?php echo ($current_page === 'kds.php') ? 'active' : ''; ?>" href="kds.php" id="nav-kds">
           <span class="icon">🍳</span>
           <span>Kitchen Display (KDS)</span>
           <span class="nav-badge danger" style="background:#e11d48; color:#fff; font-size:0.7rem; padding:2px 6px; border-radius:4px;">LIVE</span>
         </a>
+        <?php endif; ?>
 
+        <?php if (in_array($current_user['role'] ?? '', ['Admin', 'Manager'])): ?>
         <div class="nav-section-title">Admin & Operations</div>
         <a class="nav-item <?php echo ($current_page === 'inventory.php') ? 'active' : ''; ?>" href="inventory.php" id="nav-inventory">
           <span class="icon">📦</span>
@@ -81,6 +84,7 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
           <span class="icon">👥</span>
           <span>Staff Management</span>
         </a>
+        <?php endif; ?>
       </nav>
 
       <div class="sidebar-footer">

@@ -1,9 +1,8 @@
 <?php
-$page_title = 'Kitchen Display System (KDS) - FlavourCraft';
-$page_heading = 'Kitchen Display (KDS)';
-$page_desc = 'Real-time kitchen dispatching, cook recipe specs & preparation status controller';
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/auth_check.php';
 
-require_once __DIR__ . '/includes/header.php';
+check_auth(['Admin', 'Manager', 'Kitchen']);
 
 $pdo = get_db();
 $orders = [];
@@ -33,6 +32,12 @@ if ($pdo) {
         $db_error = $e->getMessage();
     }
 }
+
+$page_title = 'Kitchen Display System (KDS) - FlavourCraft';
+$page_heading = 'Kitchen Display (KDS)';
+$page_desc = 'Real-time kitchen dispatching, cook recipe specs & preparation status controller';
+
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 18px 24px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 24px; flex-wrap: wrap; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
@@ -40,7 +45,7 @@ if ($pdo) {
     <span style="font-size: 1.8rem;">🍳</span>
     <div>
       <h3 style="margin: 0; font-size: 1.15rem; color: #0f172a;">Live Cooking Station</h3>
-      <div style="font-size: 0.8rem; color: #64748b;">Executive Baburchi: <strong>Chef Rony</strong> • Auto-refresh: 15s</div>
+      <div style="font-size: 0.8rem; color: #64748b;">Staff Station: <strong><?php echo htmlspecialchars($current_user['name']); ?></strong> (<?php echo htmlspecialchars($current_user['role']); ?>)</div>
     </div>
   </div>
 
@@ -54,8 +59,8 @@ if ($pdo) {
     <div style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.85rem;">
       Ready to Serve: <?php echo $ready_count; ?>
     </div>
-    <a href="kds.php" style="background: #f1f5f9; color: #334155; padding: 8px 14px; border-radius: 10px; font-weight: 600; font-size: 0.85rem; text-decoration: none; display: flex; align-items: gap: 6px;">
-      🔄 Refresh Now
+    <a href="kds.php" style="background: #f1f5f9; color: #334155; padding: 8px 14px; border-radius: 10px; font-weight: 600; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+      🔄 Refresh
     </a>
   </div>
 </div>

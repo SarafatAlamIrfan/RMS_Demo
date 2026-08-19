@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/auth_check.php';
+
+check_auth(['Admin', 'Manager', 'Kitchen']);
 
 $order_uid = $_POST['order_uid'] ?? '';
 $next_status = $_POST['next_status'] ?? 'Preparing';
