@@ -113,14 +113,6 @@ require_once __DIR__ . '/includes/header.php';
       <button type="submit" style="width: 100%; background: #0f172a; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);">
         Sign In
       </button>
-
-      <div style="margin-top: 20px; font-size: 0.8rem; color: #64748b; background: #f8fafc; border-radius: 8px; padding: 12px; border: 1px solid #f1f5f9;">
-        <div style="font-weight: 700; color: #334155; margin-bottom: 4px;">Demo Credentials:</div>
-        <div>• <strong>Admin:</strong> <code>admin</code> / <code>admin123</code></div>
-        <div>• <strong>Manager:</strong> <code>manager</code> / <code>manager123</code></div>
-        <div>• <strong>Kitchen:</strong> <code>kitchen</code> / <code>kitchen123</code></div>
-        <div>• <strong>Customer:</strong> <code>customer</code> / <code>customer123</code></div>
-      </div>
     </form>
   </div>
 

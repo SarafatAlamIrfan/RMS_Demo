@@ -137,7 +137,7 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
             <?php else: ?>
               <a href="login.php" class="btn btn-primary" style="padding:7px 16px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border-radius:8px; background:#0f172a; color:#fff; font-weight:700;">
                 <span>🔑</span>
-                <span>Sign In / Demo</span>
+                <span>Sign In</span>
               </a>
             <?php endif; ?>
           </div>
