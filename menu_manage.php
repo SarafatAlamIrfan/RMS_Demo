@@ -6,6 +6,35 @@ check_auth(['Admin', 'Manager']);
 
 $pdo = get_db();
 
+function handle_image_upload($existing_url = '') {
+    if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) {
+        $file_tmp = $_FILES['image_file']['tmp_name'];
+        $file_name = $_FILES['image_file']['name'];
+        $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        
+        if (in_array($ext, $allowed)) {
+            $uploads_dir = __DIR__ . '/uploads';
+            if (!is_dir($uploads_dir)) {
+                mkdir($uploads_dir, 0777, true);
+            }
+            $new_filename = 'dish_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+            $destination = $uploads_dir . '/' . $new_filename;
+            
+            if (move_uploaded_file($file_tmp, $destination)) {
+                return 'uploads/' . $new_filename;
+            }
+        }
+    }
+    
+    $url_input = trim($_POST['image_url'] ?? '');
+    if (!empty($url_input)) {
+        return $url_input;
+    }
+    
+    return !empty($existing_url) ? $existing_url : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     $action = $_POST['action'] ?? '';
 
@@ -15,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         $category_slug = $_POST['category_slug'] ?? 'Kacchi & Biryani';
         $price = (float)($_POST['price'] ?? 0);
         $description = trim($_POST['description'] ?? '');
-        $image_url = trim($_POST['image_url'] ?? '');
+        $image_url = handle_image_upload();
         $tags = trim($_POST['tags'] ?? '100% Halal');
         $spice_level = (int)($_POST['spice_level'] ?? 1);
         $prep_time = (int)($_POST['prep_time_minutes'] ?? 10);
@@ -24,10 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
 
         if (empty($sku)) {
             $sku = strtoupper(substr($name, 0, 3)) . '-' . rand(100, 999);
-        }
-
-        if (empty($image_url)) {
-            $image_url = 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80';
         }
 
         if ($name && $price > 0) {
@@ -53,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         $category_slug = $_POST['category_slug'] ?? 'Kacchi & Biryani';
         $price = (float)($_POST['price'] ?? 0);
         $description = trim($_POST['description'] ?? '');
-        $image_url = trim($_POST['image_url'] ?? '');
+        $current_db_image = $_POST['current_image'] ?? '';
+        $image_url = handle_image_upload($current_db_image);
         $tags = trim($_POST['tags'] ?? '100% Halal');
         $spice_level = (int)($_POST['spice_level'] ?? 1);
         $prep_time = (int)($_POST['prep_time_minutes'] ?? 10);
@@ -152,7 +178,7 @@ if ($pdo) {
 
 $page_title = 'Menu Management (CRUD) - FlavourCraft';
 $page_heading = 'Menu Catalog & Recipe Management';
-$page_desc = 'Add new culinary dishes, modify pricing and descriptions, toggle live kitchen availability';
+$page_desc = 'Upload dish photos, add new culinary dishes, modify pricing, and manage kitchen availability';
 
 require_once __DIR__ . '/includes/header.php';
 ?>
@@ -173,7 +199,7 @@ require_once __DIR__ . '/includes/header.php';
   </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 380px; gap: 30px; align-items: start;">
+<div style="display: grid; grid-template-columns: 1fr 400px; gap: 30px; align-items: start;">
 
   <div style="background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
     
@@ -284,10 +310,11 @@ require_once __DIR__ . '/includes/header.php';
       <?php endif; ?>
     </div>
 
-    <form method="POST" action="menu_manage.php">
+    <form method="POST" action="menu_manage.php" enctype="multipart/form-data">
       <input type="hidden" name="action" value="<?php echo $edit_item ? 'update' : 'create'; ?>" />
       <?php if ($edit_item): ?>
         <input type="hidden" name="item_uid" value="<?php echo htmlspecialchars($edit_item['item_uid']); ?>" />
+        <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($edit_item['image_url']); ?>" />
       <?php endif; ?>
 
       <div style="margin-bottom: 12px;">
@@ -317,9 +344,25 @@ require_once __DIR__ . '/includes/header.php';
         </select>
       </div>
 
+      <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+        <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
+          📸 Upload Dish Image File
+        </label>
+        
+        <?php if (!empty($edit_item['image_url'])): ?>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <img src="<?php echo htmlspecialchars($edit_item['image_url']); ?>" alt="" style="width: 48px; height: 48px; border-radius: 6px; object-fit: cover; border: 1px solid #cbd5e1;" />
+            <div style="font-size: 0.75rem; color: #64748b;">Current photo preview. Choose new file to replace.</div>
+          </div>
+        <?php endif; ?>
+
+        <input type="file" name="image_file" accept="image/*" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.8rem; background: #fff;" />
+        <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Supports JPG, PNG, WEBP, GIF. Or enter image URL below:</div>
+      </div>
+
       <div style="margin-bottom: 12px;">
-        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Image URL</label>
-        <input type="url" name="image_url" value="<?php echo htmlspecialchars($edit_item['image_url'] ?? ''); ?>" placeholder="https://images.unsplash.com/..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;" />
+        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 4px;">Or Image URL</label>
+        <input type="text" name="image_url" value="<?php echo htmlspecialchars($edit_item['image_url'] ?? ''); ?>" placeholder="https://images.unsplash.com/..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;" />
       </div>
 
       <div style="margin-bottom: 12px;">
