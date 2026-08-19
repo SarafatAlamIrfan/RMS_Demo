@@ -94,7 +94,7 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
       <div class="sidebar-footer">
         <a href="<?php echo isset($_SESSION['user']) ? 'profile.php' : 'login.php'; ?>" style="text-decoration:none; color:inherit; display:block;">
           <div class="user-profile-card" style="cursor:pointer;" title="<?php echo isset($_SESSION['user']) ? 'Click to view & edit your profile' : 'Click to sign in'; ?>">
-            <div class="user-avatar"><?php echo htmlspecialchars($current_user['avatar'] ?? '👤'); ?></div>
+            <div class="user-avatar"><?php echo htmlspecialchars(get_user_avatar($current_user['avatar'] ?? '', $current_user['role'] ?? 'Guest')); ?></div>
             <div class="user-info">
               <div class="user-name"><?php echo htmlspecialchars($current_user['name'] ?? 'Guest Customer'); ?></div>
               <div class="user-role-badge"><?php echo htmlspecialchars($current_user['role'] ?? 'Guest'); ?></div>
@@ -130,7 +130,7 @@ $page_desc = $page_desc ?? 'Authentic Bangladeshi Cuisine & Dining Service';
                 <span>Profile</span>
               </a>
               <a href="login.php" class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; color:#334155; font-weight:600;" title="Switch Role">
-                <span><?php echo htmlspecialchars($current_user['avatar'] ?? '👤'); ?></span>
+                <span><?php echo htmlspecialchars(get_user_avatar($current_user['avatar'] ?? '', $current_user['role'])); ?></span>
                 <span>Role: <strong><?php echo htmlspecialchars($current_user['role']); ?></strong></span>
               </a>
               <a href="logout.php" class="btn btn-sm" style="padding:6px 12px; font-size:0.85rem; text-decoration:none; background:#fee2e2; color:#b91c1c; border-radius:6px; font-weight:700;">🚪 Logout</a>

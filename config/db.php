@@ -61,6 +61,20 @@ function get_cart_count() {
     return $count;
 }
 
+function get_user_avatar($avatar = '', $role = 'Customer') {
+    if (!empty($avatar) && strpos($avatar, '?') === false) {
+        return $avatar;
+    }
+    $role_avatars = [
+        'Admin' => '👩‍💼',
+        'Manager' => '👨‍💼',
+        'Kitchen' => '🍳',
+        'Customer' => '🌟',
+        'Guest' => '👤'
+    ];
+    return $role_avatars[$role] ?? '👤';
+}
+
 function get_current_user_data() {
     global $pdo;
     if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {
@@ -75,6 +89,7 @@ function get_current_user_data() {
             } catch (PDOException $e) {
             }
         }
+        $_SESSION['user']['avatar'] = get_user_avatar($_SESSION['user']['avatar'] ?? '', $_SESSION['user']['role'] ?? 'Customer');
         return $_SESSION['user'];
     }
     return [
