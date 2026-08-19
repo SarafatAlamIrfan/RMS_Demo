@@ -22,6 +22,32 @@ INSERT INTO `categories` VALUES
 (5,'Drinks & Desserts','Drinks & Desserts','🍨',5);
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_uid` varchar(64) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `role` enum('Admin','Manager','Kitchen','Customer') NOT NULL DEFAULT 'Customer',
+  `avatar` varchar(50) DEFAULT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `delivery_address` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_uid` (`user_uid`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+LOCK TABLES `users` WRITE;
+INSERT INTO `users` VALUES 
+(1,'usr_admin','admin','admin123','Sadia Islam Dia','Admin','👩‍💼','+880 1710-000001','sadia.dia@flavourcraft.bd','Banani, Dhaka','2026-08-19 14:46:15'),
+(2,'usr_manager','manager','manager123','Sarafat Alam Irfan','Manager','👨‍💼','+880 1710-000002','irfan@flavourcraft.bd','Gulshan 2, Dhaka','2026-08-19 14:46:15'),
+(3,'usr_kitchen','kitchen','kitchen123','Chef Rony','Kitchen','🍳','+880 1710-000004','rony@flavourcraft.bd','Old Dhaka, Dhaka','2026-08-19 14:46:15'),
+(4,'usr_customer','customer','customer123','Arnob Rahman','Customer','🌟','+880 1711-234567','arnob.rahman@gmail.com','House 42, Road 11, Block D, Banani, Dhaka','2026-08-19 14:46:15');
+UNLOCK TABLES;
+
 DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE `inventory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -95,44 +121,6 @@ INSERT INTO `menu_items` VALUES
 (15,'dish_15','DES-603','Sweet Rasmalai Bowl (4 pcs)','Drinks & Desserts',220.00,'Soft cottage cheese chenna balls soaked in thick saffron-cardamom flavored clotted malai milk with chopped pistachios.','uploads/dish_1787163791_8ece2411.jpg','Vegetarian, 100% Halal',1,3,'2026-08-19 14:46:15');
 UNLOCK TABLES;
 
-DROP TABLE IF EXISTS `order_items`;
-CREATE TABLE `order_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_uid` varchar(64) NOT NULL,
-  `item_uid` varchar(64) NOT NULL,
-  `item_name` varchar(150) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `unit_price` decimal(10,2) NOT NULL,
-  `modifiers` text DEFAULT NULL,
-  `item_total` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `order_uid` (`order_uid`),
-  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_uid`) REFERENCES `orders` (`order_uid`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-DROP TABLE IF EXISTS `orders`;
-CREATE TABLE `orders` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_uid` varchar(64) NOT NULL,
-  `order_number` varchar(50) NOT NULL,
-  `order_type` enum('Dine-In','Takeaway','Delivery') NOT NULL DEFAULT 'Dine-In',
-  `table_number` varchar(20) DEFAULT NULL,
-  `delivery_address` text DEFAULT NULL,
-  `customer_name` varchar(100) NOT NULL,
-  `customer_phone` varchar(30) NOT NULL,
-  `subtotal` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `tax_vat` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `delivery_fee` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `payment_method` varchar(50) NOT NULL DEFAULT 'Cash',
-  `payment_status` enum('Pending','Paid','Refunded') NOT NULL DEFAULT 'Paid',
-  `status` enum('New','Preparing','Ready to Serve','Completed','Cancelled') NOT NULL DEFAULT 'New',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `order_uid` (`order_uid`),
-  UNIQUE KEY `order_number` (`order_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 DROP TABLE IF EXISTS `recipes`;
 CREATE TABLE `recipes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -190,6 +178,44 @@ INSERT INTO `recipe_ingredients` VALUES
 (15,'rec_05','ing_golda_chingri',2.00,220.00);
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_uid` varchar(64) NOT NULL,
+  `order_number` varchar(50) NOT NULL,
+  `order_type` enum('Dine-In','Takeaway','Delivery') NOT NULL DEFAULT 'Dine-In',
+  `table_number` varchar(20) DEFAULT NULL,
+  `delivery_address` text DEFAULT NULL,
+  `customer_name` varchar(100) NOT NULL,
+  `customer_phone` varchar(30) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `tax_vat` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `delivery_fee` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `payment_method` varchar(50) NOT NULL DEFAULT 'Cash',
+  `payment_status` enum('Pending','Paid','Refunded') NOT NULL DEFAULT 'Paid',
+  `status` enum('New','Preparing','Ready to Serve','Completed','Cancelled') NOT NULL DEFAULT 'New',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_uid` (`order_uid`),
+  UNIQUE KEY `order_number` (`order_number`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+DROP TABLE IF EXISTS `order_items`;
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_uid` varchar(64) NOT NULL,
+  `item_uid` varchar(64) NOT NULL,
+  `item_name` varchar(150) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `unit_price` decimal(10,2) NOT NULL,
+  `modifiers` text DEFAULT NULL,
+  `item_total` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_uid` (`order_uid`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_uid`) REFERENCES `orders` (`order_uid`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 DROP TABLE IF EXISTS `reservations`;
 CREATE TABLE `reservations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -214,32 +240,6 @@ CREATE TABLE `reservations` (
 LOCK TABLES `reservations` WRITE;
 INSERT INTO `reservations` VALUES 
 (1,'res_1a2b3c4d','FC-RES-501','Sadia Islam Dia','+880 1710-000001','sadia.dia@flavourcraft.bd',4,'2026-08-25','20:00','VIP Royal Suite (1st Floor)',500.00,'Confirmed','Window side VIP table for anniversary celebration dinner','2026-08-19 14:46:15');
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_uid` varchar(64) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `role` enum('Admin','Manager','Kitchen','Customer') NOT NULL DEFAULT 'Customer',
-  `avatar` varchar(50) DEFAULT NULL,
-  `phone` varchar(30) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `delivery_address` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_uid` (`user_uid`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-LOCK TABLES `users` WRITE;
-INSERT INTO `users` VALUES 
-(1,'usr_admin','admin','admin123','Sadia Islam Dia','Admin','👩‍💼','+880 1710-000001','sadia.dia@flavourcraft.bd','Banani, Dhaka','2026-08-19 14:46:15'),
-(2,'usr_manager','manager','manager123','Sarafat Alam Irfan','Manager','👨‍💼','+880 1710-000002','irfan@flavourcraft.bd','Gulshan 2, Dhaka','2026-08-19 14:46:15'),
-(3,'usr_kitchen','kitchen','kitchen123','Chef Rony','Kitchen','🍳','+880 1710-000004','rony@flavourcraft.bd','Old Dhaka, Dhaka','2026-08-19 14:46:15'),
-(4,'usr_customer','customer','customer123','Arnob Rahman','Customer','🌟','+880 1711-234567','arnob.rahman@gmail.com','House 42, Road 11, Block D, Banani, Dhaka','2026-08-19 14:46:15');
 UNLOCK TABLES;
 
 SET FOREIGN_KEY_CHECKS=1;
