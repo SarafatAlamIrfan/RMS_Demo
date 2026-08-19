@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/auth_check.php';
 
 check_auth(['Admin', 'Manager']);
 
-$pdo = get_db();
+$conn = get_db();
 
 function handle_image_upload($existing_url = '') {
     if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) {
@@ -35,7 +35,7 @@ function handle_image_upload($existing_url = '') {
     return !empty($existing_url) ? $existing_url : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conn) {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'create') {
@@ -55,17 +55,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         }
 
         if ($name && $price > 0) {
-            try {
-                $stmt = $pdo->prepare("
-                    INSERT INTO menu_items (item_uid, sku, name, category_slug, price, description, image_url, tags, is_available, prep_time_minutes)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ");
-                $stmt->execute([$item_uid, $sku, $name, $category_slug, $price, $description, $image_url, $tags, $is_available, $prep_time]);
+            $safe_uid = mysqli_real_escape_string($conn, $item_uid);
+            $safe_sku = mysqli_real_escape_string($conn, $sku);
+            $safe_name = mysqli_real_escape_string($conn, $name);
+            $safe_cat = mysqli_real_escape_string($conn, $category_slug);
+            $safe_desc = mysqli_real_escape_string($conn, $description);
+            $safe_img = mysqli_real_escape_string($conn, $image_url);
+            $safe_tags = mysqli_real_escape_string($conn, $tags);
+
+            $ins_sql = "
+                INSERT INTO menu_items (item_uid, sku, name, category_slug, price, description, image_url, tags, is_available, prep_time_minutes)
+                VALUES ('{$safe_uid}', '{$safe_sku}', '{$safe_name}', '{$safe_cat}', {$price}, '{$safe_desc}', '{$safe_img}', '{$safe_tags}', {$is_available}, {$prep_time})
+            ";
+            if (mysqli_query($conn, $ins_sql)) {
                 set_flash('success', "New dish '{$name}' added to menu successfully!");
                 header('Location: menu_manage.php');
                 exit;
-            } catch (PDOException $e) {
-                set_flash('error', 'Failed to add dish: ' . $e->getMessage());
+            } else {
+                set_flash('error', 'Failed to add dish: ' . mysqli_error($conn));
             }
         } else {
             set_flash('error', 'Dish Name and valid Price are required.');
@@ -84,31 +91,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         $is_available = isset($_POST['is_available']) ? 1 : 0;
 
         if ($item_uid && $name && $price > 0) {
-            try {
-                $stmt = $pdo->prepare("
-                    UPDATE menu_items 
-                    SET name = ?, sku = ?, category_slug = ?, price = ?, description = ?, image_url = ?, tags = ?, is_available = ?, prep_time_minutes = ?
-                    WHERE item_uid = ?
-                ");
-                $stmt->execute([$name, $sku, $category_slug, $price, $description, $image_url, $tags, $is_available, $prep_time, $item_uid]);
+            $safe_uid = mysqli_real_escape_string($conn, $item_uid);
+            $safe_sku = mysqli_real_escape_string($conn, $sku);
+            $safe_name = mysqli_real_escape_string($conn, $name);
+            $safe_cat = mysqli_real_escape_string($conn, $category_slug);
+            $safe_desc = mysqli_real_escape_string($conn, $description);
+            $safe_img = mysqli_real_escape_string($conn, $image_url);
+            $safe_tags = mysqli_real_escape_string($conn, $tags);
+
+            $upd_sql = "
+                UPDATE menu_items 
+                SET name = '{$safe_name}', sku = '{$safe_sku}', category_slug = '{$safe_cat}', price = {$price}, 
+                    description = '{$safe_desc}', image_url = '{$safe_img}', tags = '{$safe_tags}', 
+                    is_available = {$is_available}, prep_time_minutes = {$prep_time}
+                WHERE item_uid = '{$safe_uid}'
+            ";
+            if (mysqli_query($conn, $upd_sql)) {
                 set_flash('success', "Dish '{$name}' updated successfully!");
                 header('Location: menu_manage.php');
                 exit;
-            } catch (PDOException $e) {
-                set_flash('error', 'Failed to update dish: ' . $e->getMessage());
+            } else {
+                set_flash('error', 'Failed to update dish: ' . mysqli_error($conn));
             }
         }
     } elseif ($action === 'delete') {
         $item_uid = $_POST['item_uid'] ?? '';
         if ($item_uid) {
-            try {
-                $stmt = $pdo->prepare("DELETE FROM menu_items WHERE item_uid = ?");
-                $stmt->execute([$item_uid]);
+            $safe_uid = mysqli_real_escape_string($conn, $item_uid);
+            if (mysqli_query($conn, "DELETE FROM menu_items WHERE item_uid = '{$safe_uid}'")) {
                 set_flash('success', 'Dish deleted from menu successfully.');
                 header('Location: menu_manage.php');
                 exit;
-            } catch (PDOException $e) {
-                set_flash('error', 'Failed to delete dish: ' . $e->getMessage());
+            } else {
+                set_flash('error', 'Failed to delete dish: ' . mysqli_error($conn));
             }
         }
     } elseif ($action === 'toggle_availability') {
@@ -117,25 +132,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         $new_status = ($current_status === 1) ? 0 : 1;
 
         if ($item_uid) {
-            try {
-                $stmt = $pdo->prepare("UPDATE menu_items SET is_available = ? WHERE item_uid = ?");
-                $stmt->execute([$new_status, $item_uid]);
+            $safe_uid = mysqli_real_escape_string($conn, $item_uid);
+            if (mysqli_query($conn, "UPDATE menu_items SET is_available = {$new_status} WHERE item_uid = '{$safe_uid}'")) {
                 set_flash('success', 'Dish availability updated.');
                 header('Location: menu_manage.php');
                 exit;
-            } catch (PDOException $e) {
-                set_flash('error', 'Update failed: ' . $e->getMessage());
+            } else {
+                set_flash('error', 'Update failed: ' . mysqli_error($conn));
             }
         }
     }
 }
 
 $edit_item = null;
-if (isset($_GET['edit']) && $pdo) {
-    $edit_uid = $_GET['edit'];
-    $stmt = $pdo->prepare("SELECT * FROM menu_items WHERE item_uid = ? LIMIT 1");
-    $stmt->execute([$edit_uid]);
-    $edit_item = $stmt->fetch();
+if (isset($_GET['edit']) && $conn) {
+    $safe_edit_uid = mysqli_real_escape_string($conn, $_GET['edit']);
+    $res = mysqli_query($conn, "SELECT * FROM menu_items WHERE item_uid = '{$safe_edit_uid}' LIMIT 1");
+    if ($res) {
+        $edit_item = mysqli_fetch_assoc($res);
+    }
 }
 
 $search = trim($_GET['search'] ?? '');
@@ -144,33 +159,32 @@ $category_filter = trim($_GET['category'] ?? 'all');
 $categories = [];
 $menu_items = [];
 
-if ($pdo) {
-    try {
-        $cat_stmt = $pdo->query("SELECT * FROM categories ORDER BY display_order ASC");
-        $categories = $cat_stmt->fetchAll();
-
-        $query = "SELECT * FROM menu_items WHERE 1=1";
-        $params = [];
-
-        if ($category_filter !== 'all' && !empty($category_filter)) {
-            $query .= " AND category_slug = ?";
-            $params[] = $category_filter;
+if ($conn) {
+    $cat_res = mysqli_query($conn, "SELECT * FROM categories ORDER BY display_order ASC");
+    if ($cat_res) {
+        while ($row = mysqli_fetch_assoc($cat_res)) {
+            $categories[] = $row;
         }
+    }
 
-        if (!empty($search)) {
-            $query .= " AND (name LIKE ? OR description LIKE ? OR sku LIKE ?)";
-            $searchTerm = "%{$search}%";
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
+    $query = "SELECT * FROM menu_items WHERE 1=1";
+
+    if ($category_filter !== 'all' && !empty($category_filter)) {
+        $safe_cf = mysqli_real_escape_string($conn, $category_filter);
+        $query .= " AND category_slug = '{$safe_cf}'";
+    }
+
+    if (!empty($search)) {
+        $safe_s = mysqli_real_escape_string($conn, $search);
+        $query .= " AND (name LIKE '%{$safe_s}%' OR description LIKE '%{$safe_s}%' OR sku LIKE '%{$safe_s}%')";
+    }
+
+    $query .= " ORDER BY id DESC";
+    $item_res = mysqli_query($conn, $query);
+    if ($item_res) {
+        while ($row = mysqli_fetch_assoc($item_res)) {
+            $menu_items[] = $row;
         }
-
-        $query .= " ORDER BY id DESC";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $menu_items = $stmt->fetchAll();
-    } catch (PDOException $e) {
-        $db_error = $e->getMessage();
     }
 }
 

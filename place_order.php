@@ -28,78 +28,80 @@ $total_amount = $subtotal + $vat + $delivery_fee;
 $order_uid = 'ord_' . bin2hex(random_bytes(6));
 $order_number = 'FC-' . rand(1000, 9999);
 
-$pdo = get_db();
+$conn = get_db();
 
-if ($pdo) {
+if ($conn) {
+    mysqli_begin_transaction($conn);
+
     try {
-        $pdo->beginTransaction();
+        $safe_order_uid = mysqli_real_escape_string($conn, $order_uid);
+        $safe_order_num = mysqli_real_escape_string($conn, $order_number);
+        $safe_type = mysqli_real_escape_string($conn, $order_type);
+        $safe_table = $table_number ? "'" . mysqli_real_escape_string($conn, $table_number) . "'" : "NULL";
+        $safe_address = $delivery_address ? "'" . mysqli_real_escape_string($conn, $delivery_address) . "'" : "NULL";
+        $safe_cname = mysqli_real_escape_string($conn, $customer_name);
+        $safe_cphone = mysqli_real_escape_string($conn, $customer_phone);
+        $safe_payment = mysqli_real_escape_string($conn, $payment_method);
 
-        $stmt = $pdo->prepare("
+        $order_sql = "
             INSERT INTO orders (
                 order_uid, order_number, order_type, table_number, delivery_address,
                 customer_name, customer_phone, subtotal, tax_vat, delivery_fee,
                 total_amount, payment_method, payment_status, status
             ) VALUES (
-                ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?,
-                ?, ?, 'Paid', 'New'
+                '{$safe_order_uid}', '{$safe_order_num}', '{$safe_type}', {$safe_table}, {$safe_address},
+                '{$safe_cname}', '{$safe_cphone}', {$subtotal}, {$vat}, {$delivery_fee},
+                {$total_amount}, '{$safe_payment}', 'Paid', 'New'
             )
-        ");
-        $stmt->execute([
-            $order_uid, $order_number, $order_type, $table_number, $delivery_address,
-            $customer_name, $customer_phone, $subtotal, $vat, $delivery_fee,
-            $total_amount, $payment_method
-        ]);
+        ";
 
-        $item_stmt = $pdo->prepare("
-            INSERT INTO order_items (
-                order_uid, item_uid, item_name, quantity, unit_price, modifiers, item_total
-            ) VALUES (
-                ?, ?, ?, ?, ?, ?, ?
-            )
-        ");
-
-        $recipe_stmt = $pdo->prepare("
-            SELECT ri.ingredient_uid, ri.quantity AS ingredient_qty
-            FROM recipes r
-            JOIN recipe_ingredients ri ON r.recipe_uid = ri.recipe_uid
-            WHERE r.menu_item_uid = ?
-        ");
-
-        $stock_deduct_stmt = $pdo->prepare("
-            UPDATE inventory 
-            SET current_stock = GREATEST(0, current_stock - ?)
-            WHERE ingredient_uid = ?
-        ");
+        if (!mysqli_query($conn, $order_sql)) {
+            throw new Exception(mysqli_error($conn));
+        }
 
         foreach ($cart as $item) {
             $item_qty = (int)$item['quantity'];
-            $modifiers = null;
-            $item_total = $item['price'] * $item_qty;
+            $item_price = (float)$item['price'];
+            $item_total = $item_price * $item_qty;
+            $safe_item_uid = mysqli_real_escape_string($conn, $item['item_uid']);
+            $safe_item_name = mysqli_real_escape_string($conn, $item['name']);
 
-            $item_stmt->execute([
-                $order_uid,
-                $item['item_uid'],
-                $item['name'],
-                $item_qty,
-                $item['price'],
-                $modifiers,
-                $item_total
-            ]);
+            $item_sql = "
+                INSERT INTO order_items (
+                    order_uid, item_uid, item_name, quantity, unit_price, modifiers, item_total
+                ) VALUES (
+                    '{$safe_order_uid}', '{$safe_item_uid}', '{$safe_item_name}', {$item_qty}, {$item_price}, NULL, {$item_total}
+                )
+            ";
 
-            $recipe_stmt->execute([$item['item_uid']]);
-            $ingredients = $recipe_stmt->fetchAll();
-            foreach ($ingredients as $ing) {
-                $deduct_amount = (float)$ing['ingredient_qty'] * $item_qty;
-                $stock_deduct_stmt->execute([$deduct_amount, $ing['ingredient_uid']]);
+            if (!mysqli_query($conn, $item_sql)) {
+                throw new Exception(mysqli_error($conn));
+            }
+
+            $recipe_sql = "
+                SELECT ri.ingredient_uid, ri.quantity AS ingredient_qty
+                FROM recipes r
+                JOIN recipe_ingredients ri ON r.recipe_uid = ri.recipe_uid
+                WHERE r.menu_item_uid = '{$safe_item_uid}'
+            ";
+            $recipe_res = mysqli_query($conn, $recipe_sql);
+            if ($recipe_res) {
+                while ($ing = mysqli_fetch_assoc($recipe_res)) {
+                    $deduct_amount = (float)$ing['ingredient_qty'] * $item_qty;
+                    $safe_ing_uid = mysqli_real_escape_string($conn, $ing['ingredient_uid']);
+                    $deduct_sql = "
+                        UPDATE inventory 
+                        SET current_stock = GREATEST(0, current_stock - {$deduct_amount})
+                        WHERE ingredient_uid = '{$safe_ing_uid}'
+                    ";
+                    mysqli_query($conn, $deduct_sql);
+                }
             }
         }
 
-        $pdo->commit();
+        mysqli_commit($conn);
     } catch (Exception $e) {
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
+        mysqli_rollback($conn);
         set_flash('error', 'Order processing failed: ' . $e->getMessage());
         header('Location: cart.php');
         exit;

@@ -5,40 +5,39 @@ $page_desc = 'Authentic Bangladeshi Traditional Cuisine & Signature Dishes';
 
 require_once __DIR__ . '/includes/header.php';
 
-$pdo = get_db();
+$conn = get_db();
 $selected_category = $_GET['category'] ?? 'all';
 $search_query = trim($_GET['search'] ?? '');
 
 $categories = [];
 $menu_items = [];
 
-if ($pdo) {
-    try {
-        $cat_stmt = $pdo->query("SELECT * FROM categories ORDER BY display_order ASC");
-        $categories = $cat_stmt->fetchAll();
-
-        $sql = "SELECT * FROM menu_items WHERE 1=1";
-        $params = [];
-
-        if ($selected_category !== 'all' && !empty($selected_category)) {
-            $sql .= " AND category_slug = ?";
-            $params[] = $selected_category;
+if ($conn) {
+    $cat_res = mysqli_query($conn, "SELECT * FROM categories ORDER BY display_order ASC");
+    if ($cat_res) {
+        while ($row = mysqli_fetch_assoc($cat_res)) {
+            $categories[] = $row;
         }
+    }
 
-        if (!empty($search_query)) {
-            $sql .= " AND (name LIKE ? OR description LIKE ? OR tags LIKE ?)";
-            $wildcard = "%$search_query%";
-            $params[] = $wildcard;
-            $params[] = $wildcard;
-            $params[] = $wildcard;
+    $sql = "SELECT * FROM menu_items WHERE 1=1";
+
+    if ($selected_category !== 'all' && !empty($selected_category)) {
+        $safe_cat = mysqli_real_escape_string($conn, $selected_category);
+        $sql .= " AND category_slug = '{$safe_cat}'";
+    }
+
+    if (!empty($search_query)) {
+        $safe_search = mysqli_real_escape_string($conn, $search_query);
+        $sql .= " AND (name LIKE '%{$safe_search}%' OR description LIKE '%{$safe_search}%' OR tags LIKE '%{$safe_search}%')";
+    }
+
+    $sql .= " ORDER BY id ASC";
+    $item_res = mysqli_query($conn, $sql);
+    if ($item_res) {
+        while ($row = mysqli_fetch_assoc($item_res)) {
+            $menu_items[] = $row;
         }
-
-        $sql .= " ORDER BY id ASC";
-        $item_stmt = $pdo->prepare($sql);
-        $item_stmt->execute($params);
-        $menu_items = $item_stmt->fetchAll();
-    } catch (PDOException $e) {
-        $db_error = $e->getMessage();
     }
 }
 ?>

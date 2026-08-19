@@ -5,7 +5,7 @@ $user = get_current_user_data();
 $is_guest = ($user['role'] === 'Guest');
 $is_staff = ($user['role'] === 'Admin' || $user['role'] === 'Manager');
 
-$pdo = get_db();
+$conn = get_db();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($is_guest) {
@@ -31,27 +31,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $_SESSION['my_reservations'][] = $booking_code;
 
-    if ($pdo && $guest_name && $guest_phone) {
-        try {
-            $stmt = $pdo->prepare("
-                INSERT INTO reservations (
-                    booking_uid, booking_code, guest_name, guest_phone, guest_email,
-                    party_size, reservation_date, time_slot, table_preference,
-                    deposit_paid, status, special_request
-                ) VALUES (
-                    ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?,
-                    500.00, 'Confirmed', ?
-                )
-            ");
-            $stmt->execute([
-                $booking_uid, $booking_code, $guest_name, $guest_phone, $guest_email,
-                $party_size, $reservation_date, $time_slot, $table_preference,
-                $special_request
-            ]);
+    if ($conn && $guest_name && $guest_phone) {
+        $safe_buid = mysqli_real_escape_string($conn, $booking_uid);
+        $safe_bcode = mysqli_real_escape_string($conn, $booking_code);
+        $safe_name = mysqli_real_escape_string($conn, $guest_name);
+        $safe_phone = mysqli_real_escape_string($conn, $guest_phone);
+        $safe_email = mysqli_real_escape_string($conn, $guest_email);
+        $safe_date = mysqli_real_escape_string($conn, $reservation_date);
+        $safe_time = mysqli_real_escape_string($conn, $time_slot);
+        $safe_pref = mysqli_real_escape_string($conn, $table_preference);
+        $safe_req = mysqli_real_escape_string($conn, $special_request);
+
+        $sql = "
+            INSERT INTO reservations (
+                booking_uid, booking_code, guest_name, guest_phone, guest_email,
+                party_size, reservation_date, time_slot, table_preference,
+                deposit_paid, status, special_request
+            ) VALUES (
+                '{$safe_buid}', '{$safe_bcode}', '{$safe_name}', '{$safe_phone}', '{$safe_email}',
+                {$party_size}, '{$safe_date}', '{$safe_time}', '{$safe_pref}',
+                500.00, 'Confirmed', '{$safe_req}'
+            )
+        ";
+        if (mysqli_query($conn, $sql)) {
             set_flash('success', "🎉 Table Reservation #{$booking_code} Confirmed! We look forward to welcoming you.");
-        } catch (PDOException $e) {
-            set_flash('error', 'Reservation failed: ' . $e->getMessage());
+        } else {
+            set_flash('error', 'Reservation failed: ' . mysqli_error($conn));
         }
     } else {
         set_flash('success', "🎉 Table Reservation #{$booking_code} Confirmed for {$guest_name}!");
@@ -59,41 +64,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $reservations = [];
-if ($pdo) {
-    try {
-        if ($is_staff) {
-            $stmt = $pdo->query("SELECT * FROM reservations ORDER BY reservation_date DESC, id DESC LIMIT 10");
-            $reservations = $stmt->fetchAll();
-        } else {
-            $my_codes = $_SESSION['my_reservations'] ?? [];
-            $user_phone = $user['phone'] ?? '';
-            $user_name = (!$is_guest) ? $user['name'] : '';
-
-            $conditions = [];
-            $params = [];
-
-            if (!empty($my_codes)) {
-                $placeholders = implode(',', array_fill(0, count($my_codes), '?'));
-                $conditions[] = "booking_code IN ($placeholders)";
-                $params = array_merge($params, $my_codes);
-            }
-            if ($user_phone) {
-                $conditions[] = "guest_phone = ?";
-                $params[] = $user_phone;
-            }
-            if ($user_name) {
-                $conditions[] = "guest_name = ?";
-                $params[] = $user_name;
-            }
-
-            if (!empty($conditions)) {
-                $sql = "SELECT * FROM reservations WHERE " . implode(' OR ', $conditions) . " ORDER BY id DESC";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute($params);
-                $reservations = $stmt->fetchAll();
+if ($conn) {
+    if ($is_staff) {
+        $res = mysqli_query($conn, "SELECT * FROM reservations ORDER BY reservation_date DESC, id DESC LIMIT 10");
+        if ($res) {
+            while ($row = mysqli_fetch_assoc($res)) {
+                $reservations[] = $row;
             }
         }
-    } catch (PDOException $e) {
+    } else {
+        $my_codes = $_SESSION['my_reservations'] ?? [];
+        $user_phone = $user['phone'] ?? '';
+        $user_name = (!$is_guest) ? $user['name'] : '';
+
+        $conditions = [];
+
+        if (!empty($my_codes)) {
+            $escaped_codes = array_map(function($c) use ($conn) { return "'" . mysqli_real_escape_string($conn, $c) . "'"; }, $my_codes);
+            $conditions[] = "booking_code IN (" . implode(',', $escaped_codes) . ")";
+        }
+        if ($user_phone) {
+            $safe_uphone = mysqli_real_escape_string($conn, $user_phone);
+            $conditions[] = "guest_phone = '{$safe_uphone}'";
+        }
+        if ($user_name) {
+            $safe_uname = mysqli_real_escape_string($conn, $user_name);
+            $conditions[] = "guest_name = '{$safe_uname}'";
+        }
+
+        if (!empty($conditions)) {
+            $sql = "SELECT * FROM reservations WHERE " . implode(' OR ', $conditions) . " ORDER BY id DESC";
+            $res = mysqli_query($conn, $sql);
+            if ($res) {
+                while ($row = mysqli_fetch_assoc($res)) {
+                    $reservations[] = $row;
+                }
+            }
+        }
     }
 }
 

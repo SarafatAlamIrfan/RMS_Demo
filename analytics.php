@@ -8,7 +8,7 @@ require_once __DIR__ . '/includes/auth_check.php';
 
 check_auth(['Admin', 'Manager']);
 
-$pdo = get_db();
+$conn = get_db();
 
 $total_revenue = 0;
 $total_orders = 0;
@@ -17,30 +17,38 @@ $avg_order_value = 0;
 $top_dishes = [];
 $recent_orders = [];
 
-if ($pdo) {
-    try {
-        $rev_stmt = $pdo->query("SELECT COUNT(id) AS total_orders, SUM(total_amount) AS total_revenue FROM orders");
-        $rev_row = $rev_stmt->fetch();
+if ($conn) {
+    $rev_res = mysqli_query($conn, "SELECT COUNT(id) AS total_orders, SUM(total_amount) AS total_revenue FROM orders");
+    if ($rev_res && $rev_row = mysqli_fetch_assoc($rev_res)) {
         $total_orders = (int)($rev_row['total_orders'] ?? 0);
         $total_revenue = (float)($rev_row['total_revenue'] ?? 0);
         $avg_order_value = ($total_orders > 0) ? ($total_revenue / $total_orders) : 0;
+    }
 
-        $res_stmt = $pdo->query("SELECT COUNT(id) AS total_res FROM reservations");
-        $total_reservations = (int)($res_stmt->fetch()['total_res'] ?? 0);
+    $res_res = mysqli_query($conn, "SELECT COUNT(id) AS total_res FROM reservations");
+    if ($res_res && $res_row = mysqli_fetch_assoc($res_res)) {
+        $total_reservations = (int)($res_row['total_res'] ?? 0);
+    }
 
-        $top_stmt = $pdo->query("
-            SELECT item_name, SUM(quantity) AS total_qty, SUM(item_total) AS total_sales
-            FROM order_items
-            GROUP BY item_name
-            ORDER BY total_qty DESC
-            LIMIT 5
-        ");
-        $top_dishes = $top_stmt->fetchAll();
+    $top_sql = "
+        SELECT item_name, SUM(quantity) AS total_qty, SUM(item_total) AS total_sales
+        FROM order_items
+        GROUP BY item_name
+        ORDER BY total_qty DESC
+        LIMIT 5
+    ";
+    $top_res = mysqli_query($conn, $top_sql);
+    if ($top_res) {
+        while ($row = mysqli_fetch_assoc($top_res)) {
+            $top_dishes[] = $row;
+        }
+    }
 
-        $recent_stmt = $pdo->query("SELECT * FROM orders ORDER BY id DESC LIMIT 8");
-        $recent_orders = $recent_stmt->fetchAll();
-    } catch (PDOException $e) {
-        $db_error = $e->getMessage();
+    $recent_res = mysqli_query($conn, "SELECT * FROM orders ORDER BY id DESC LIMIT 8");
+    if ($recent_res) {
+        while ($row = mysqli_fetch_assoc($recent_res)) {
+            $recent_orders[] = $row;
+        }
     }
 }
 ?>

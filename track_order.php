@@ -9,21 +9,19 @@ $search_order = trim($_GET['order_id'] ?? '');
 $order = null;
 $order_items = [];
 
-$pdo = get_db();
+$conn = get_db();
 
-if ($pdo && !empty($search_order)) {
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM orders WHERE order_number = ? OR order_uid = ? LIMIT 1");
-        $stmt->execute([$search_order, $search_order]);
-        $order = $stmt->fetch();
-
-        if ($order) {
-            $item_stmt = $pdo->prepare("SELECT * FROM order_items WHERE order_uid = ?");
-            $item_stmt->execute([$order['order_uid']]);
-            $order_items = $item_stmt->fetchAll();
+if ($conn && !empty($search_order)) {
+    $safe_search = mysqli_real_escape_string($conn, $search_order);
+    $res = mysqli_query($conn, "SELECT * FROM orders WHERE order_number = '{$safe_search}' OR order_uid = '{$safe_search}' LIMIT 1");
+    if ($res && $order = mysqli_fetch_assoc($res)) {
+        $safe_order_uid = mysqli_real_escape_string($conn, $order['order_uid']);
+        $item_res = mysqli_query($conn, "SELECT * FROM order_items WHERE order_uid = '{$safe_order_uid}'");
+        if ($item_res) {
+            while ($row = mysqli_fetch_assoc($item_res)) {
+                $order_items[] = $row;
+            }
         }
-    } catch (PDOException $e) {
-        $db_error = $e->getMessage();
     }
 }
 

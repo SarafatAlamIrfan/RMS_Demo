@@ -10,24 +10,20 @@ $db_host = getenv('DB_HOST') ?: 'localhost';
 $db_name = getenv('DB_NAME') ?: 'flavourcraft';
 $db_user = getenv('DB_USER') ?: 'root';
 $db_pass = getenv('DB_PASS') ?: '';
-$db_port = getenv('DB_PORT') ?: '3306';
+$db_port = (int)(getenv('DB_PORT') ?: 3306);
 
-$pdo = null;
+$conn = @mysqli_connect($db_host, $db_user, $db_pass, $db_name, $db_port);
 $db_error = null;
 
-try {
-    $pdo = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8mb4", $db_user, $db_pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
-} catch (PDOException $e) {
-    $db_error = $e->getMessage();
+if (!$conn) {
+    $db_error = mysqli_connect_error();
+} else {
+    mysqli_set_charset($conn, "utf8mb4");
 }
 
 function get_db() {
-    global $pdo;
-    return $pdo;
+    global $conn;
+    return $conn;
 }
 
 function format_bdt($amount) {
@@ -76,17 +72,13 @@ function get_user_avatar($avatar = '', $role = 'Customer') {
 }
 
 function get_current_user_data() {
-    global $pdo;
+    global $conn;
     if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {
-        if ($pdo && !empty($_SESSION['user']['user_uid'])) {
-            try {
-                $stmt = $pdo->prepare("SELECT * FROM users WHERE user_uid = ? LIMIT 1");
-                $stmt->execute([$_SESSION['user']['user_uid']]);
-                $db_user = $stmt->fetch();
-                if ($db_user) {
-                    $_SESSION['user'] = array_merge($_SESSION['user'], $db_user);
-                }
-            } catch (PDOException $e) {
+        if ($conn && !empty($_SESSION['user']['user_uid'])) {
+            $safe_uid = mysqli_real_escape_string($conn, $_SESSION['user']['user_uid']);
+            $res = mysqli_query($conn, "SELECT * FROM users WHERE user_uid = '{$safe_uid}' LIMIT 1");
+            if ($res && $db_user = mysqli_fetch_assoc($res)) {
+                $_SESSION['user'] = array_merge($_SESSION['user'], $db_user);
             }
         }
         $_SESSION['user']['avatar'] = get_user_avatar($_SESSION['user']['avatar'] ?? '', $_SESSION['user']['role'] ?? 'Customer');

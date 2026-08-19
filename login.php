@@ -1,41 +1,37 @@
 <?php
 require_once __DIR__ . '/config/db.php';
 
-$pdo = get_db();
+$conn = get_db();
 $redirect = $_GET['redirect'] ?? ($_POST['redirect'] ?? 'index.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'login';
 
-    if ($action === 'login' && $pdo) {
+    if ($action === 'login' && $conn) {
         $username = trim($_POST['username'] ?? '');
         $password = trim($_POST['password'] ?? '');
 
-        try {
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
-            $stmt->execute([$username]);
-            $user = $stmt->fetch();
+        $safe_username = mysqli_real_escape_string($conn, $username);
+        $res = mysqli_query($conn, "SELECT * FROM users WHERE username = '{$safe_username}' LIMIT 1");
+        $user = $res ? mysqli_fetch_assoc($res) : null;
 
-            if ($user && ($user['password'] === $password || $password === 'admin123' || $password === 'manager123' || $password === 'kitchen123' || $password === 'customer123' || $password === 'pass123')) {
-                $_SESSION['user'] = [
-                    'user_uid' => $user['user_uid'],
-                    'username' => $user['username'],
-                    'name' => $user['name'],
-                    'role' => $user['role'],
-                    'avatar' => $user['avatar'] ?? '👤',
-                    'email' => $user['email'],
-                    'phone' => $user['phone']
-                ];
-                set_flash('success', "Welcome back, {$user['name']}!");
-                header('Location: ' . $redirect);
-                exit;
-            } else {
-                set_flash('error', 'Invalid username or password.');
-            }
-        } catch (PDOException $e) {
-            set_flash('error', 'Login error: ' . $e->getMessage());
+        if ($user && ($user['password'] === $password || $password === 'admin123' || $password === 'manager123' || $password === 'kitchen123' || $password === 'customer123' || $password === 'pass123')) {
+            $_SESSION['user'] = [
+                'user_uid' => $user['user_uid'],
+                'username' => $user['username'],
+                'name' => $user['name'],
+                'role' => $user['role'],
+                'avatar' => $user['avatar'] ?? '👤',
+                'email' => $user['email'],
+                'phone' => $user['phone']
+            ];
+            set_flash('success', "Welcome back, {$user['name']}!");
+            header('Location: ' . $redirect);
+            exit;
+        } else {
+            set_flash('error', 'Invalid username or password.');
         }
-    } elseif ($action === 'register' && $pdo) {
+    } elseif ($action === 'register' && $conn) {
         $name = trim($_POST['name'] ?? '');
         $username = trim($_POST['username'] ?? '');
         $password = trim($_POST['password'] ?? '');
@@ -44,18 +40,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uid = 'usr_' . bin2hex(random_bytes(4));
 
         if ($name && $username && $password) {
-            try {
-                $check_stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
-                $check_stmt->execute([$username]);
-                if ($check_stmt->fetch()) {
-                    set_flash('error', 'Username is already taken. Please choose another.');
-                } else {
-                    $ins_stmt = $pdo->prepare("
-                        INSERT INTO users (user_uid, username, password, name, role, avatar, phone, email)
-                        VALUES (?, ?, ?, ?, 'Customer', '🌟', ?, ?)
-                    ");
-                    $ins_stmt->execute([$uid, $username, $password, $name, $phone, $email]);
+            $safe_username = mysqli_real_escape_string($conn, $username);
+            $check_res = mysqli_query($conn, "SELECT id FROM users WHERE username = '{$safe_username}' LIMIT 1");
+            if ($check_res && mysqli_num_rows($check_res) > 0) {
+                set_flash('error', 'Username is already taken. Please choose another.');
+            } else {
+                $safe_uid = mysqli_real_escape_string($conn, $uid);
+                $safe_name = mysqli_real_escape_string($conn, $name);
+                $safe_pass = mysqli_real_escape_string($conn, $password);
+                $safe_phone = mysqli_real_escape_string($conn, $phone);
+                $safe_email = mysqli_real_escape_string($conn, $email);
 
+                $ins_query = "INSERT INTO users (user_uid, username, password, name, role, avatar, phone, email) 
+                              VALUES ('{$safe_uid}', '{$safe_username}', '{$safe_pass}', '{$safe_name}', 'Customer', '🌟', '{$safe_phone}', '{$safe_email}')";
+                if (mysqli_query($conn, $ins_query)) {
                     $_SESSION['user'] = [
                         'user_uid' => $uid,
                         'username' => $username,
@@ -68,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     set_flash('success', "Account created successfully! Welcome to FlavourCraft, {$name}.");
                     header('Location: ' . $redirect);
                     exit;
+                } else {
+                    set_flash('error', 'Registration error: ' . mysqli_error($conn));
                 }
-            } catch (PDOException $e) {
-                set_flash('error', 'Registration error: ' . $e->getMessage());
             }
         } else {
             set_flash('error', 'Please fill in all required registration fields.');

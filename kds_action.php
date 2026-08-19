@@ -7,15 +7,15 @@ check_auth(['Admin', 'Manager', 'Kitchen']);
 $order_uid = $_POST['order_uid'] ?? '';
 $next_status = $_POST['next_status'] ?? 'Preparing';
 
-$pdo = get_db();
+$conn = get_db();
 
-if ($pdo && $order_uid) {
-    try {
-        $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE order_uid = ?");
-        $stmt->execute([$next_status, $order_uid]);
+if ($conn && $order_uid) {
+    $safe_uid = mysqli_real_escape_string($conn, $order_uid);
+    $safe_status = mysqli_real_escape_string($conn, $next_status);
+    if (mysqli_query($conn, "UPDATE orders SET status = '{$safe_status}' WHERE order_uid = '{$safe_uid}'")) {
         set_flash('success', "Order status updated to: {$next_status}");
-    } catch (PDOException $e) {
-        set_flash('error', 'Status update failed: ' . $e->getMessage());
+    } else {
+        set_flash('error', 'Status update failed: ' . mysqli_error($conn));
     }
 }
 

@@ -4,25 +4,24 @@ require_once __DIR__ . '/includes/auth_check.php';
 
 check_auth(['Admin', 'Manager']);
 
-$pdo = get_db();
+$conn = get_db();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
-    if ($action === 'restock' && $pdo) {
+    if ($action === 'restock' && $conn) {
         $ingredient_uid = $_POST['ingredient_uid'] ?? '';
         $add_qty = (float)($_POST['add_qty'] ?? 0);
 
         if ($ingredient_uid && $add_qty > 0) {
-            try {
-                $stmt = $pdo->prepare("UPDATE inventory SET current_stock = current_stock + ? WHERE ingredient_uid = ?");
-                $stmt->execute([$add_qty, $ingredient_uid]);
+            $safe_uid = mysqli_real_escape_string($conn, $ingredient_uid);
+            if (mysqli_query($conn, "UPDATE inventory SET current_stock = current_stock + {$add_qty} WHERE ingredient_uid = '{$safe_uid}'")) {
                 set_flash('success', "Added +{$add_qty} to stock successfully.");
-            } catch (PDOException $e) {
-                set_flash('error', 'Restock failed: ' . $e->getMessage());
+            } else {
+                set_flash('error', 'Restock failed: ' . mysqli_error($conn));
             }
         }
-    } elseif ($action === 'add_ingredient' && $pdo) {
+    } elseif ($action === 'add_ingredient' && $conn) {
         $name = trim($_POST['name'] ?? '');
         $category = $_POST['category'] ?? 'Pantry';
         $stock = (float)($_POST['current_stock'] ?? 0);
@@ -32,15 +31,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uid = 'ing_' . bin2hex(random_bytes(4));
 
         if ($name) {
-            try {
-                $stmt = $pdo->prepare("
-                    INSERT INTO inventory (ingredient_uid, name, category, current_stock, threshold, unit, cost_per_unit)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ");
-                $stmt->execute([$uid, $name, $category, $stock, $threshold, $unit, $cost]);
+            $safe_uid = mysqli_real_escape_string($conn, $uid);
+            $safe_name = mysqli_real_escape_string($conn, $name);
+            $safe_cat = mysqli_real_escape_string($conn, $category);
+            $safe_unit = mysqli_real_escape_string($conn, $unit);
+
+            $ins_sql = "
+                INSERT INTO inventory (ingredient_uid, name, category, current_stock, threshold, unit, cost_per_unit)
+                VALUES ('{$safe_uid}', '{$safe_name}', '{$safe_cat}', {$stock}, {$threshold}, '{$safe_unit}', {$cost})
+            ";
+            if (mysqli_query($conn, $ins_sql)) {
                 set_flash('success', "New ingredient '{$name}' added to inventory.");
-            } catch (PDOException $e) {
-                set_flash('error', 'Adding ingredient failed: ' . $e->getMessage());
+            } else {
+                set_flash('error', 'Adding ingredient failed: ' . mysqli_error($conn));
             }
         }
     }
@@ -50,27 +53,29 @@ $inventory = [];
 $recipes = [];
 $low_stock_count = 0;
 
-if ($pdo) {
-    try {
-        $inv_stmt = $pdo->query("SELECT * FROM inventory ORDER BY category ASC, name ASC");
-        $inventory = $inv_stmt->fetchAll();
-
-        foreach ($inventory as $item) {
+if ($conn) {
+    $inv_res = mysqli_query($conn, "SELECT * FROM inventory ORDER BY category ASC, name ASC");
+    if ($inv_res) {
+        while ($item = mysqli_fetch_assoc($inv_res)) {
+            $inventory[] = $item;
             if ($item['current_stock'] <= $item['threshold']) {
                 $low_stock_count++;
             }
         }
+    }
 
-        $rec_stmt = $pdo->query("
-            SELECT r.*, 
-                   SUM(ri.quantity * ri.unit_cost) AS total_cost
-            FROM recipes r
-            LEFT JOIN recipe_ingredients ri ON r.recipe_uid = ri.recipe_uid
-            GROUP BY r.recipe_uid
-        ");
-        $recipes = $rec_stmt->fetchAll();
-    } catch (PDOException $e) {
-        $db_error = $e->getMessage();
+    $rec_sql = "
+        SELECT r.*, 
+               SUM(ri.quantity * ri.unit_cost) AS total_cost
+        FROM recipes r
+        LEFT JOIN recipe_ingredients ri ON r.recipe_uid = ri.recipe_uid
+        GROUP BY r.recipe_uid
+    ";
+    $rec_res = mysqli_query($conn, $rec_sql);
+    if ($rec_res) {
+        while ($row = mysqli_fetch_assoc($rec_res)) {
+            $recipes[] = $row;
+        }
     }
 }
 

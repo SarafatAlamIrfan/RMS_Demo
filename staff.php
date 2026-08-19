@@ -4,9 +4,9 @@ require_once __DIR__ . '/includes/auth_check.php';
 
 check_auth(['Admin', 'Manager']);
 
-$pdo = get_db();
+$conn = get_db();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conn) {
     $name = trim($_POST['name'] ?? '');
     $role = $_POST['role'] ?? 'Customer';
     $username = trim($_POST['username'] ?? '');
@@ -15,26 +15,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     $uid = 'usr_' . bin2hex(random_bytes(4));
 
     if ($name && $username) {
-        try {
-            $stmt = $pdo->prepare("
-                INSERT INTO users (user_uid, username, password, name, role, avatar, phone)
-                VALUES (?, ?, 'pass123', ?, ?, ?, ?)
-            ");
-            $stmt->execute([$uid, $username, $name, $role, $avatar, $phone]);
+        $safe_uid = mysqli_real_escape_string($conn, $uid);
+        $safe_username = mysqli_real_escape_string($conn, $username);
+        $safe_name = mysqli_real_escape_string($conn, $name);
+        $safe_role = mysqli_real_escape_string($conn, $role);
+        $safe_avatar = mysqli_real_escape_string($conn, $avatar);
+        $safe_phone = mysqli_real_escape_string($conn, $phone);
+
+        $sql = "
+            INSERT INTO users (user_uid, username, password, name, role, avatar, phone)
+            VALUES ('{$safe_uid}', '{$safe_username}', 'pass123', '{$safe_name}', '{$safe_role}', '{$safe_avatar}', '{$safe_phone}')
+        ";
+        if (mysqli_query($conn, $sql)) {
             set_flash('success', "Staff member '{$name}' added as {$role}.");
-        } catch (PDOException $e) {
-            set_flash('error', 'Failed to add staff: ' . $e->getMessage());
+        } else {
+            set_flash('error', 'Failed to add staff: ' . mysqli_error($conn));
         }
     }
 }
 
 $staff_members = [];
-if ($pdo) {
-    try {
-        $stmt = $pdo->query("SELECT * FROM users ORDER BY FIELD(role, 'Admin', 'Manager', 'Kitchen', 'Customer'), id ASC");
-        $staff_members = $stmt->fetchAll();
-    } catch (PDOException $e) {
-        $db_error = $e->getMessage();
+if ($conn) {
+    $res = mysqli_query($conn, "SELECT * FROM users ORDER BY FIELD(role, 'Admin', 'Manager', 'Kitchen', 'Customer'), id ASC");
+    if ($res) {
+        while ($row = mysqli_fetch_assoc($res)) {
+            $staff_members[] = $row;
+        }
     }
 }
 

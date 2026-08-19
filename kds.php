@@ -4,32 +4,30 @@ require_once __DIR__ . '/includes/auth_check.php';
 
 check_auth(['Admin', 'Manager', 'Kitchen']);
 
-$pdo = get_db();
+$conn = get_db();
 $orders = [];
 $active_count = 0;
 $preparing_count = 0;
 $ready_count = 0;
 
-if ($pdo) {
-    try {
-        $stmt = $pdo->query("
-            SELECT o.*, 
-                   GROUP_CONCAT(CONCAT(oi.quantity, 'x ', oi.item_name) SEPARATOR '||') AS items_summary
-            FROM orders o
-            LEFT JOIN order_items oi ON o.order_uid = oi.order_uid
-            WHERE o.status IN ('New', 'Preparing', 'Ready to Serve')
-            GROUP BY o.order_uid
-            ORDER BY o.id DESC
-        ");
-        $orders = $stmt->fetchAll();
-
-        foreach ($orders as $ord) {
+if ($conn) {
+    $sql = "
+        SELECT o.*, 
+               GROUP_CONCAT(CONCAT(oi.quantity, 'x ', oi.item_name) SEPARATOR '||') AS items_summary
+        FROM orders o
+        LEFT JOIN order_items oi ON o.order_uid = oi.order_uid
+        WHERE o.status IN ('New', 'Preparing', 'Ready to Serve')
+        GROUP BY o.order_uid
+        ORDER BY o.id DESC
+    ";
+    $res = mysqli_query($conn, $sql);
+    if ($res) {
+        while ($ord = mysqli_fetch_assoc($res)) {
+            $orders[] = $ord;
             if ($ord['status'] === 'New') $active_count++;
             if ($ord['status'] === 'Preparing') $preparing_count++;
             if ($ord['status'] === 'Ready to Serve') $ready_count++;
         }
-    } catch (PDOException $e) {
-        $db_error = $e->getMessage();
     }
 }
 

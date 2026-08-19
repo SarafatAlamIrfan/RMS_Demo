@@ -8,17 +8,19 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 $redirect = $_POST['redirect'] ?? $_GET['redirect'] ?? 'index.php';
 
-$pdo = get_db();
+$conn = get_db();
 
 if ($action === 'add') {
     $item_uid = trim($_POST['item_uid'] ?? '');
     $quantity = max(1, (int)($_POST['quantity'] ?? 1));
     
     $item = null;
-    if ($pdo && $item_uid) {
-        $stmt = $pdo->prepare("SELECT * FROM menu_items WHERE item_uid = ? LIMIT 1");
-        $stmt->execute([$item_uid]);
-        $item = $stmt->fetch();
+    if ($conn && $item_uid) {
+        $safe_uid = mysqli_real_escape_string($conn, $item_uid);
+        $res = mysqli_query($conn, "SELECT * FROM menu_items WHERE item_uid = '{$safe_uid}' LIMIT 1");
+        if ($res) {
+            $item = mysqli_fetch_assoc($res);
+        }
     }
     
     if ($item) {

@@ -52,11 +52,11 @@ Built using core web fundamentals (**HTML, CSS, JS, PHP, SQL**), it delivers a s
   - **Plain CSS3**: Curated color tokens (Pinkish Red `#e11d48` & Saffron `#f59e0b`), CSS Grid, Flexbox, glassmorphism, responsive across desktop and mobile.
   - **Vanilla JavaScript**: Lightweight interactive DOM logic and real-time calculation.
 - **Backend (Basic PHP)**:
-  - Multi-page server-side rendering with clean procedural scripts.
-  - Secure database access using PHP `PDO` prepared statements.
-  - Session-based Role-Based Access Control (RBAC) with redirect authentication gates.
-- **Database (MySQL)**:
-  - Normalized relational database (`database/flavourcraft.sql`) with tables for users, categories, menu items, recipes, ingredients, orders, and reservations.
+  - Clean, straightforward PHP scripts using standard **MySQLi** database functions with zero complex frameworks.
+  - Basic database queries (SELECT, INSERT, UPDATE, DELETE) with transaction support (`mysqli_begin_transaction`, `mysqli_commit`, `mysqli_rollback`).
+- **Database (Basic SQL / MySQL)**:
+  - Normalized MySQL schema in `database/flavourcraft.sql`.
+  - Normalized tables (`users`, `categories`, `menu_items`, `recipes`, `recipe_ingredients`, `orders`, `order_items`, `reservations`, `inventory`) with foreign keys and complete Bangladeshi seed data for 1-click import in **phpMyAdmin / XAMPP / WAMP**.
 - **Media & File Storage**:
   - Native PHP multipart file upload handling saving dish photos to `uploads/`.
 

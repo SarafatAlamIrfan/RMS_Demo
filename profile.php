@@ -10,9 +10,9 @@ if ($user['role'] === 'Guest' || empty($user['user_uid'])) {
     exit;
 }
 
-$pdo = get_db();
+$conn = get_db();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conn) {
     $name = trim($_POST['name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -21,23 +21,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     $new_password = trim($_POST['new_password'] ?? '');
 
     if ($name) {
-        try {
-            if (!empty($new_password)) {
-                $stmt = $pdo->prepare("
-                    UPDATE users 
-                    SET name = ?, phone = ?, email = ?, delivery_address = ?, avatar = ?, password = ?
-                    WHERE user_uid = ?
-                ");
-                $stmt->execute([$name, $phone, $email, $delivery_address, $avatar, $new_password, $user['user_uid']]);
-            } else {
-                $stmt = $pdo->prepare("
-                    UPDATE users 
-                    SET name = ?, phone = ?, email = ?, delivery_address = ?, avatar = ?
-                    WHERE user_uid = ?
-                ");
-                $stmt->execute([$name, $phone, $email, $delivery_address, $avatar, $user['user_uid']]);
-            }
+        $safe_name = mysqli_real_escape_string($conn, $name);
+        $safe_phone = mysqli_real_escape_string($conn, $phone);
+        $safe_email = mysqli_real_escape_string($conn, $email);
+        $safe_addr = mysqli_real_escape_string($conn, $delivery_address);
+        $safe_avatar = mysqli_real_escape_string($conn, $avatar);
+        $safe_uid = mysqli_real_escape_string($conn, $user['user_uid']);
 
+        if (!empty($new_password)) {
+            $safe_pass = mysqli_real_escape_string($conn, $new_password);
+            $sql = "
+                UPDATE users 
+                SET name = '{$safe_name}', phone = '{$safe_phone}', email = '{$safe_email}', 
+                    delivery_address = '{$safe_addr}', avatar = '{$safe_avatar}', password = '{$safe_pass}'
+                WHERE user_uid = '{$safe_uid}'
+            ";
+        } else {
+            $sql = "
+                UPDATE users 
+                SET name = '{$safe_name}', phone = '{$safe_phone}', email = '{$safe_email}', 
+                    delivery_address = '{$safe_addr}', avatar = '{$safe_avatar}'
+                WHERE user_uid = '{$safe_uid}'
+            ";
+        }
+
+        if (mysqli_query($conn, $sql)) {
             $_SESSION['user']['name'] = $name;
             $_SESSION['user']['phone'] = $phone;
             $_SESSION['user']['email'] = $email;
@@ -47,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
             set_flash('success', 'Profile information updated successfully!');
             header('Location: profile.php');
             exit;
-        } catch (PDOException $e) {
-            set_flash('error', 'Profile update failed: ' . $e->getMessage());
+        } else {
+            set_flash('error', 'Profile update failed: ' . mysqli_error($conn));
         }
     } else {
         set_flash('error', 'Full Name is required.');
